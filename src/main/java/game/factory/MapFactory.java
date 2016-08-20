@@ -4,8 +4,8 @@ import game.constants.GameTextConstants;
 import game.model.*;
 import game.model.implementation.*;
 
-public class MapFactory implements GameTextConstants {
     
+public class MapFactory implements GameTextConstants {
     public static Location getStartMap() {
         Location location = new ImmutableLocation(DEFAULT_LOCATION_TEXT);
         location.setLink(Direction.UP, new SimpleLink(location, getBlankLocation(Direction.DOWN, location), DEFAULT_LOCATION_TEXT_UP, true));
@@ -17,7 +17,7 @@ public class MapFactory implements GameTextConstants {
         return location;
     }
    
-    public static Location getBlankLocation(Direction fromDirection, Location fromLocation) {
+    public static Location getBlankLocation() {
         Location location = new ImmutableLocation(BLANK_LOCATION_TEXT);
         location.setLink(Direction.DOWN, getBlankLink(location));
         location.setLink(Direction.UP, getBlankLink(location));
@@ -25,6 +25,11 @@ public class MapFactory implements GameTextConstants {
         location.setLink(Direction.SOUTH, getBlankLink(location));
         location.setLink(Direction.EAST, getBlankLink(location));
         location.setLink(Direction.WEST, getBlankLink(location));
+        return location;
+    }
+
+    public static Location getBlankLocation(Direction fromDirection, Location fromLocation) {
+        Location location = getBlankLocation();
         location.setLink(fromDirection, new SimpleLink(location, fromLocation, "Return to your previous position", true));
         return location;
     }
