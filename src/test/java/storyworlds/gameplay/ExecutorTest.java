@@ -1,4 +1,4 @@
-package game.gameplay;
+package storyworlds.gameplay;
 
 import storyworlds.factory.MapFactory;
 import storyworlds.gameplay.Executor;

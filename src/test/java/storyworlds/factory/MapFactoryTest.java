@@ -1,4 +1,4 @@
-package game.factory;
+package storyworlds.factory;
 
 import storyworlds.factory.*;
 import storyworlds.model.*;

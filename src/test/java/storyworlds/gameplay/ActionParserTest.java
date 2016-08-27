@@ -1,4 +1,4 @@
-package game.gameplay;
+package storyworlds.gameplay;
 
 import static org.junit.Assert.*;
 import org.junit.Test;

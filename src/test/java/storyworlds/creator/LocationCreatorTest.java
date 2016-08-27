@@ -1,4 +1,4 @@
-package game.creator;
+package storyworlds.creator;
 
 import org.junit.Test;
 import org.junit.Before;
