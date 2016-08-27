@@ -26,7 +26,7 @@ public class Executor {
             if (arg.length > 1) {
                 direction = dirp.parse(arg[1]);
                 m.addLine("you " + action.toString() + " " + direction.toString());
-                m.addLine(player.getLocation().getLink(direction).getText());
+                m.addLine(player.getLocation().getLink(direction).getText(player));
             }
             if (arg.length <=1 || Direction.ERROR.equals(direction)) {
                 action = Action.ERROR;
