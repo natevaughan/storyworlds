@@ -1,8 +1,8 @@
 package game.factory;
 
-import game.factory.*;
-import game.model.*;
-import game.model.implementation.*;
+import storyworlds.factory.*;
+import storyworlds.model.*;
+import storyworlds.model.implementation.*;
 
 import static org.junit.Assert.*;
 import org.junit.Test;

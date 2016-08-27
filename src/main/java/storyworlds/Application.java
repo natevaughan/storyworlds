@@ -1,10 +1,10 @@
-package game;
+package storyworlds;
 
-import game.constants.GameTextConstants;
-import game.model.*;
-import game.model.implementation.*;
-import game.factory.MapFactory;
-import game.gameplay.*;
+import storyworlds.constants.GameTextConstants;
+import storyworlds.factory.MapFactory;
+import storyworlds.gameplay.*;
+import storyworlds.model.*;
+import storyworlds.model.implementation.*;
 
 public class Application implements GameTextConstants {
 

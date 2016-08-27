@@ -1,7 +1,7 @@
-package game.gameplay;
+package storyworlds.gameplay;
 
-import game.model.*;
-import game.model.implementation.ConsoleMessenger;
+import storyworlds.model.*;
+import storyworlds.model.implementation.ConsoleMessenger;
 
 public class Executor {
     

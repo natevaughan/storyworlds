@@ -1,8 +1,11 @@
-package game.model.implementation;
+package storyworlds.model.implementation;
 
-import game.model.*;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+
+import storyworlds.model.Link;
+import storyworlds.model.Location;
+import storyworlds.model.Player;
 
 public class SimpleLink implements Link {
     private Map<Location, Location> locations;
@@ -21,11 +24,11 @@ public class SimpleLink implements Link {
         return locations.get(startLocation);
     }
 
-    public String getText() {
-        return text;
+    public boolean isPassable(Player player) {
+        return isPassable;
     }
 
-    public boolean isPassable(Player player) {
-        return true;
+    public String getText(Player player) {
+        return text;
     }
 }

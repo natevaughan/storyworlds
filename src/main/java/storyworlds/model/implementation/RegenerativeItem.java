@@ -1,4 +1,4 @@
-package game.model.implementation;
+package storyworlds.model.implementation;
 
 public class RegenerativeItem {
 

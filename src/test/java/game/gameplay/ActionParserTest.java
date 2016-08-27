@@ -2,7 +2,9 @@ package game.gameplay;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
-import game.model.*;
+
+import storyworlds.gameplay.ActionParser;
+import storyworlds.model.*;
 
 public class ActionParserTest {
 

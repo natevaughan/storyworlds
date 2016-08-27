@@ -1,7 +1,8 @@
-package game.model.implementation;
+package storyworlds.model.implementation;
 
-import game.model.*;
 import java.util.Scanner;
+
+import storyworlds.model.*;
 
 public class ConsoleMessenger implements Messenger {
 

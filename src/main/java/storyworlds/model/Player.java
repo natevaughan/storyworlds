@@ -1,4 +1,4 @@
-package game.model;
+package storyworlds.model;
 
 import java.util.Collection;
 

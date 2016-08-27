@@ -1,8 +1,8 @@
-package game.factory;
+package storyworlds.factory;
 
-import game.constants.GameTextConstants;
-import game.model.*;
-import game.model.implementation.*;
+import storyworlds.constants.GameTextConstants;
+import storyworlds.model.*;
+import storyworlds.model.implementation.*;
 
     
 public class MapFactory implements GameTextConstants {

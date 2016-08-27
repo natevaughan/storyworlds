@@ -1,4 +1,4 @@
-package game.constants; 
+package storyworlds.constants; 
 
 public interface GameTextConstants {
 

@@ -1,6 +1,6 @@
-package game.gameplay;
+package storyworlds.gameplay;
 
-import game.model.Action;
+import storyworlds.model.Action;
 
 public class ActionParser {
     

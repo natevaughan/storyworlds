@@ -1,11 +1,12 @@
-package game.model.implementation; 
+package storyworlds.model.implementation; 
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.HashMap;
 
-import game.model.*;
+import storyworlds.model.*;
+
+import java.util.HashMap;
 
 public class ImmutableLocation implements Location { 
 

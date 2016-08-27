@@ -1,7 +1,7 @@
-package game.creator;
+package storyworlds.creator;
 
-import game.model.*;
-import game.model.implementation.*;
+import storyworlds.model.*;
+import storyworlds.model.implementation.*;
 
 public class LocationCreator {
     public Location createLocation(User user) {

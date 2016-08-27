@@ -1,8 +1,10 @@
 package game.gameplay;
 
-import game.model.*;
-import game.factory.MapFactory;
-import game.model.implementation.User;
+import storyworlds.factory.MapFactory;
+import storyworlds.gameplay.Executor;
+import storyworlds.model.*;
+import storyworlds.model.implementation.User;
+
 import org.junit.Test;
 import org.junit.Before;
 import static org.junit.Assert.*;

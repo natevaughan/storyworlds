@@ -4,9 +4,9 @@ import org.junit.Test;
 import org.junit.Before;
 import static org.junit.Assert.*;
 
-import game.model.*;
-import game.factory.MapFactory;
-import game.model.implementation.*;
+import storyworlds.factory.MapFactory;
+import storyworlds.model.*;
+import storyworlds.model.implementation.*;
 
 public class LocationCreatorTest {
 

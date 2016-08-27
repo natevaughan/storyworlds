@@ -1,9 +1,9 @@
-package game.model.implementation; 
+package storyworlds.model.implementation; 
 
 import java.util.Collection;
 import java.util.HashSet;
 
-import game.model.*;
+import storyworlds.model.*;
 
 public class User implements Player {
 

@@ -1,4 +1,4 @@
-package game.exception;
+package storyworlds.exception;
 
 public class IncompleteLocationException extends Exception {
 
