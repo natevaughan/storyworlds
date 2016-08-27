@@ -1,11 +1,11 @@
 package storyworlds.factory;
 
-import storyworlds.factory.*;
-import storyworlds.model.*;
-import storyworlds.model.implementation.*;
+import static org.junit.Assert.assertNotNull;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
+
+import storyworlds.model.Direction;
+import storyworlds.model.Location;
 
 public class MapFactoryTest {
 

@@ -3,7 +3,6 @@ package storyworlds.model.implementation;
 import java.util.Collection;
 import java.util.HashSet;
 
-import storyworlds.model.Direction;
 import storyworlds.model.Item;
 import storyworlds.model.Location;
 import storyworlds.model.Player;
@@ -12,23 +11,16 @@ public class User implements Player {
 
     protected final String name;
     protected Collection<Item> items;
-    protected Direction facingDirection;
     protected Location location;
-
-    public User(String name) {
-        this(name, Direction.NORTH);
-    }
     
-    public User(String name, Direction direction) {
+    public User(String name) {
         this.name = name;
-        this.facingDirection = direction;
         this.items = new HashSet<Item>();
     }
 
     public String getName() {
         return name;
     }
-
 
     public Collection<Item> getItems() {
         return items;
@@ -44,14 +36,6 @@ public class User implements Player {
 
     public void setLocation(Location location) {
         this.location = location;
-    }
-
-    public Direction getDirection() {
-        return facingDirection;
-    }
-
-    public void setDirection(Direction direction) {
-        this.facingDirection = direction;
     }
 }	
 
