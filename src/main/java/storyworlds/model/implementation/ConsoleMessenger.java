@@ -2,7 +2,7 @@ package storyworlds.model.implementation;
 
 import java.util.Scanner;
 
-import storyworlds.model.*;
+import storyworlds.model.Messenger;
 
 public class ConsoleMessenger implements Messenger {
 

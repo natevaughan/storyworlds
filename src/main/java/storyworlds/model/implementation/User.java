@@ -3,7 +3,10 @@ package storyworlds.model.implementation;
 import java.util.Collection;
 import java.util.HashSet;
 
-import storyworlds.model.*;
+import storyworlds.model.Direction;
+import storyworlds.model.Item;
+import storyworlds.model.Location;
+import storyworlds.model.Player;
 
 public class User implements Player {
 
