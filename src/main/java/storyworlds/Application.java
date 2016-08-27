@@ -2,9 +2,12 @@ package storyworlds;
 
 import storyworlds.constants.GameTextConstants;
 import storyworlds.factory.MapFactory;
-import storyworlds.gameplay.*;
-import storyworlds.model.*;
-import storyworlds.model.implementation.*;
+import storyworlds.gameplay.Executor;
+import storyworlds.model.Action;
+import storyworlds.model.Location;
+import storyworlds.model.Messenger;
+import storyworlds.model.implementation.ConsoleMessenger;
+import storyworlds.model.implementation.User;
 
 public class Application implements GameTextConstants {
 

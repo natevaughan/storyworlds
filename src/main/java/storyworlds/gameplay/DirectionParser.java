@@ -1,10 +1,9 @@
 package storyworlds.gameplay;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import storyworlds.model.Direction;
-
-import java.util.HashMap;
 
 public class DirectionParser {
     

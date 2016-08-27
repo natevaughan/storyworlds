@@ -1,8 +1,11 @@
 package storyworlds.factory;
 
 import storyworlds.constants.GameTextConstants;
-import storyworlds.model.*;
-import storyworlds.model.implementation.*;
+import storyworlds.model.Direction;
+import storyworlds.model.Link;
+import storyworlds.model.Location;
+import storyworlds.model.implementation.ImmutableLocation;
+import storyworlds.model.implementation.SimpleLink;
 
     
 public class MapFactory implements GameTextConstants {
