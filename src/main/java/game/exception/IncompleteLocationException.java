@@ -2,7 +2,7 @@ package game.exception;
 
 public class IncompleteLocationException extends Exception {
 
-    public IncompleteLocationException(String message, Location location) {
-        super(message + location.getText());
+    public IncompleteLocationException(String message) {
+        super(message);
     }
 }
