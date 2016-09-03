@@ -38,5 +38,13 @@ public class ExecutorTest {
         executor.getPlayer().setLocation(boundedLocation);
         action = executor.execute("mOve nOrtH");
         assertTrue("User should not move past a boundary", executor.getPlayer().getLocation().equals(boundedLocation));
+    }    
+    
+    @Test
+    public void badDirectionError() {
+        action = executor.execute("mOve");
+        assertTrue("User should remain in current locaion", executor.getPlayer().getLocation().equals(start));
     }
+    
+    
 }

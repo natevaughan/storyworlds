@@ -1,6 +1,7 @@
 package storyworlds.model;
 
 import java.util.Collection;
+import java.util.Map;
 
 public interface Location { 
 
@@ -12,7 +13,7 @@ public interface Location {
     
     public String getMap();
 
-    public Collection<Link> listLinks();
+    public Map<Direction, Link> getLinks();
 
     public Link getLink(Direction direction);
 

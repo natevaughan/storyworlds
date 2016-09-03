@@ -42,8 +42,8 @@ public class ImmutableLocation implements Location {
         return currentPlayers;
     }
 
-    public Collection<Link> listLinks() {
-        return links.values();
+    public Map<Direction, Link> getLinks() {
+        return links;
     }
 
     public Link getLink(Direction direction) {
