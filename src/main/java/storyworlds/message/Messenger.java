@@ -1,4 +1,4 @@
-package storyworlds.model;
+package storyworlds.message;
 
 public interface Messenger {
 

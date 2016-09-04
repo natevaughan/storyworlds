@@ -1,86 +1,71 @@
 package storyworlds.gameplay;
 
-import java.util.Map;
-
-import storyworlds.model.Action;
-import storyworlds.model.Direction;
-import storyworlds.model.Link;
-import storyworlds.model.Messenger;
+import storyworlds.action.Action;
+import storyworlds.action.ActionDoVisitor;
+import storyworlds.action.Actionable;
 import storyworlds.model.Player;
-import storyworlds.model.implementation.ConsoleMessenger;
 
 public class Executor {
     
 //  @Autowired Environment env;
     
-    private final Player          player;
-    private final ActionParser actionp;
-    private final DirectionParser dirp;
-    private final Messenger       m;
+    private final ActionParser actionParser;
+    private final ActionDoVisitor actionDoVisitor;
 
     public Executor(Player player) {
-        this.player = player;
-        this.actionp = new ActionParser();
-        this.dirp = new DirectionParser();
-        this.m = new ConsoleMessenger();
+        this.actionDoVisitor = new ActionDoVisitor(player);
+        this.actionParser = new ActionParser();
+        // this.m = getBean(env.getMessengerType);
     }
 
-    public Action execute(String args) {
-        String[] arg = split(args);
-        Action action = Action.ERROR;
-        Direction direction = Direction.ERROR;
+    public void execute(String args) {
         
-        if (arg.length > 0) {
-            action = actionp.parse(arg[0]);
+        String[] input = split(args);
+        String primary = null;
+        String secondary = null;
+
+        if (input.length > 0) {
+            primary = input[0];
         }
         
-        if (arg.length  > 1) {
-            direction = dirp.parse(arg[0]);
-                
+        if (input.length > 1) {
+            secondary = input[1];
         }
+
+        Actionable actionable = actionParser.parse(primary);
         
-        return execute(action);
+        actionDoVisitor.setSecondary(secondary);
         
+        actionable.accept(actionDoVisitor);
     }
 
-    private Action execute(Action action) {
+    private void execute(Actionable actionable) {
 
-        
-        String[] arg = {"abc"};
-        Direction direction = Direction.ERROR;
-        
-        if (Action.LOOK.equals(action)) {
-            if (arg.length > 1) {
-                direction = dirp.parse(arg[1]);
-                m.addLine("you " + action.toString() + " " + direction.toString());
-                m.addLine(player.getLocation().getLink(direction).getText(player));
-            }
-            if (arg.length <= 1 || Direction.ERROR.equals(direction)) {
-                action = Action.ERROR;
-            }
-        } else if (Action.MOVE.equals(action)) {
-            direction = dirp.parse(arg[1]);
-            if (!Direction.ERROR.equals(direction)) {
-                player.setLocation(player.getLocation().getLink(direction).getLinkedLocation(player.getLocation()));
-                m.addLine(player.getLocation().getText());
-                for (Map.Entry<Direction, Link> entry : player.getLocation().getLinks().entrySet()) {
-                    if (entry.getValue().isPassable(player)) {
-                        m.addLine("To the " + entry.getKey() + " is " + entry.getValue().getText(player));
-                    }
-                }
-            }
-        } else {
-            m.addLine("Unhandled action: " + action);
-        }
-        m.send();
-        return action;
+//        if (Action.LOOK.equals(action)) {
+//                direction = dirp.parse(args[1]);
+//                m.addLine("you " + action.toString() + " " + direction.toString());
+//                m.addLine(player.getLocation().getLink(direction).getText(player));
+//            
+//            if (args.length <= 1 || Direction.ERROR.equals(direction)) {
+//                action = Action.ERROR;
+//            }
+//        } else if (Action.MOVE.equals(action)) {
+//            direction = dirp.parse(args[1]);
+//            if (!Direction.ERROR.equals(direction)) {
+//                m.addLine(player.getLocation().getText());
+//                for (Map.Entry<Direction, Link> entry : player.getLocation().getLinks().entrySet()) {
+//                    if (entry.getValue().isPassable(player)) {
+//                        m.addLine("To the " + entry.getKey() + " is " + entry.getValue().getText(player));
+//                    }
+//                }
+//            }
+//        } else {
+//            m.addLine("Unhandled action: " + action);
+//        }
+//        m.send();
     }
 
     public static String[] split(String input) {
         return input.split("[ ]+");
-    }
-
-    public Player getPlayer() {
-        return player;
     }
 }

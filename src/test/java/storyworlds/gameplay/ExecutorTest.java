@@ -1,49 +1,52 @@
 package storyworlds.gameplay;
 
-import storyworlds.factory.MapFactory;
-import storyworlds.gameplay.Executor;
-import storyworlds.model.*;
-import storyworlds.model.implementation.User;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
 import org.junit.Before;
-import static org.junit.Assert.*;
+import org.junit.Test;
+
+import storyworlds.action.Actionable;
+import storyworlds.factory.MapFactory;
+import storyworlds.model.Location;
+import storyworlds.model.Player;
+import storyworlds.model.implementation.User;
 
 public class ExecutorTest {
     
     Executor executor;
     Location start;
-    Action action;
+    Actionable actionable;
+    Player user;
 
     @Before
     public void setup() {
-        Player user = new User("foo");
+        user = new User("foo");
         user.setLocation(MapFactory.getStartMap());
         executor = new Executor(user);
-        start = executor.getPlayer().getLocation();
+        start = user.getLocation();
     }
     
     @Test
     public void testMoveUser() {
-        action = executor.execute("mOve nOrtH");
-        assertTrue("Executor should return correct action", Action.MOVE.equals(action));
-        assertFalse("Player should no longer be in start location", executor.getPlayer().getLocation().equals(start));
-        action = executor.execute("move South");
-        assertTrue("Executor should return user to start location", executor.getPlayer().getLocation().equals(start));
+        executor.execute("mOve nOrtH");
+        assertFalse("Player should no longer be in start location", user.getLocation().equals(start));
+        executor.execute("move South");
+        assertTrue("Executor should return user to start location", user.getLocation().equals(start));
     }
     
     @Test
     public void ensureUserCannotMoveBeyondBoundary() {
         Location boundedLocation = MapFactory.getBlankLocation();
-        executor.getPlayer().setLocation(boundedLocation);
-        action = executor.execute("mOve nOrtH");
-        assertTrue("User should not move past a boundary", executor.getPlayer().getLocation().equals(boundedLocation));
+        user.setLocation(boundedLocation);
+        executor.execute("mOve nOrtH");
+        assertTrue("User should not move past a boundary", user.getLocation().equals(boundedLocation));
     }    
     
     @Test
     public void badDirectionError() {
-        action = executor.execute("mOve");
-        assertTrue("User should remain in current locaion", executor.getPlayer().getLocation().equals(start));
+        executor.execute("mOve");
+        assertTrue("User should remain in current locaion", user.getLocation().equals(start));
     }
     
     

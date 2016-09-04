@@ -1,11 +1,11 @@
 package storyworlds;
 
+import storyworlds.action.Action;
 import storyworlds.constants.GameTextConstants;
 import storyworlds.factory.MapFactory;
 import storyworlds.gameplay.Executor;
-import storyworlds.model.Action;
+import storyworlds.message.Messenger;
 import storyworlds.model.Location;
-import storyworlds.model.Messenger;
 import storyworlds.model.implementation.ConsoleMessenger;
 import storyworlds.model.implementation.User;
 
@@ -19,11 +19,11 @@ public class Application implements GameTextConstants {
         User user = new User(name);
         user.setLocation(start);
         Executor e = new Executor(user); 
-        m.addLine(e.getPlayer().getLocation().getText());
+//        m.addLine(e.getPlayer().getLocation().getText());
         Action action = Action.ERROR;
         while (!Action.QUIT.equals(action)) { 
             m.send("What's your next move?");
-            action = e.execute(m.getLine());
+//            action = e.execute(m.getLine());
         }
     }
 }
