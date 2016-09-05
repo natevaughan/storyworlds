@@ -1,6 +1,8 @@
 package storyworlds.action;
 
-public class Look extends AbstractAction {
+import storyworlds.action.visitor.ActionVisitor;
+
+public class Look extends DirectionedAction {
 
     public void accept(ActionVisitor visitor) {
         visitor.visit(this);

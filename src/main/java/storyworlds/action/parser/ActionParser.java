@@ -1,4 +1,4 @@
-package storyworlds.gameplay;
+package storyworlds.action.parser;
 
 import storyworlds.action.Action;
 import storyworlds.action.ActionFactory;

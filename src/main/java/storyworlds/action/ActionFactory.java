@@ -9,6 +9,8 @@ public class ActionFactory {
                 return new Look();
             case MAP:
                 return new Map();
+            case MOVE:
+                return new Move();
             case QUIT:
                 return new Quit();
             case TAKE:

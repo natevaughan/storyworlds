@@ -1,4 +1,4 @@
-package storyworlds.gameplay;
+package storyworlds.action.parser;
 
 import java.util.HashMap;
 import java.util.Map;

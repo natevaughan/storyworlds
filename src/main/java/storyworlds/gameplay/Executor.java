@@ -1,8 +1,11 @@
 package storyworlds.gameplay;
 
 import storyworlds.action.Action;
-import storyworlds.action.ActionDoVisitor;
+import storyworlds.action.ActionFactory;
 import storyworlds.action.Actionable;
+import storyworlds.action.parser.ActionParser;
+import storyworlds.action.visitor.ActionDoVisitor;
+import storyworlds.action.visitor.SecondaryParserVisitor;
 import storyworlds.model.Player;
 
 public class Executor {
@@ -34,7 +37,9 @@ public class Executor {
 
         Actionable actionable = actionParser.parse(primary);
         
-        actionDoVisitor.setSecondary(secondary);
+        SecondaryParserVisitor secondaryParser = new SecondaryParserVisitor(secondary);
+        
+        actionable.accept(secondaryParser);
         
         actionable.accept(actionDoVisitor);
     }

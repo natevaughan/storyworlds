@@ -1,4 +1,13 @@
-package storyworlds.action;
+package storyworlds.action.visitor;
+
+import storyworlds.action.Error;
+import storyworlds.action.Items;
+import storyworlds.action.Look;
+import storyworlds.action.Map;
+import storyworlds.action.Move;
+import storyworlds.action.Quit;
+import storyworlds.action.Take;
+import storyworlds.action.Use;
 
 public interface ActionVisitor {
     public void visit(Error error);
