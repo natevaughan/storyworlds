@@ -46,6 +46,10 @@ public class ActionDoVisitor implements ActionVisitor {
         // TODO Auto-generated method stub
         
     }
+    
+    public void visit(Actionable actionable) {
+        // unknown?
+    }
 
     public void visit(Map map) {
         // TODO Auto-generated method stub
