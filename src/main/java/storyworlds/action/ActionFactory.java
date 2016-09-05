@@ -1,0 +1,22 @@
+package storyworlds.action;
+
+public class ActionFactory {
+    public static Actionable get(Action action) {
+        switch (action) {
+            case ITEMS:
+                return new Items();
+            case LOOK:
+                return new Look();
+            case MAP:
+                return new Map();
+            case QUIT:
+                return new Quit();
+            case TAKE:
+                return new Take();
+            case USE:
+                return new Use();
+            default:
+                return new storyworlds.action.Error("Unhandled action: " + action);
+        }
+    }
+}

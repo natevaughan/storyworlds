@@ -1,18 +1,18 @@
 package storyworlds.gameplay;
 
 import storyworlds.action.Action;
+import storyworlds.action.ActionFactory;
 import storyworlds.action.Actionable;
 
 public class ActionParser {
 
     public Actionable parse(String input) {
 
-        Actionable actionable = Action.ERROR.getActionable();
+        Actionable actionable = ActionFactory.get(Action.ERROR);
         
-
         for (Action action : Action.values()) {
             if (action.toString().equalsIgnoreCase(input)) {
-                actionable = action.getActionable();
+                actionable = ActionFactory.get(action);
             }
         }
         
