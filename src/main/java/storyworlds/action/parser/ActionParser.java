@@ -6,13 +6,13 @@ import storyworlds.action.Actionable;
 
 public class ActionParser {
 
-    public Actionable parse(String input) {
+    public Action parse(String input) {
 
-        Actionable actionable = ActionFactory.get(Action.ERROR);
+        Action actionable = Action.ERROR;
         
         for (Action action : Action.values()) {
             if (action.toString().equalsIgnoreCase(input)) {
-                actionable = ActionFactory.get(action);
+                actionable = action;
             }
         }
         

@@ -9,15 +9,20 @@ import storyworlds.action.Move;
 import storyworlds.action.Quit;
 import storyworlds.action.Take;
 import storyworlds.action.Use;
+import storyworlds.message.ConsoleMessenger;
+import storyworlds.message.Messenger;
 import storyworlds.model.Direction;
 import storyworlds.model.Link;
 import storyworlds.model.Player;
 
-public class ActionDoVisitor implements ActionVisitor {
+public class ActionMessageVisitor implements ActionVisitor {
 
+//    Messenger messenger = getBean(env.getProperty(MESSENGER_TYPE));
+    Messenger m = new ConsoleMessenger();
+    
     private Player player;
 
-    public ActionDoVisitor(Player player) {
+    public ActionMessageVisitor(Player player) {
         this.player = player;
     }
 
@@ -46,18 +51,8 @@ public class ActionDoVisitor implements ActionVisitor {
     }
 
     public void visit(Move move) {
-
-        if (Direction.ERROR.equals(move.getDirection())) {
-            return;
-        }
-
-        Link link = player.getLocation().getLink(move.getDirection());
-
-        if (!link.isPassable(player)) {
-            return;
-        }
-
-        player.setLocation(player.getLocation().getLink(move.getDirection()).getLinkedLocation(player.getLocation()));
+        m.addLine(player.getLocation().getText());
+        m.send();
     }
 
     public void visit(Quit quit) {

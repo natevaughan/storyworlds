@@ -4,9 +4,9 @@ import storyworlds.action.Action;
 import storyworlds.constants.GameTextConstants;
 import storyworlds.factory.MapFactory;
 import storyworlds.gameplay.Executor;
+import storyworlds.message.ConsoleMessenger;
 import storyworlds.message.Messenger;
 import storyworlds.model.Location;
-import storyworlds.model.implementation.ConsoleMessenger;
 import storyworlds.model.implementation.User;
 
 public class Application implements GameTextConstants {
@@ -23,7 +23,7 @@ public class Application implements GameTextConstants {
         Action action = Action.ERROR;
         while (!Action.QUIT.equals(action)) { 
             m.send("What's your next move?");
-//            action = e.execute(m.getLine());
+            action = e.execute(m.getLine());
         }
     }
 }

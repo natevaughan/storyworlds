@@ -1,5 +1,6 @@
 package storyworlds.action.visitor;
 
+import storyworlds.action.Create;
 import storyworlds.action.Error;
 import storyworlds.action.Items;
 import storyworlds.action.Look;
@@ -21,6 +22,11 @@ public class SecondaryParserVisitor implements ActionVisitor {
     
     public SecondaryParserVisitor(String secondary) {
         this.secondary = secondary;
+    }
+
+    public void visit(Create create) {
+        // TODO Auto-generated method stub
+        
     }
     
     public void visit(Error error) {
@@ -61,4 +67,5 @@ public class SecondaryParserVisitor implements ActionVisitor {
         // TODO Auto-generated method stub
         
     }
+
 }

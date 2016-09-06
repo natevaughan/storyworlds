@@ -5,6 +5,7 @@ import storyworlds.action.ActionFactory;
 import storyworlds.action.Actionable;
 import storyworlds.action.parser.ActionParser;
 import storyworlds.action.visitor.ActionDoVisitor;
+import storyworlds.action.visitor.ActionMessageVisitor;
 import storyworlds.action.visitor.SecondaryParserVisitor;
 import storyworlds.model.Player;
 
@@ -14,14 +15,15 @@ public class Executor {
     
     private final ActionParser actionParser;
     private final ActionDoVisitor actionDoVisitor;
+    private final ActionMessageVisitor actionMessageVisitor;
 
     public Executor(Player player) {
         this.actionDoVisitor = new ActionDoVisitor(player);
+        this.actionMessageVisitor = new ActionMessageVisitor(player);
         this.actionParser = new ActionParser();
-        // this.m = getBean(env.getMessengerType);
     }
 
-    public void execute(String args) {
+    public Action execute(String args) {
         
         String[] input = split(args);
         String primary = null;
@@ -35,13 +37,19 @@ public class Executor {
             secondary = input[1];
         }
 
-        Actionable actionable = actionParser.parse(primary);
+        Action action = actionParser.parse(primary);
+        
+        Actionable actionable = ActionFactory.get(action);
         
         SecondaryParserVisitor secondaryParser = new SecondaryParserVisitor(secondary);
         
         actionable.accept(secondaryParser);
         
         actionable.accept(actionDoVisitor);
+        
+        actionable.accept(actionMessageVisitor);
+        
+        return action;
     }
 
     private void execute(Actionable actionable) {
