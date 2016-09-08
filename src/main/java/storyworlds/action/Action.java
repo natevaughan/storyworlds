@@ -8,6 +8,6 @@ public enum Action {
     MAP, 
     MOVE, 
     QUIT,
-    TAKE, 
+    TAKE,
     USE
 }

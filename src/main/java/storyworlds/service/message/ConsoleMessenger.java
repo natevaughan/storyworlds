@@ -1,4 +1,4 @@
-package storyworlds.message;
+package storyworlds.service.message;
 
 import java.util.Scanner;
 

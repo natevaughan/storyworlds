@@ -4,10 +4,10 @@ import storyworlds.action.Action;
 import storyworlds.constants.GameTextConstants;
 import storyworlds.factory.MapFactory;
 import storyworlds.gameplay.Executor;
-import storyworlds.message.ConsoleMessenger;
-import storyworlds.message.Messenger;
 import storyworlds.model.Location;
 import storyworlds.model.implementation.User;
+import storyworlds.service.message.ConsoleMessenger;
+import storyworlds.service.message.Messenger;
 
 public class Application implements GameTextConstants {
 
