@@ -9,8 +9,7 @@ import storyworlds.action.Move;
 import storyworlds.action.Quit;
 import storyworlds.action.Take;
 import storyworlds.action.Use;
-import storyworlds.model.Direction;
-import storyworlds.model.Link;
+import storyworlds.model.Item;
 import storyworlds.model.Player;
 import storyworlds.service.message.ConsoleMessenger;
 import storyworlds.service.message.Messenger;
@@ -32,17 +31,24 @@ public class ActionMessageVisitor implements ActionVisitor {
     }
 
     public void visit(Error error) {
-        // TODO Auto-generated method stub
-
+        m.addLine("Unrecognized action: " + error.getMessage());
     }
 
     public void visit(Items items) {
-        // TODO Auto-generated method stub
-
+        if (player.listItems().isEmpty()) {
+            m.addLine("No items");
+        } else {
+            m.addLine("Current inventory: ");
+            for (Item item : this.player.listItems()) {
+                m.addLine(item.getName());
+            }
+        }
+        m.send();
     }
 
     public void visit(Look look) {
-        // TODO Auto-generated method stub
+        m.addLine(player.getLocation().getLink(look.getDirection()).getText(player));
+        m.send();
     }
 
     public void visit(Map map) {
@@ -52,17 +58,24 @@ public class ActionMessageVisitor implements ActionVisitor {
 
     public void visit(Move move) {
         m.addLine(player.getLocation().getText());
+        for (Item item : player.getLocation().listItems()) {
+            m.addLine("There is a " + item.getName() + " here");
+        }
         m.send();
     }
 
     public void visit(Quit quit) {
-        // TODO Auto-generated method stub
-
+        m.addLine("Thanks for playing.");
+        m.send();
     }
 
     public void visit(Take take) {
-        // TODO Auto-generated method stub
-
+        if (take.isSuccessful()) {
+            m.addLine("You take the " + take.getItemName());
+        } else {
+            m.addLine("Unable to take the " + take.getItemName());
+        }
+        m.send();
     }
 
     public void visit(Use use) {

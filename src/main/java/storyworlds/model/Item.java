@@ -6,5 +6,5 @@ public interface Item {
 
     public String getProperties();
 
-    public boolean isVisible();
+    public boolean isVisible(Player player);
 }

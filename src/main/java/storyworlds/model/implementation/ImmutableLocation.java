@@ -1,10 +1,7 @@
 
 package storyworlds.model.implementation; 
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 import storyworlds.model.Direction;
 import storyworlds.model.Item;
@@ -16,26 +13,43 @@ public class ImmutableLocation implements Location {
 
     private final String text;
     private final Map<Direction, Link> links;
-    private final Collection<Item> items;
+    private final Map<String, Item> items;
     private final Collection<Player> currentPlayers;
     
     public ImmutableLocation(String text) {
-        this(text, new HashMap<Direction, Link>(), new HashSet<Item>());
+        this(text, new HashSet<Item>());
     }
 
-    public ImmutableLocation(String text, Map<Direction, Link> links, Collection<Item> items) {
+
+    public ImmutableLocation(String text, Collection<Item> items) {
+        this(text, items, new HashMap<Direction, Link>());
+    }
+
+    public ImmutableLocation(String text, Collection<Item> items, Map<Direction, Link> links) {
+        this.items = new HashMap<String, Item>();
+        for (Item item : items) {
+            this.items.put(item.getName().toUpperCase(), item);
+        }
         this.text = text;
         this.links = links;
-        this.items = items;
         this.currentPlayers = new HashSet<Player>();
     }
+
 
     public String getText() {
         return text;
     }
 
     public Collection<Item> listItems() {
-        return items;
+        return items.values();
+    }
+
+    public Item getItem(String name) {
+        return items.get(name.toUpperCase());
+    }
+
+    public Item takeItem(String name) {
+        return items.remove(name.toUpperCase());
     }
 
     public Collection<Player> listPlayers() {
@@ -52,9 +66,5 @@ public class ImmutableLocation implements Location {
 
     public void setLink(Direction direction, Link link) {
         links.put(direction, link);
-    }
-
-    public String getMap() {
-        return "map not yet supported";
     }
 }

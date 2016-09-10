@@ -18,8 +18,8 @@ public class Application implements GameTextConstants {
         Location start = MapFactory.getStartMap();
         User user = new User(name);
         user.setLocation(start);
-        Executor e = new Executor(user); 
-//        m.addLine(e.getPlayer().getLocation().getText());
+        Executor e = new Executor(user);
+        m.addLine(start.getText());
         Action action = Action.ERROR;
         while (!Action.QUIT.equals(action)) { 
             m.send("What's your next move?");

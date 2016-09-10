@@ -11,17 +11,21 @@ import storyworlds.action.Take;
 import storyworlds.action.Use;
 import storyworlds.action.parser.DirectionParser;
 import storyworlds.action.parser.ItemParser;
+import storyworlds.model.Item;
+import storyworlds.model.Player;
+
+import java.util.Collection;
 
 public class SecondaryParserVisitor implements ActionVisitor {
 
-    private final String secondary;
+    private String secondary;
+
+    private final Player player;
 
     private final DirectionParser dirp = new DirectionParser();
-
-    private final ItemParser itemParser = new ItemParser();
     
-    public SecondaryParserVisitor(String secondary) {
-        this.secondary = secondary;
+    public SecondaryParserVisitor(Player player) {
+        this.player = player;
     }
 
     public void visit(Create create) {
@@ -35,8 +39,7 @@ public class SecondaryParserVisitor implements ActionVisitor {
     }
 
     public void visit(Items items) {
-        // TODO Auto-generated method stub
-        
+        // no action
     }
 
     public void visit(Move move) {
@@ -54,8 +57,10 @@ public class SecondaryParserVisitor implements ActionVisitor {
     }
 
     public void visit(Take take) {
-        // TODO Auto-generated method stub
-        
+        take.setItemName(secondary);
+        if (player.getLocation().getItem(secondary) != null) {
+            take.setSuccessful(true);
+        }
     }
 
     public void visit(Quit quit) {
@@ -64,8 +69,13 @@ public class SecondaryParserVisitor implements ActionVisitor {
     }
 
     public void visit(Use use) {
-        // TODO Auto-generated method stub
-        
+        use.setItemName(secondary);
+        if (player.getItem(secondary) != null) {
+            use.setSuccessful(true);
+        }
     }
 
+    public void setSecondary(String secondary) {
+        this.secondary = secondary;
+    }
 }

@@ -10,8 +10,10 @@ public interface Location {
     public Collection<Player> listPlayers();
 
     public Collection<Item> listItems();
-    
-    public String getMap();
+
+    public Item getItem(String item);
+
+    public Item takeItem(String name);
 
     public Map<Direction, Link> getLinks();
 

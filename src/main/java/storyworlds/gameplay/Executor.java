@@ -16,9 +16,11 @@ public class Executor {
     private final ActionParser actionParser;
     private final ActionDoVisitor actionDoVisitor;
     private final ActionMessageVisitor actionMessageVisitor;
+    private final SecondaryParserVisitor secondaryParser;
 
     public Executor(Player player) {
         this.actionDoVisitor = new ActionDoVisitor(player);
+        secondaryParser = new SecondaryParserVisitor(player);
         this.actionMessageVisitor = new ActionMessageVisitor(player);
         this.actionParser = new ActionParser();
     }
@@ -40,9 +42,9 @@ public class Executor {
         Action action = actionParser.parse(primary);
         
         Actionable actionable = ActionFactory.get(action);
-        
-        SecondaryParserVisitor secondaryParser = new SecondaryParserVisitor(secondary);
-        
+
+        secondaryParser.setSecondary(secondary);
+
         actionable.accept(secondaryParser);
         
         actionable.accept(actionDoVisitor);

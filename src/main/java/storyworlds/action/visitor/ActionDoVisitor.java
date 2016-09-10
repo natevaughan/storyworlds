@@ -66,12 +66,10 @@ public class ActionDoVisitor implements ActionVisitor {
     }
 
     public void visit(Take take) {
-        // TODO Auto-generated method stub
-
+        player.addItem(player.getLocation().takeItem(take.getItemName()));
     }
 
     public void visit(Use use) {
-        // TODO Auto-generated method stub
-
+        player.setActiveItem(player.getItem(use.getItemName()));
     }
 }
