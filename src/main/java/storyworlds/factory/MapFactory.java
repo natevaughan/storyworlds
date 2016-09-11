@@ -8,8 +8,6 @@ import storyworlds.model.implementation.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * @author nvaughan since 8/26/16
@@ -28,7 +26,7 @@ public class MapFactory implements GameTextConstants {
 
     private static Collection<Item> createItems() {
         Collection<Item> items = new ArrayList<Item>();
-        Item item = new VisibleItem(ITEM_NAME,ITEM_PROPERTIES);
+        Item item = new UsableItem(ITEM_NAME,ITEM_PROPERTIES);
         items.add(item);
         return items;
     }

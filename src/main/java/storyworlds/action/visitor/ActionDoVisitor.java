@@ -70,6 +70,8 @@ public class ActionDoVisitor implements ActionVisitor {
     }
 
     public void visit(Use use) {
-        player.setActiveItem(player.getItem(use.getItemName()));
+        if (player.getItem(use.getItemName()) != null) {
+            player.getItem(use.getItemName()).setActive(true);
+        }
     }
 }

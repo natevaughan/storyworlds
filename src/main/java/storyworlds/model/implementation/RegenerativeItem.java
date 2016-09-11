@@ -1,6 +1,6 @@
 package storyworlds.model.implementation;
 
-public class RegenerativeItem extends VisibleItem {
+public class RegenerativeItem extends UsableItem {
 
     private int regenerationInterval;
 

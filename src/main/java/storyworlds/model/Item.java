@@ -4,7 +4,10 @@ public interface Item {
 
     public String getName();
 
+    public void setActive(boolean active);
+
+    public boolean isActive();
+
     public String getProperties();
 
-    public boolean isVisible(Player player);
 }

@@ -2,7 +2,6 @@ package storyworlds.model.implementation;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 import storyworlds.model.Item;
@@ -27,14 +26,6 @@ public class User implements Player {
 
     public Collection<Item> listItems() {
         return items.values();
-    }
-
-    public void setActiveItem(Item item) {
-        this.activeItem = item;
-    }
-
-    public Item getActiveItem() {
-        return activeItem;
     }
 
     public Item getItem(String name) {

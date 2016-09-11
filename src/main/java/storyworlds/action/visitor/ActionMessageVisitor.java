@@ -79,7 +79,11 @@ public class ActionMessageVisitor implements ActionVisitor {
     }
 
     public void visit(Use use) {
-        // TODO Auto-generated method stub
-
+        if (use.isSuccessful()) {
+            m.addLine("Using " + use.getItemName());
+        } else {
+            m.addLine("You don't have a " + use.getItemName());
+        }
+        m.send();
     }
 }
