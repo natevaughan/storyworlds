@@ -20,6 +20,12 @@ public class BlockableLink extends BidirectionalLink implements Link {
         isPassableMap.put(location2, true);
     }
 
+    @Override
+    public Location getLinkedLocation(Location location) {
+        return super.getLinkedLocation(location);
+    }
+
+    @Override
     public boolean isPassable(Player player) {
         return isPassableMap.get(player.getLocation());
     }

@@ -52,7 +52,7 @@ public class ActionMessageVisitor implements ActionVisitor {
     }
 
     public void visit(Map map) {
-        // TODO Auto-generated method stub
+        m.send("Map feature not yet supported");
 
     }
 
