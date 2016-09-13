@@ -12,7 +12,7 @@ import storyworlds.model.Player;
  */
 public class BlockableLink extends BidirectionalLink implements Link {
     
-    private Map<Location, Boolean> isPassableMap = new HashMap<Location, Boolean>();
+    protected Map<Location, Boolean> isPassableMap = new HashMap<Location, Boolean>();
 
     public BlockableLink(String text, Location location1, Location location2) {
         super(text, location1, location2);

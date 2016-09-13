@@ -7,4 +7,5 @@ public interface Link {
     public String getText(Player player);
 
     public Location getLinkedLocation(Location startLocation);
+
 }	

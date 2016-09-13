@@ -32,4 +32,25 @@ public class UsableItem implements Item {
     public void setActive(boolean active) {
         this.active = active;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UsableItem that = (UsableItem) o;
+
+        if (active != that.active) return false;
+        if (!name.equals(that.name)) return false;
+        return properties.equals(that.properties);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + properties.hashCode();
+        result = 31 * result + (active ? 1 : 0);
+        return result;
+    }
 }
