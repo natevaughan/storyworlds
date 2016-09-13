@@ -9,8 +9,6 @@ public abstract class ItemAction extends AbstractAction {
 
     private String itemName;
 
-    private boolean successful = false;
-
     public String getItemName() {
         return itemName;
     }
@@ -19,11 +17,4 @@ public abstract class ItemAction extends AbstractAction {
         this.itemName = itemName;
     }
 
-    public void setSuccessful(boolean successful) {
-        this.successful = successful;
-    }
-
-    public boolean isSuccessful() {
-        return successful;
-    }
 }
