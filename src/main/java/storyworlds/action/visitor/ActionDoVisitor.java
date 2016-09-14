@@ -54,9 +54,11 @@ public class ActionDoVisitor implements ActionVisitor {
         Link link = player.getLocation().getLink(move.getDirection());
 
         if (!link.isPassable(player)) {
+            move.setMessage("Unable to move " + move.getDirection() + ": " + link.getText(player));
             return;
         }
 
+        move.setMessage("Moving " + link.getText(player));
         player.setLocation(player.getLocation().getLink(move.getDirection()).getLinkedLocation(player.getLocation()));
     }
 
