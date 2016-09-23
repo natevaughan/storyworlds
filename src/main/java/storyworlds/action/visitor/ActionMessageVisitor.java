@@ -47,7 +47,7 @@ public class ActionMessageVisitor implements ActionVisitor {
     }
 
     public void visit(Look look) {
-        m.addLine(player.getLocation().getLink(look.getDirection()).getText(player));
+        m.addLine(player.getLocation().getLink(look.getDirection()).getPassText(player));
         m.send();
     }
 
@@ -57,6 +57,7 @@ public class ActionMessageVisitor implements ActionVisitor {
     }
 
     public void visit(Move move) {
+        m.addLine(move.getMessage());
         m.addLine(player.getLocation().getText());
         for (Item item : player.getLocation().listItems()) {
             m.addLine("There is a " + item.getName() + " here");

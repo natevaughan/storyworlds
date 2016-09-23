@@ -12,18 +12,14 @@ import storyworlds.model.Location;
 import storyworlds.model.Player;
 import storyworlds.model.implementation.User;
 
-public class ExecutorTest {
-    
-    Executor executor;
-    Location start;
-    Actionable actionable;
-    Player user;
+public class ExecutorTest extends AbstractGameplayTest {
+
+    private Location start;
 
     @Before
     public void setup() {
-        user = new User("foo");
+        super.setup();
         user.setLocation(MapFactory.getStartMap());
-        executor = new Executor(user);
         start = user.getLocation();
     }
     

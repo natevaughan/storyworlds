@@ -54,32 +54,6 @@ public class Executor {
         return action;
     }
 
-    private void execute(Actionable actionable) {
-
-//        if (Action.LOOK.equals(action)) {
-//                direction = dirp.parse(args[1]);
-//                m.addLine("you " + action.toString() + " " + direction.toString());
-//                m.addLine(player.getLocation().getLink(direction).getText(player));
-//            
-//            if (args.length <= 1 || Direction.ERROR.equals(direction)) {
-//                action = Action.ERROR;
-//            }
-//        } else if (Action.MOVE.equals(action)) {
-//            direction = dirp.parse(args[1]);
-//            if (!Direction.ERROR.equals(direction)) {
-//                m.addLine(player.getLocation().getText());
-//                for (Map.Entry<Direction, Link> entry : player.getLocation().getLinks().entrySet()) {
-//                    if (entry.getValue().isPassable(player)) {
-//                        m.addLine("To the " + entry.getKey() + " is " + entry.getValue().getText(player));
-//                    }
-//                }
-//            }
-//        } else {
-//            m.addLine("Unhandled action: " + action);
-//        }
-//        m.send();
-    }
-
     public static String[] split(String input) {
         return input.split("[ ]+");
     }

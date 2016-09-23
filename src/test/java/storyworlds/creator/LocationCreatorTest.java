@@ -22,9 +22,7 @@ public class LocationCreatorTest {
 
     @Test
     public void editExistingLocation() {
-        
-        assertNotNull(user.getLocation());
-        assertTrue(true);
+        // todo
     }
 }
 

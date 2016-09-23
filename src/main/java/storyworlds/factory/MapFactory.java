@@ -32,17 +32,15 @@ testPermissionMap = Collections.unmodifiableMap(map);
 public class MapFactory implements GameTextConstants {
     public static Location getStartMap() {
         Location location = new ImmutableLocation(DEFAULT_LOCATION_TEXT,  createItems());
-        location.setLink(Direction.UP, new DirectionalLink(DEFAULT_LOCATION_TEXT_UP, getBlankLocation(Direction.DOWN, location)));
+        location.setLink(Direction.UP, new DirectionalLink(DEFAULT_LOCATION_TEXT_UP,  DEFAULT_LOCATION_PASS_TEXT_UP, getBlankLocation(Direction.DOWN, location)));
         Item key = new UsableItem(KEY_NAME, KEY_USE_MESSAGE, KEY_DESCRIPTION);
         key.setActive(true);
-        BlockableLink lockedLink = new BlockableLink(DEFAULT_LOCATION_TEXT_DOWN, "", key, getBlankLocation(Direction.UP, location));
+        BlockableLink lockedLink = new BlockableLink(DEFAULT_LOCATION_TEXT_DOWN, DEFAULT_LOCATION_PASS_TEXT_DOWN, DEFAULT_LOCATION_FAIL_TEXT_DOWN, key, getBlankLocation(Direction.UP, location));
 
         location.setLink(Direction.DOWN, lockedLink);
 
-        location.setLink(Direction.NORTH, new DirectionalLink(DEFAULT_LOCATION_TEXT_NORTH, getBlankLocation(Direction.SOUTH, location)));
-        location.setLink(Direction.SOUTH, new DirectionalLink(DEFAULT_LOCATION_TEXT_SOUTH, getBlankLocation(Direction.NORTH, location)));
-        location.setLink(Direction.EAST, new ImpassableLink(DEFAULT_LOCATION_TEXT_EAST));
-        location.setLink(Direction.WEST, new ImpassableLink(DEFAULT_LOCATION_TEXT_WEST));
+        location.setLink(Direction.NORTH, new DirectionalLink(DEFAULT_LOCATION_TEXT_NORTH, DEFAULT_LOCATION_PASS_TEXT_NORTH, getBlankLocation(Direction.SOUTH, location)));
+        location.setLink(Direction.SOUTH, new DirectionalLink(DEFAULT_LOCATION_TEXT_SOUTH, DEFAULT_LOCATION_PASS_TEXT_SOUTH, getBlankLocation(Direction.NORTH, location)));
         return location;
     }
 
@@ -56,18 +54,12 @@ public class MapFactory implements GameTextConstants {
 
     public static Location getBlankLocation() {
         Location location = new ImmutableLocation(BLANK_LOCATION_TEXT);
-        location.setLink(Direction.DOWN, new ImpassableLink());
-        location.setLink(Direction.UP, new ImpassableLink());
-        location.setLink(Direction.NORTH, new ImpassableLink());
-        location.setLink(Direction.SOUTH, new ImpassableLink());
-        location.setLink(Direction.EAST, new ImpassableLink());
-        location.setLink(Direction.WEST, new ImpassableLink());
         return location;
     }
 
     public static Location getBlankLocation(Direction fromDirection, Location fromLocation) {
         Location location = getBlankLocation();
-        location.setLink(fromDirection, new DirectionalLink("Return to your previous position", fromLocation));
+        location.setLink(fromDirection, new DirectionalLink(RETURN_DESCRIPTION, RETURN_PASS_TEXT, fromLocation));
         return location;
     }
 }

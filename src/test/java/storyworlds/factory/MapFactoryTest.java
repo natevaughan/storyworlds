@@ -16,8 +16,6 @@ public class MapFactoryTest {
         assertNotNull("Location had missing link direction", loc.getLink(Direction.UP));
         assertNotNull("Location had missing link direction", loc.getLink(Direction.DOWN));
         assertNotNull("Location had missing link direction", loc.getLink(Direction.NORTH));
-        assertNotNull("Location had missing link direction", loc.getLink(Direction.EAST));
-        assertNotNull("Location had missing link direction", loc.getLink(Direction.WEST));
         assertNotNull("Location had missing link direction", loc.getLink(Direction.SOUTH));
     }
 }

@@ -1,8 +1,5 @@
 package storyworlds.model.implementation;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import storyworlds.model.Item;
 import storyworlds.model.Link;
 import storyworlds.model.Location;
@@ -16,8 +13,8 @@ public class BlockableLink extends DirectionalLink implements Link {
     private final Item requiredItem;
     private final String                  failText;
 
-    public BlockableLink(String passText, String failText, Item requiredItem, Location endLocation) {
-        super(passText, endLocation);
+    public BlockableLink(String description, String passText, String failText, Item requiredItem, Location endLocation) {
+        super(description, passText, endLocation);
         this.requiredItem = requiredItem;
         this.failText = failText;
     }
@@ -38,7 +35,7 @@ public class BlockableLink extends DirectionalLink implements Link {
     }
 
     @Override
-    public String getText(Player player) {
+    public String getPassText(Player player) {
         if (isPassable(player)) {
             return passText;
         } else {
