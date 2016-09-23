@@ -8,6 +8,8 @@ public interface Item {
 
     public boolean isActive();
 
-    public String getProperties();
+    public String getDescription();
+
+    public String getUseMessage();
 
 }

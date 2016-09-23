@@ -1,28 +1,34 @@
 package storyworlds.model.implementation;
 
 import storyworlds.model.Item;
-import storyworlds.model.Player;
 
 /**
  * Created by nvaughan on 9/10/2016.
  */
 public class UsableItem implements Item {
 
-    private String name;
-    private String properties;
+    private final String name;
+    private final String description;
+    private final String useMessage;
     private boolean active;
 
-    public UsableItem(String name, String properties) {
+    public UsableItem(String name, String description, String useMessage) {
         this.name = name;
-        this.properties = properties;
+        this.description = description;
+        this.useMessage = description;
+        this.active = false;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getProperties() {
-        return properties;
+    public String getDescription() {
+        return description;
+    }
+
+    public String getUseMessage() {
+        return useMessage;
     }
 
     public boolean isActive() {
@@ -42,14 +48,14 @@ public class UsableItem implements Item {
 
         if (active != that.active) return false;
         if (!name.equals(that.name)) return false;
-        return properties.equals(that.properties);
+        return description.equals(that.description);
 
     }
 
     @Override
     public int hashCode() {
         int result = name.hashCode();
-        result = 31 * result + properties.hashCode();
+        result = 31 * result + description.hashCode();
         result = 31 * result + (active ? 1 : 0);
         return result;
     }

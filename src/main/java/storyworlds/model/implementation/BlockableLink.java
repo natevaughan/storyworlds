@@ -3,6 +3,7 @@ package storyworlds.model.implementation;
 import java.util.HashMap;
 import java.util.Map;
 
+import storyworlds.model.Item;
 import storyworlds.model.Link;
 import storyworlds.model.Location;
 import storyworlds.model.Player;
@@ -10,14 +11,15 @@ import storyworlds.model.Player;
 /**
  * @author nvaughan since 8/26/16
  */
-public class BlockableLink extends BidirectionalLink implements Link {
+public class BlockableLink extends DirectionalLink implements Link {
     
-    protected Map<Location, Boolean> isPassableMap = new HashMap<Location, Boolean>();
+    private final Item requiredItem;
+    private final String                  failText;
 
-    public BlockableLink(String text, Location location1, Location location2) {
-        super(text, location1, location2);
-        isPassableMap.put(location1, true);
-        isPassableMap.put(location2, true);
+    public BlockableLink(String passText, String failText, Item requiredItem, Location endLocation) {
+        super(passText, endLocation);
+        this.requiredItem = requiredItem;
+        this.failText = failText;
     }
 
     @Override
@@ -27,10 +29,20 @@ public class BlockableLink extends BidirectionalLink implements Link {
 
     @Override
     public boolean isPassable(Player player) {
-        return isPassableMap.get(player.getLocation());
+        for (Item item : player.listItems()) {
+            if (item.equals(requiredItem) && item.isActive()) {
+                return true;
+            }
+        }
+        return false;
     }
-    
-    public void setPassable(Location fromLocation, boolean passable) {
-        isPassableMap.put(fromLocation, passable);
+
+    @Override
+    public String getText(Player player) {
+        if (isPassable(player)) {
+            return passText;
+        } else {
+            return failText;
+        }
     }
 }

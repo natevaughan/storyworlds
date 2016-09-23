@@ -19,6 +19,7 @@ public interface GameTextConstants {
     public final String BLANK_LOCATION_TEXT = "There is nothing here. \nEDIT this location to continue the story and expand the game universe";
     public final String BLANK_LINK_TEXT = "Cannot move beyond this location. \nEDIT this location to link it to new locations and expand the game universe.";
 
-    public final String ITEM_NAME = "key";
-    public final String ITEM_PROPERTIES = "A large brass key that looks to be useful for opening ancient locks";
+    public final String KEY_NAME = "key";
+    public final String KEY_USE_MESSAGE = "You retrieve your brass key.";
+    public final String KEY_DESCRIPTION = "A large brass key that looks to be useful for opening ancient locks";
 }

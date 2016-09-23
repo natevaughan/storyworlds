@@ -73,6 +73,7 @@ public class ActionDoVisitor implements ActionVisitor {
 
     public void visit(Use use) {
         if (player.getItem(use.getItemName()) != null) {
+            player.listItems().stream().forEach(item -> item.setActive(false));
             player.getItem(use.getItemName()).setActive(true);
         }
     }

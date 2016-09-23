@@ -2,8 +2,8 @@ package storyworlds.action;
 
 public abstract class AbstractAction implements Actionable {
 
-    private String message;
-    private boolean successful = true;
+    protected String message;
+    protected boolean successful = true;
 
     public String getMessage() {
         return message;
