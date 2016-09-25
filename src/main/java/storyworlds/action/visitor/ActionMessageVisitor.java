@@ -65,17 +65,6 @@ public class ActionMessageVisitor implements ActionVisitor {
         m.send();
     }
 
-    private void describeLocation() {
-        m.addLine(player.getLocation().getText());
-        java.util.Map<Direction, Link> links = player.getLocation().getLinks();
-        for (Direction direction : links.keySet()) {
-            m.addLine("To the " + direction + " is " + links.get(direction).getDescription());
-        }
-        for (Item item : player.getLocation().listItems()) {
-            m.addLine("There is a " + item.getName() + " here");
-        }
-    }
-
     public void visit(Quit quit) {
         m.addLine("Thanks for playing.");
         m.send();
@@ -97,5 +86,16 @@ public class ActionMessageVisitor implements ActionVisitor {
             m.addLine("You don't have a " + use.getItemName());
         }
         m.send();
+    }
+
+    private void describeLocation() {
+        m.addLine(player.getLocation().getText());
+        java.util.Map<Direction, Link> links = player.getLocation().getLinks();
+        for (Direction direction : links.keySet()) {
+            m.addLine("To the " + direction + " is " + links.get(direction).getDescription());
+        }
+        for (Item item : player.getLocation().listItems()) {
+            m.addLine("There is a " + item.getName() + " here");
+        }
     }
 }
