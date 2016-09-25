@@ -15,6 +15,7 @@ public class BlockableLink extends DirectionalLink implements Link {
 
     public BlockableLink(String description, String passText, String failText, Item requiredItem, Location endLocation) {
         super(description, passText, endLocation);
+        requiredItem.setActive(true);
         this.requiredItem = requiredItem;
         this.failText = failText;
     }
@@ -27,7 +28,7 @@ public class BlockableLink extends DirectionalLink implements Link {
     @Override
     public boolean isPassable(Player player) {
         for (Item item : player.listItems()) {
-            if (item.equals(requiredItem) && item.isActive()) {
+            if (item.equals(requiredItem)) {
                 return true;
             }
         }

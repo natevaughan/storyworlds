@@ -11,7 +11,7 @@ public interface Location {
 
     public Collection<Item> listItems();
 
-    public Item getItem(String item);
+    public Item getItem(String name);
 
     public Item takeItem(String name);
 

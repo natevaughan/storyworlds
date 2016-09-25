@@ -19,9 +19,9 @@ public class Application implements GameTextConstants {
         User user = new User(name);
         user.setLocation(start);
         Executor e = new Executor(user);
-        m.addLine(start.getText());
         Action action = Action.ERROR;
-        while (!Action.QUIT.equals(action)) { 
+        action = e.execute("status");
+        while (!Action.QUIT.equals(action)) {
             m.send("What's your next move?");
             action = e.execute(m.getLine());
         }

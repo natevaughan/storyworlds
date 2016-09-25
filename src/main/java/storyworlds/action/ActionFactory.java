@@ -3,8 +3,8 @@ package storyworlds.action;
 public class ActionFactory {
     public static Actionable get(Action action) {
         switch (action) {
-            case ITEMS:
-                return new Items();
+            case STATUS:
+                return new Status();
             case LOOK:
                 return new Look();
             case MAP:

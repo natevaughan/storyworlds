@@ -2,8 +2,8 @@ package storyworlds.action;
 
 public enum Action {
     CREATE,
-    ERROR, 
-    ITEMS,
+    ERROR,
+    STATUS,
     LOOK, 
     MAP, 
     MOVE, 

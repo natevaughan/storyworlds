@@ -1,15 +1,17 @@
 package storyworlds.action.visitor;
 
+
 import storyworlds.action.Create;
 import storyworlds.action.Error;
-import storyworlds.action.Items;
+import storyworlds.action.Status;
 import storyworlds.action.Look;
-import storyworlds.action.Map;
 import storyworlds.action.Move;
 import storyworlds.action.Quit;
 import storyworlds.action.Take;
 import storyworlds.action.Use;
+import storyworlds.model.Direction;
 import storyworlds.model.Item;
+import storyworlds.model.Link;
 import storyworlds.model.Player;
 import storyworlds.service.message.ConsoleMessenger;
 import storyworlds.service.message.Messenger;
@@ -34,7 +36,8 @@ public class ActionMessageVisitor implements ActionVisitor {
         m.addLine("Unrecognized action: " + error.getMessage());
     }
 
-    public void visit(Items items) {
+    public void visit(Status status) {
+        describeLocation();
         if (player.listItems().isEmpty()) {
             m.addLine("No items");
         } else {
@@ -47,22 +50,30 @@ public class ActionMessageVisitor implements ActionVisitor {
     }
 
     public void visit(Look look) {
-        m.addLine(player.getLocation().getLink(look.getDirection()).getPassText(player));
+        m.addLine(player.getLocation().getLink(look.getDirection()).getDescription());
         m.send();
     }
 
-    public void visit(Map map) {
+    public void visit(storyworlds.action.Map map) {
         m.send("Map feature not yet supported");
 
     }
 
     public void visit(Move move) {
         m.addLine(move.getMessage());
+        describeLocation();
+        m.send();
+    }
+
+    private void describeLocation() {
         m.addLine(player.getLocation().getText());
+        java.util.Map<Direction, Link> links = player.getLocation().getLinks();
+        for (Direction direction : links.keySet()) {
+            m.addLine("To the " + direction + " is " + links.get(direction).getDescription());
+        }
         for (Item item : player.getLocation().listItems()) {
             m.addLine("There is a " + item.getName() + " here");
         }
-        m.send();
     }
 
     public void visit(Quit quit) {

@@ -2,7 +2,7 @@ package storyworlds.action.visitor;
 
 import storyworlds.action.Create;
 import storyworlds.action.Error;
-import storyworlds.action.Items;
+import storyworlds.action.Status;
 import storyworlds.action.Look;
 import storyworlds.action.Map;
 import storyworlds.action.Move;
@@ -10,11 +10,7 @@ import storyworlds.action.Quit;
 import storyworlds.action.Take;
 import storyworlds.action.Use;
 import storyworlds.action.parser.DirectionParser;
-import storyworlds.action.parser.ItemParser;
-import storyworlds.model.Item;
 import storyworlds.model.Player;
-
-import java.util.Collection;
 
 public class SecondaryParserVisitor implements ActionVisitor {
 
@@ -38,7 +34,7 @@ public class SecondaryParserVisitor implements ActionVisitor {
         
     }
 
-    public void visit(Items items) {
+    public void visit(Status items) {
         // no action
     }
 

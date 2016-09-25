@@ -1,11 +1,9 @@
 package storyworlds.action;
 
 import org.junit.Test;
+import storyworlds.factory.MapFactory;
 import storyworlds.gameplay.AbstractGameplayTest;
-import storyworlds.model.Direction;
-import storyworlds.model.Item;
-import storyworlds.model.Link;
-import storyworlds.model.Location;
+import storyworlds.model.*;
 import storyworlds.model.implementation.ImmutableLocation;
 import storyworlds.model.implementation.UsableItem;
 
@@ -31,4 +29,13 @@ public class TakeTest extends AbstractGameplayTest {
         assertTrue(Action.TAKE.equals(action));
     }
 
+    @Test
+    public void takeThenMoveTest() {
+        Location location = MapFactory.getStartMap();
+        user.setLocation(location);
+        executor.execute("take key");
+        executor.execute("use key");
+        executor.execute("move down");
+        assertTrue("user should move down", user.getLocation().equals(location.getLink(Direction.DOWN).getLinkedLocation(location)));
+    }
 }

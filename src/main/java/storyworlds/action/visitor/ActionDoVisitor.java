@@ -2,7 +2,7 @@ package storyworlds.action.visitor;
 
 import storyworlds.action.Create;
 import storyworlds.action.Error;
-import storyworlds.action.Items;
+import storyworlds.action.Status;
 import storyworlds.action.Look;
 import storyworlds.action.Map;
 import storyworlds.action.Move;
@@ -32,7 +32,7 @@ public class ActionDoVisitor implements ActionVisitor {
 
     }
 
-    public void visit(Items items) {
+    public void visit(Status status) {
         // TODO Auto-generated method stub
 
     }
@@ -76,7 +76,7 @@ public class ActionDoVisitor implements ActionVisitor {
     }
 
     public void visit(Take take) {
-        if (player.getLocation().takeItem(take.getItemName()) == null) {
+        if (player.getLocation().getItem(take.getItemName()) == null) {
             take.setSuccessful(false);
             take.setMessage("Item not found: " + take.getItemName());
             return;
