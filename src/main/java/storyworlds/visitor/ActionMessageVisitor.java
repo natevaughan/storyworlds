@@ -1,8 +1,8 @@
-package storyworlds.action.visitor;
+package storyworlds.visitor;
 
 
 import storyworlds.action.*;
-import storyworlds.action.Error;
+import storyworlds.model.Error;
 import storyworlds.model.Direction;
 import storyworlds.model.Item;
 import storyworlds.model.Link;

@@ -2,9 +2,9 @@ package storyworlds.gameplay;
 
 import storyworlds.action.ActionFactory;
 import storyworlds.action.Actionable;
-import storyworlds.action.visitor.ActionDoVisitor;
-import storyworlds.action.visitor.ActionMessageVisitor;
-import storyworlds.action.visitor.SecondaryParserVisitor;
+import storyworlds.visitor.ActionDoVisitor;
+import storyworlds.visitor.ActionMessageVisitor;
+import storyworlds.visitor.SecondaryParserVisitor;
 import storyworlds.model.Player;
 
 public class Executor {

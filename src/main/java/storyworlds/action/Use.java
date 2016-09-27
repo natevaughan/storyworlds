@@ -1,6 +1,6 @@
 package storyworlds.action;
 
-import storyworlds.action.visitor.ActionVisitor;
+import storyworlds.visitor.ActionVisitor;
 
 public class Use extends ItemAction {
 

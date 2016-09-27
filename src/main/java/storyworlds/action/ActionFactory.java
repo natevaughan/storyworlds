@@ -1,5 +1,7 @@
 package storyworlds.action;
 
+import storyworlds.model.Error;
+
 public class ActionFactory {
     public static Actionable get(String input) {
         Action action = parse(input);
@@ -21,7 +23,7 @@ public class ActionFactory {
             case USE:
                 return new Use();
             default:
-                return new storyworlds.action.Error("Unhandled action: " + input);
+                return new Error("Unhandled action: " + input);
         }
     }
 

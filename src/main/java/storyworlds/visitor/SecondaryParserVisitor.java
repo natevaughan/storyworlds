@@ -1,7 +1,7 @@
-package storyworlds.action.visitor;
+package storyworlds.visitor;
 
 import storyworlds.action.*;
-import storyworlds.action.Error;
+import storyworlds.model.Error;
 import storyworlds.action.parser.DirectionParser;
 import storyworlds.model.Direction;
 import storyworlds.model.Player;
@@ -24,6 +24,7 @@ public class SecondaryParserVisitor implements ActionVisitor {
     }
 
     public void visit(Create create) {
+
     }
     
     public void visit(Error error) {
