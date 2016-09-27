@@ -1,12 +1,11 @@
 package storyworlds.creator;
 
-import org.junit.Test;
 import org.junit.Before;
-import static org.junit.Assert.*;
-
+import org.junit.Test;
 import storyworlds.factory.MapFactory;
-import storyworlds.model.*;
-import storyworlds.model.implementation.*;
+import storyworlds.model.Location;
+import storyworlds.model.Player;
+import storyworlds.model.implementation.User;
 
 public class LocationCreatorTest {
 

@@ -21,18 +21,20 @@ public class Executor {
         this.actionMessageVisitor = new ActionMessageVisitor(player);
     }
 
-    public Actionable execute(String args) {
-        
-        String[] input = split(args);
+    public Actionable execute(String input) {
+
+        input = input.trim();
+
         String primary = null;
         String secondary = null;
 
-        if (input.length > 0) {
-            primary = input[0];
-        }
-        
-        if (input.length > 1) {
-            secondary = input[1];
+        if (!input.isEmpty()) {
+            if (input.contains(" ")) {
+                primary = input.substring(0, input.indexOf(" "));
+                secondary = input.substring(input.indexOf(" ") + 1);
+            } else {
+                primary = input;
+            }
         }
 
         Actionable actionable = ActionFactory.get(primary);
@@ -46,9 +48,5 @@ public class Executor {
         actionable.accept(actionMessageVisitor);
         
         return actionable;
-    }
-
-    public static String[] split(String input) {
-        return input.split("[ ]+");
     }
 }

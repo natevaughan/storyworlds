@@ -27,6 +27,9 @@ public class SecondaryParserVisitor implements ActionVisitor {
     }
     
     public void visit(Error error) {
+        if (secondary != null) {
+            error.setMessage(error.getMessage() + ", unreconginzed modifier: " + secondary);
+        }
     }
 
     public void visit(Status status) {
@@ -36,9 +39,8 @@ public class SecondaryParserVisitor implements ActionVisitor {
     public void visit(Move move) {
         if (Direction.ERROR.equals(dirp.parse(secondary))) {
             setUnrecognizedModifier(move);
-        } else {
-            move.setDirection(dirp.parse(secondary));
         }
+        move.setDirection(dirp.parse(secondary));
     }
     public void visit(Map map) {
         setUnrecognizedModifier(map);
@@ -46,9 +48,6 @@ public class SecondaryParserVisitor implements ActionVisitor {
 
     public void visit(Take take) {
         take.setItemName(secondary);
-        if (player.getLocation().getItem(secondary) != null) {
-            take.setSuccessful(true);
-        }
     }
 
     public void visit(Quit quit) {

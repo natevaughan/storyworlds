@@ -1,13 +1,7 @@
 package storyworlds.action.visitor;
 
-import storyworlds.action.Create;
+import storyworlds.action.*;
 import storyworlds.action.Error;
-import storyworlds.action.Status;
-import storyworlds.action.Map;
-import storyworlds.action.Move;
-import storyworlds.action.Quit;
-import storyworlds.action.Take;
-import storyworlds.action.Use;
 import storyworlds.model.Direction;
 import storyworlds.model.Item;
 import storyworlds.model.Link;
@@ -32,16 +26,15 @@ public class ActionDoVisitor implements ActionVisitor {
     }
 
     public void visit(Error error) {
-        error.setMessage("Error");
+
     }
 
     public void visit(Status status) {
-        status.setMessage("Selfcheck");
+        status.setMessage("Status");
         status.setSuccessful(true);
     }
 
     public void visit(Map map) {
-
     }
 
     public void visit(Move move) {
@@ -71,24 +64,29 @@ public class ActionDoVisitor implements ActionVisitor {
 
     public void visit(Quit quit) {
         quit.setSuccessful(true);
+        quit.setMessage("Thanks for playing");
     }
 
     public void visit(Take take) {
         if (player.getLocation().getItem(take.getItemName()) == null) {
-            take.setSuccessful(false);
             take.setMessage("Item not found: " + take.getItemName());
             return;
         }
+        take.setSuccessful(true);
         player.addItem(player.getLocation().takeItem(take.getItemName()));
     }
 
     public void visit(Use use) {
-        if (player.getItem(use.getItemName()) != null) {
-            player.listItems().stream().forEach(item -> item.setActive(false));
-            Item item = player.getItem(use.getItemName());
-            item.setActive(true);
-            use.setSuccessful(true);
-            use.setMessage(item.getUseMessage());
+        if (player.getItem(use.getItemName()) == null) {
+            use.setMessage("You don't have item: " + use.getItemName());
+            return;
         }
+
+        use.setSuccessful(true);
+
+        player.listItems().stream().forEach(item -> item.setActive(false));
+        Item item = player.getItem(use.getItemName());
+        item.setActive(true);
+        use.setMessage(item.getUseMessage());
     }
 }

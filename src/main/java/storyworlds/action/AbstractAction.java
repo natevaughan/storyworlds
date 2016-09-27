@@ -3,7 +3,7 @@ package storyworlds.action;
 public abstract class AbstractAction implements Actionable {
 
     protected String message;
-    protected boolean successful = true;
+    protected boolean successful = false;
     private Action action;
 
     public String getMessage() {

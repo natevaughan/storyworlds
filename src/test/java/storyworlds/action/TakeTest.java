@@ -3,7 +3,10 @@ package storyworlds.action;
 import org.junit.Test;
 import storyworlds.factory.MapFactory;
 import storyworlds.gameplay.AbstractGameplayTest;
-import storyworlds.model.*;
+import storyworlds.model.Direction;
+import storyworlds.model.Item;
+import storyworlds.model.Link;
+import storyworlds.model.Location;
 import storyworlds.model.implementation.ImmutableLocation;
 import storyworlds.model.implementation.UsableItem;
 

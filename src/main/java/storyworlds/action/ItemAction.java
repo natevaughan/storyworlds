@@ -1,7 +1,5 @@
 package storyworlds.action;
 
-import storyworlds.model.Item;
-
 /**
  * Created by nvaughan on 9/9/2016.
  */

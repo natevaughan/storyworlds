@@ -1,10 +1,10 @@
 package storyworlds.gameplay;
 
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
 import storyworlds.action.Action;
 import storyworlds.action.ActionFactory;
+
+import static org.junit.Assert.assertTrue;
 
 
 public class ActionParserTest {

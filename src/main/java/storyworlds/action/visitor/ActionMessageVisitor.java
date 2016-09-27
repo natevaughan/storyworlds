@@ -1,13 +1,8 @@
 package storyworlds.action.visitor;
 
 
-import storyworlds.action.Create;
+import storyworlds.action.*;
 import storyworlds.action.Error;
-import storyworlds.action.Status;
-import storyworlds.action.Move;
-import storyworlds.action.Quit;
-import storyworlds.action.Take;
-import storyworlds.action.Use;
 import storyworlds.model.Direction;
 import storyworlds.model.Item;
 import storyworlds.model.Link;
@@ -32,15 +27,15 @@ public class ActionMessageVisitor implements ActionVisitor {
     }
 
     public void visit(Error error) {
-        m.addLine("Unrecognized action: " + error.getMessage());
+        m.send(error.getMessage());
     }
 
     public void visit(Status status) {
         describeLocation();
         if (player.listItems().isEmpty()) {
-            m.addLine("No items");
+            m.addLine("You have no items");
         } else {
-            m.addLine("Current inventory: ");
+            m.addLine("Your inventory: ");
             for (Item item : this.player.listItems()) {
                 m.addLine(item.getName());
             }
@@ -50,12 +45,13 @@ public class ActionMessageVisitor implements ActionVisitor {
 
     public void visit(storyworlds.action.Map map) {
         m.send("Map feature not yet supported");
-
     }
 
     public void visit(Move move) {
         m.addLine(move.getMessage());
-        describeLocation();
+        if (move.isSuccessful()) {
+            describeLocation();
+        }
         m.send();
     }
 

@@ -4,7 +4,10 @@ import storyworlds.constants.GameTextConstants;
 import storyworlds.model.Direction;
 import storyworlds.model.Item;
 import storyworlds.model.Location;
-import storyworlds.model.implementation.*;
+import storyworlds.model.implementation.BlockableLink;
+import storyworlds.model.implementation.DirectionalLink;
+import storyworlds.model.implementation.ImmutableLocation;
+import storyworlds.model.implementation.UsableItem;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,13 +1,12 @@
 
-package storyworlds.model.implementation; 
+package storyworlds.model.implementation;
 
-import java.util.*;
+import storyworlds.model.*;
 
-import storyworlds.model.Direction;
-import storyworlds.model.Item;
-import storyworlds.model.Link;
-import storyworlds.model.Location;
-import storyworlds.model.Player;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 public class ImmutableLocation implements Location { 
 
