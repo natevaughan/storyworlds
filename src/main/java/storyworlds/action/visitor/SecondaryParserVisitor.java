@@ -1,20 +1,19 @@
 package storyworlds.action.visitor;
 
-import storyworlds.action.Create;
+import storyworlds.action.*;
 import storyworlds.action.Error;
-import storyworlds.action.Status;
-import storyworlds.action.Look;
-import storyworlds.action.Map;
-import storyworlds.action.Move;
-import storyworlds.action.Quit;
-import storyworlds.action.Take;
-import storyworlds.action.Use;
 import storyworlds.action.parser.DirectionParser;
+import storyworlds.model.Direction;
 import storyworlds.model.Player;
 
+/**
+ * Responsibilities:
+ * -Parsing directions or items
+ * -Noting unrecognized modifiers for valid actions that do not require secondary
+ */
 public class SecondaryParserVisitor implements ActionVisitor {
 
-    private String secondary;
+    private String secondary = null;
 
     private final Player player;
 
@@ -25,31 +24,24 @@ public class SecondaryParserVisitor implements ActionVisitor {
     }
 
     public void visit(Create create) {
-        // TODO Auto-generated method stub
-        
     }
     
     public void visit(Error error) {
-        // TODO Auto-generated method stub
-        
     }
 
-    public void visit(Status items) {
-        // no action
+    public void visit(Status status) {
+        setUnrecognizedModifier(status);
     }
 
     public void visit(Move move) {
-        move.setDirection(dirp.parse(secondary));
+        if (Direction.ERROR.equals(dirp.parse(secondary))) {
+            setUnrecognizedModifier(move);
+        } else {
+            move.setDirection(dirp.parse(secondary));
+        }
     }
-
-    public void visit(Look look) {
-        look.setDirection(dirp.parse(secondary));
-        
-    }
-
     public void visit(Map map) {
-        // TODO Auto-generated method stub
-        
+        setUnrecognizedModifier(map);
     }
 
     public void visit(Take take) {
@@ -60,18 +52,20 @@ public class SecondaryParserVisitor implements ActionVisitor {
     }
 
     public void visit(Quit quit) {
-        // TODO Auto-generated method stub
-        
+        setUnrecognizedModifier(quit);
     }
 
     public void visit(Use use) {
         use.setItemName(secondary);
-        if (player.getItem(secondary) != null) {
-            use.setSuccessful(true);
-        }
     }
 
     public void setSecondary(String secondary) {
         this.secondary = secondary;
+    }
+
+    private void setUnrecognizedModifier(Actionable actionable) {
+        if (secondary != null) {
+            actionable.setMessage("Unreconginzed modifier: " + secondary);
+        }
     }
 }

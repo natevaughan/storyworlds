@@ -4,6 +4,7 @@ public abstract class AbstractAction implements Actionable {
 
     protected String message;
     protected boolean successful = true;
+    private Action action;
 
     public String getMessage() {
         return message;

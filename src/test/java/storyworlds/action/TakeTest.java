@@ -13,9 +13,6 @@ import java.util.HashMap;
 
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by nvaughan on 9/23/2016.
- */
 public class TakeTest extends AbstractGameplayTest {
 
     @Test
@@ -25,8 +22,8 @@ public class TakeTest extends AbstractGameplayTest {
         items.add(item);
         Location location = new ImmutableLocation("", items, new HashMap<Direction, Link>());
         user.setLocation(location);
-        Action action = executor.execute("take foo");
-        assertTrue(Action.TAKE.equals(action));
+        Actionable actionable = executor.execute("take foo");
+        assertTrue(Take.class.equals(actionable.getClass()));
     }
 
     @Test

@@ -1,9 +1,7 @@
 package storyworlds.gameplay;
 
-import storyworlds.action.Action;
 import storyworlds.action.ActionFactory;
 import storyworlds.action.Actionable;
-import storyworlds.action.parser.ActionParser;
 import storyworlds.action.visitor.ActionDoVisitor;
 import storyworlds.action.visitor.ActionMessageVisitor;
 import storyworlds.action.visitor.SecondaryParserVisitor;
@@ -12,8 +10,7 @@ import storyworlds.model.Player;
 public class Executor {
     
 //  @Autowired Environment env;
-    
-    private final ActionParser actionParser;
+
     private final ActionDoVisitor actionDoVisitor;
     private final ActionMessageVisitor actionMessageVisitor;
     private final SecondaryParserVisitor secondaryParser;
@@ -22,10 +19,9 @@ public class Executor {
         this.actionDoVisitor = new ActionDoVisitor(player);
         secondaryParser = new SecondaryParserVisitor(player);
         this.actionMessageVisitor = new ActionMessageVisitor(player);
-        this.actionParser = new ActionParser();
     }
 
-    public Action execute(String args) {
+    public Actionable execute(String args) {
         
         String[] input = split(args);
         String primary = null;
@@ -39,9 +35,7 @@ public class Executor {
             secondary = input[1];
         }
 
-        Action action = actionParser.parse(primary);
-        
-        Actionable actionable = ActionFactory.get(action);
+        Actionable actionable = ActionFactory.get(primary);
 
         secondaryParser.setSecondary(secondary);
 
@@ -51,7 +45,7 @@ public class Executor {
         
         actionable.accept(actionMessageVisitor);
         
-        return action;
+        return actionable;
     }
 
     public static String[] split(String input) {

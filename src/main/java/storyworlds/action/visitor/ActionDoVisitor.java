@@ -3,7 +3,6 @@ package storyworlds.action.visitor;
 import storyworlds.action.Create;
 import storyworlds.action.Error;
 import storyworlds.action.Status;
-import storyworlds.action.Look;
 import storyworlds.action.Map;
 import storyworlds.action.Move;
 import storyworlds.action.Quit;
@@ -14,6 +13,12 @@ import storyworlds.model.Item;
 import storyworlds.model.Link;
 import storyworlds.model.Player;
 
+/**
+ * Responsibilities
+ * -Executing action
+ * -Setting action success
+ * -Setting message
+ */
 public class ActionDoVisitor implements ActionVisitor {
 
     private Player player;
@@ -23,26 +28,19 @@ public class ActionDoVisitor implements ActionVisitor {
     }
 
     public void visit(Create create) {
-        // TODO Auto-generated method stub
 
     }
 
     public void visit(Error error) {
-        // TODO Auto-generated method stub
-
+        error.setMessage("Error");
     }
 
     public void visit(Status status) {
-        // TODO Auto-generated method stub
-
-    }
-
-    public void visit(Look look) {
-        // TODO Auto-generated method stub
+        status.setMessage("Selfcheck");
+        status.setSuccessful(true);
     }
 
     public void visit(Map map) {
-        // TODO Auto-generated method stub
 
     }
 

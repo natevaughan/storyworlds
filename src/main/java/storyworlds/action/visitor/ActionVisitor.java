@@ -3,7 +3,6 @@ package storyworlds.action.visitor;
 import storyworlds.action.Create;
 import storyworlds.action.Error;
 import storyworlds.action.Status;
-import storyworlds.action.Look;
 import storyworlds.action.Map;
 import storyworlds.action.Move;
 import storyworlds.action.Quit;
@@ -15,7 +14,6 @@ public interface ActionVisitor {
     public void visit(Error error);
     public void visit(Status items);
     public void visit(Move move);
-    public void visit(Look look);
     public void visit(Map map);
     public void visit(Take take);
     public void visit(Quit quit);

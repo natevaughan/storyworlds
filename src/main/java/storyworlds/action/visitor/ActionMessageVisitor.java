@@ -4,7 +4,6 @@ package storyworlds.action.visitor;
 import storyworlds.action.Create;
 import storyworlds.action.Error;
 import storyworlds.action.Status;
-import storyworlds.action.Look;
 import storyworlds.action.Move;
 import storyworlds.action.Quit;
 import storyworlds.action.Take;
@@ -46,11 +45,6 @@ public class ActionMessageVisitor implements ActionVisitor {
                 m.addLine(item.getName());
             }
         }
-        m.send();
-    }
-
-    public void visit(Look look) {
-        m.addLine(player.getLocation().getLink(look.getDirection()).getDescription());
         m.send();
     }
 

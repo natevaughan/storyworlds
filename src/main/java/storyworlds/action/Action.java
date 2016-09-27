@@ -4,9 +4,9 @@ public enum Action {
     CREATE,
     ERROR,
     STATUS,
-    LOOK, 
-    MAP, 
-    MOVE, 
+    LOOK,
+    MAP,
+    MOVE,
     QUIT,
     TAKE,
     USE
