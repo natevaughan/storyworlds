@@ -10,6 +10,8 @@ public class ActionFactory {
                 return new Create();
             case EDIT:
                 return new Edit();
+            case HELP:
+                return new Help();
             case MAP:
                 return new Map();
             case MOVE:

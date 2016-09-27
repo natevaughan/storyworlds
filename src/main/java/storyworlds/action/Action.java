@@ -4,11 +4,11 @@ public enum Action {
     CREATE,
     ERROR,
     EDIT,
-    STATUS,
-    LOOK,
+    HELP,
     MAP,
     MOVE,
     QUIT,
+    STATUS,
     TAKE,
     USE
 }

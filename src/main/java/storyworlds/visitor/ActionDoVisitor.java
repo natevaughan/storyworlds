@@ -33,6 +33,10 @@ public class ActionDoVisitor implements ActionVisitor {
 
     }
 
+    public void visit(Help help) {
+        help.setSuccessful(true);
+    }
+
     public void visit(Status status) {
         status.setMessage("Status");
         status.setSuccessful(true);

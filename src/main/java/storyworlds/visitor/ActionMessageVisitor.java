@@ -34,6 +34,14 @@ public class ActionMessageVisitor implements ActionVisitor {
 
     }
 
+    public void visit(Help help) {
+        m.addLine("Valid actions: ");
+        for (Action action : Action.values()) {
+            m.addLine(action.toString());
+        }
+        m.send();
+    }
+
     public void visit(Status status) {
         describeLocation();
         if (player.listItems().isEmpty()) {
