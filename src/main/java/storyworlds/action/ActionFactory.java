@@ -4,14 +4,18 @@ public class ActionFactory {
     public static Actionable get(String input) {
         Action action = parse(input);
         switch (action) {
-            case STATUS:
-                return new Status();
+            case CREATE:
+                return new Create();
+            case EDIT:
+                return new Edit();
             case MAP:
                 return new Map();
             case MOVE:
                 return new Move();
             case QUIT:
                 return new Quit();
+            case STATUS:
+                return new Status();
             case TAKE:
                 return new Take();
             case USE:

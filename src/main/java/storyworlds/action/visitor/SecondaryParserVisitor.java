@@ -32,6 +32,10 @@ public class SecondaryParserVisitor implements ActionVisitor {
         }
     }
 
+    public void visit(Edit edit) {
+
+    }
+
     public void visit(Status status) {
         setUnrecognizedModifier(status);
     }

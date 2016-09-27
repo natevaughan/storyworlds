@@ -2,26 +2,35 @@ package storyworlds.creator;
 
 import org.junit.Before;
 import org.junit.Test;
+import storyworlds.action.Actionable;
+import storyworlds.action.Create;
+import storyworlds.action.Edit;
 import storyworlds.factory.MapFactory;
+import storyworlds.gameplay.AbstractMapGameplayTest;
 import storyworlds.model.Location;
 import storyworlds.model.Player;
 import storyworlds.model.implementation.User;
 
-public class LocationCreatorTest {
+import static org.junit.Assert.assertTrue;
 
-    private Player user;
-    private Location location;
-
-    @Before
-    public void setup() {
-        user = new User("foo");
-        location = MapFactory.getBlankLocation();
-        user.setLocation(location);
-    }
+public class LocationCreatorTest extends AbstractMapGameplayTest {
 
     @Test
     public void editExistingLocation() {
-        // todo
+        Actionable a = executor.execute("edit location");
+        assertTrue("Actionable should be Edit", Edit.class.equals(a.getClass()));
+    }
+
+    @Test
+    public void createLocation() {
+        Actionable a = executor.execute("create location");
+        assertTrue("Actionable should be Create", Create.class.equals(a.getClass()));
+
+    }
+
+    @Test
+    public void createLink() {
+
     }
 }
 

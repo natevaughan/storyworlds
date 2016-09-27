@@ -29,6 +29,10 @@ public class ActionDoVisitor implements ActionVisitor {
 
     }
 
+    public void visit(Edit edit) {
+
+    }
+
     public void visit(Status status) {
         status.setMessage("Status");
         status.setSuccessful(true);

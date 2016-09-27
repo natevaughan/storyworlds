@@ -30,6 +30,10 @@ public class ActionMessageVisitor implements ActionVisitor {
         m.send(error.getMessage());
     }
 
+    public void visit(Edit edit) {
+
+    }
+
     public void visit(Status status) {
         describeLocation();
         if (player.listItems().isEmpty()) {
