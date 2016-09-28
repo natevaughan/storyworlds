@@ -4,9 +4,9 @@ public interface Messenger {
 
     public void addLine(String text);
 
-    public void send();
+    public void sendMessage();
 
-    public void send(String text);
+    public void sendMessage(String message);
 
-    public String getLine();
+    public Message getMessage();
 }

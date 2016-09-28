@@ -2,23 +2,21 @@ package storyworlds.visitor;
 
 
 import storyworlds.action.*;
+import storyworlds.model.*;
 import storyworlds.model.Error;
-import storyworlds.model.Direction;
-import storyworlds.model.Item;
-import storyworlds.model.Link;
-import storyworlds.model.Player;
 import storyworlds.service.message.ConsoleMessenger;
 import storyworlds.service.message.Messenger;
 
 public class ActionMessageVisitor implements ActionVisitor {
 
 //    Messenger messenger = getBean(env.getProperty(MESSENGER_TYPE));
-    Messenger m = new ConsoleMessenger();
+    private Messenger m;
     
     private Player player;
 
     public ActionMessageVisitor(Player player) {
         this.player = player;
+        m = new ConsoleMessenger(player);
     }
 
     public void visit(Create create) {
@@ -27,7 +25,7 @@ public class ActionMessageVisitor implements ActionVisitor {
     }
 
     public void visit(Error error) {
-        m.send(error.getMessage());
+        m.sendMessage(error.getMessage());
     }
 
     public void visit(Edit edit) {
@@ -39,7 +37,7 @@ public class ActionMessageVisitor implements ActionVisitor {
         for (Action action : Action.values()) {
             m.addLine(action.toString());
         }
-        m.send();
+        m.sendMessage();
     }
 
     public void visit(Status status) {
@@ -52,11 +50,11 @@ public class ActionMessageVisitor implements ActionVisitor {
                 m.addLine(item.getName());
             }
         }
-        m.send();
+        m.sendMessage();
     }
 
     public void visit(storyworlds.action.Map map) {
-        m.send("Map feature not yet supported");
+        m.sendMessage("Map feature not yet supported");
     }
 
     public void visit(Move move) {
@@ -64,12 +62,12 @@ public class ActionMessageVisitor implements ActionVisitor {
         if (move.isSuccessful()) {
             describeLocation();
         }
-        m.send();
+        m.sendMessage();
     }
 
     public void visit(Quit quit) {
         m.addLine("Thanks for playing.");
-        m.send();
+        m.sendMessage();
     }
 
     public void visit(Take take) {
@@ -78,7 +76,7 @@ public class ActionMessageVisitor implements ActionVisitor {
         } else {
             m.addLine("Unable to take the " + take.getItemName());
         }
-        m.send();
+        m.sendMessage();
     }
 
     public void visit(Use use) {
@@ -87,7 +85,7 @@ public class ActionMessageVisitor implements ActionVisitor {
         } else {
             m.addLine("You don't have a " + use.getItemName());
         }
-        m.send();
+        m.sendMessage();
     }
 
     private void describeLocation() {

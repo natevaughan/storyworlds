@@ -5,6 +5,7 @@ import org.junit.Test;
 import storyworlds.action.Actionable;
 import storyworlds.action.Create;
 import storyworlds.gameplay.AbstractMapGameplayTest;
+import storyworlds.service.message.Message;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -15,7 +16,8 @@ public class LocationCreatorTest extends AbstractMapGameplayTest {
 
     @Test
     public void createLocation() {
-        Actionable a = executor.execute("create location west");
+        setup();
+        Actionable a = messageService.process(new Message(user, "create location west"));
         assertTrue("Actionable should be Createables", Create.class.equals(a.getClass()));
         assertTrue("Createables should be successful", a.isSuccessful());
     }
@@ -23,14 +25,14 @@ public class LocationCreatorTest extends AbstractMapGameplayTest {
     @Test
     public void overwriteExistingLocation() {
         setup();
-        Actionable a = executor.execute("create location north");
+        Actionable a = messageService.process(new Message(user, "create location north"));
         assertFalse("Createables should fail", a.isSuccessful());
 
     }
 
     @Test
     public void createBadLocation() {
-        Actionable a = executor.execute("create location foo");
+        Actionable a = messageService.process(new Message(user, "create location foo"));
         assertTrue("Actionable should be Createables", Create.class.equals(a.getClass()));
         assertFalse("Createables should be successful", a.isSuccessful());
     }

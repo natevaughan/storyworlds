@@ -47,7 +47,6 @@ public class ActionDoVisitor implements ActionVisitor {
 
     public void visit(Move move) {
 
-        move.setSuccessful(false);
         if (Direction.ERROR.equals(move.getDirection())) {
             move.setMessage("Invalid direction");
             return;
@@ -73,6 +72,7 @@ public class ActionDoVisitor implements ActionVisitor {
     public void visit(Quit quit) {
         quit.setSuccessful(true);
         quit.setMessage("Thanks for playing");
+        System.exit(1);
     }
 
     public void visit(Take take) {
