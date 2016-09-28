@@ -1,8 +1,8 @@
 package storyworlds.model;
 
 import storyworlds.action.AbstractAction;
-import storyworlds.visitor.ActionVisitor;
 import storyworlds.create.Creatable;
+import storyworlds.visitor.ActionVisitor;
 
 public class Error extends AbstractAction implements Creatable{
 

@@ -5,6 +5,6 @@ package storyworlds.create;
  */
 public enum Createables {
     LOCATION,
-    DIRECTIONAL_LINK,
+    LINK,
     ERROR
 }

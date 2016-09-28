@@ -1,15 +1,14 @@
 package storyworlds.create;
 
-import storyworlds.model.Error;
-
 public class CreatableFactory {
 
-    public static Creatable get(String input) {
+    public static Createables get(String input) {
         Createables createables = parse(input);
-        switch (createables) {
-            default:
-                return new Error("Unhandled createables: " + input);
-        }
+//        switch (createables) {
+//            default:
+//                return new Error("Unhandled createables: " + input);
+//        }
+        return createables;
     }
 
     public static Createables parse(String input) {

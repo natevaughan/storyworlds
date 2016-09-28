@@ -1,9 +1,10 @@
 package storyworlds.visitor;
 
 import storyworlds.action.*;
-import storyworlds.model.Error;
 import storyworlds.action.parser.DirectionParser;
+import storyworlds.create.CreatableFactory;
 import storyworlds.model.Direction;
+import storyworlds.model.Error;
 import storyworlds.model.Player;
 
 /**
@@ -24,7 +25,13 @@ public class SecondaryParserVisitor implements ActionVisitor {
     }
 
     public void visit(Create create) {
-
+        String[] createArgs = secondary.split("\\s+");
+        if (createArgs.length > 0) {
+            create.setCreatable(CreatableFactory.parse(createArgs[0]));
+        }
+        if (createArgs.length > 1) {
+            create.setDirection(dirp.parse(createArgs[1]));
+        }
     }
     
     public void visit(Error error) {

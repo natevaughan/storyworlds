@@ -3,7 +3,6 @@ package storyworlds.service.message;
 import storyworlds.action.ActionFactory;
 import storyworlds.action.Actionable;
 import storyworlds.visitor.ActionDoVisitor;
-import storyworlds.visitor.ActionMessageVisitor;
 import storyworlds.visitor.SecondaryParserVisitor;
 
 public class MessageService {
@@ -12,7 +11,6 @@ public class MessageService {
         System.out.println("Message " + message.getText() + " received from " + message.getPlayer().getName() + " at " + message.getTime().toString());
 
         ActionDoVisitor actionDoVisitor = new ActionDoVisitor(message.getPlayer());
-        ActionMessageVisitor actionMessageVisitor = new ActionMessageVisitor(message.getPlayer());
         SecondaryParserVisitor secondaryParser = new SecondaryParserVisitor(message.getPlayer());
 
         String input = message.getText().trim();
@@ -36,8 +34,6 @@ public class MessageService {
         actionable.accept(secondaryParser);
 
         actionable.accept(actionDoVisitor);
-
-        actionable.accept(actionMessageVisitor);
 
         return actionable;
     }

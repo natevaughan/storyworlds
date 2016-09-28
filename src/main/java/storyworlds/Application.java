@@ -1,11 +1,7 @@
 package storyworlds;
 
-import storyworlds.action.ActionFactory;
-import storyworlds.action.Actionable;
 import storyworlds.constants.GameTextConstants;
 import storyworlds.factory.MapFactory;
-import storyworlds.gameplay.Executor;
-import storyworlds.model.Error;
 import storyworlds.model.Location;
 import storyworlds.model.Player;
 import storyworlds.model.implementation.User;
