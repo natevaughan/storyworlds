@@ -7,7 +7,7 @@ import storyworlds.visitor.ActionVisitor;
 public class Error extends AbstractAction implements Creatable{
 
     public Error(String message) {
-        this.message = message;
+        this.message.addLine(message);
     }
 
     public void accept(ActionVisitor visitor) {

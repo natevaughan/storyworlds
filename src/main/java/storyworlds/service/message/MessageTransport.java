@@ -53,7 +53,6 @@ public class MessageTransport {
     }
 
     public Actionable getResponse() {
-        this.actionable.setMessage(this.message);
         return actionable;
     };
 }

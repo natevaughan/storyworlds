@@ -15,8 +15,8 @@ public class MessageService {
             transport.accept(new SecondaryMessageParser());
             transport.accept(new MessageExecutor());
         } catch (InvalidActionException e) {
-            storyworlds.action.Error error = new storyworlds.action.Error();
-            error.setMessage(new Message(message.getPlayer(), e.getMessage()));
+            // this is not the way to handle this
+            storyworlds.action.Error error = new storyworlds.action.Error(e.getMessage());
         }
 
         return transport.getResponse();

@@ -1,6 +1,7 @@
 package storyworlds.visitor;
 
 import storyworlds.action.*;
+import storyworlds.action.Error;
 import storyworlds.action.parser.DirectionParser;
 import storyworlds.create.CreatableFactory;
 import storyworlds.model.Direction;
@@ -25,12 +26,13 @@ public class SecondaryParserVisitor implements ActionVisitor {
             create.setDirection(dirp.parse(createArgs[1]));
         }
     }
-//
-//    public void visit(Error error) {
-//        if (secondary != null) {
-//            error.getMessage().addLine("Unreconginzed modifier: " + secondary);
-//        }
-//    }
+
+
+    public void visit(Error error) {
+        if (secondary != null) {
+            error.getMessage().addLine("Unreconginzed modifier: " + secondary);
+        }
+    }
 
     public void visit(Edit edit) {
         String[] createArgs = secondary.split("\\s+");

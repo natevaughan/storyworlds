@@ -12,7 +12,7 @@ import storyworlds.service.message.MessageService;
 
 import java.util.Scanner;
 
-public class ConsoleInterface implements GameTextConstants {
+public class ConsoleIO implements GameTextConstants {
 
     private StringBuilder sb = new StringBuilder();
     MessageService messageService = new MessageService();
@@ -20,7 +20,6 @@ public class ConsoleInterface implements GameTextConstants {
     private Player player;
 
     public void run() {
-        Player system = new User("system");
         sendMessage(WELCOME_MESSAGE);
         String name = getMessage();
         Location start = MapFactory.getStartMap();
@@ -29,7 +28,8 @@ public class ConsoleInterface implements GameTextConstants {
         Actionable response = messageService.process(new Message(player, "status"));
         while (!Quit.class.equals(response.getClass())) {
             sendMessage("What's your next move?");
-            messageService.process(new Message(player, getMessage()));
+            response = messageService.process(new Message(player, getMessage()));
+            sendMessage(response.getMessage().getText());
         }
     }
 

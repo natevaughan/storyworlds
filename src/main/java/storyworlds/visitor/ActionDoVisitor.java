@@ -1,19 +1,18 @@
 package storyworlds.visitor;
 
 import storyworlds.action.*;
-import storyworlds.create.Createables;
-import storyworlds.create.LocationFactory;
-import storyworlds.model.*;
 import storyworlds.action.Error;
-import storyworlds.model.implementation.Links;
-import storyworlds.service.message.ConsoleMessenger;
-import storyworlds.service.message.Messenger;
+import storyworlds.create.Createables;
+import storyworlds.model.Direction;
+import storyworlds.model.Item;
+import storyworlds.model.Link;
+import storyworlds.service.message.Message;
 
 /**
  * Responsibilities
  * -Executing action
  * -Setting action success
- * -sending message
+ * -Setting message text
  */
 public class ActionDoVisitor implements ActionVisitor {
 
@@ -41,7 +40,7 @@ public class ActionDoVisitor implements ActionVisitor {
     }
 
     public void visit(Error error) {
-        m.sendMessage(error.getMessage());
+//        error.getMessage().addLine(error.getMessage());
     }
 
     public void visit(Edit edit) {
@@ -49,101 +48,91 @@ public class ActionDoVisitor implements ActionVisitor {
     }
 
     public void visit(Help help) {
-        m.addLine("Valid actions: ");
+        help.getMessage().addLine("Valid actions: ");
         for (Action action : Action.values()) {
-            m.addLine(action.toString());
+            help.getMessage().addLine(action.toString());
         }
-        m.sendMessage();
         help.setSuccessful(true);
     }
 
     public void visit(Status status) {
-        describeLocation();
-        if (player.listItems().isEmpty()) {
-            m.addLine("You have no items");
+        describeLocation(status.getMessage());
+        if (status.getMessage().getPlayer().listItems().isEmpty()) {
+            status.getMessage().addLine("You have no items");
         } else {
-            m.addLine("Your inventory: ");
-            for (Item item : this.player.listItems()) {
-                m.addLine(item.getName());
+            status.getMessage().addLine("Your inventory: ");
+            for (Item item : status.getMessage().getPlayer().listItems()) {
+                status.getMessage().addLine(item.getName());
             }
         }
-        m.sendMessage();
         status.setSuccessful(true);
     }
 
     public void visit(Map map) {
-        m.sendMessage("Map feature not yet supported");
+        map.getMessage().addLine("Map feature not yet supported");
     }
 
     public void visit(Move move) {
 
         if (Direction.ERROR.equals(move.getDirection())) {
-            move.setMessage("Invalid direction");
+            move.getMessage().addLine("Invalid direction");
             return;
         }
 
-        Link link = player.getLocation().getLink(move.getDirection());
+        Link link = move.getMessage().getPlayer().getLocation().getLink(move.getDirection());
 
         if (link == null) {
-            move.setMessage("Nothing to the " + move.getDirection());
+            move.getMessage().addLine("Nothing to the " + move.getDirection());
             return;
         }
 
-        move.setMessage(link.getPassText(player));
+        move.getMessage().addLine(move.getMessage().getPlayer().getLocation().getLink(move.getDirection()).getPassText(move.getMessage().getPlayer()));
 
-        if (!link.isPassable(player)) {
+        if (!link.isPassable(move.getMessage().getPlayer())) {
             return;
         }
 
         move.setSuccessful(true);
-        player.setLocation(player.getLocation().getLink(move.getDirection()).getLinkedLocation(player.getLocation()));
 
-        m.addLine(move.getMessage());
-        describeLocation();
-        m.sendMessage();
-
+        move.getMessage().getPlayer().setLocation(move.getMessage().getPlayer().getLocation().getLink(move.getDirection()).getLinkedLocation(move.getMessage().getPlayer().getLocation()));
+        describeLocation(move.getMessage());
     }
 
     public void visit(Quit quit) {
         quit.setSuccessful(true);
-        m.addLine("Thanks for playing.");
-        m.sendMessage();
-        System.exit(1);
+        quit.getMessage().addLine("Thanks for playing.");
     }
 
     public void visit(Take take) {
-        if (player.getLocation().getItem(take.getItemName()) == null) {
-            take.setMessage("Item not found: " + take.getItemName());
-            m.addLine("Unable to take the " + take.getItemName());
+        if (take.getMessage().getPlayer().getLocation().getItem(take.getItemName()) == null) {
+            take.getMessage().addLine("Item not found: " + take.getItemName());
             return;
         }
         take.setSuccessful(true);
-        player.addItem(player.getLocation().takeItem(take.getItemName()));
-        m.addLine("You take the " + take.getItemName());
-        m.sendMessage();
+        take.getMessage().getPlayer().addItem(take.getMessage().getPlayer().getLocation().takeItem(take.getItemName()));
+        take.getMessage().addLine("You take the " + take.getItemName());
     }
 
     public void visit(Use use) {
-        if (player.getItem(use.getItemName()) == null) {
-            m.addLine("You don't have a " + use.getItemName());
+        if (use.getMessage().getPlayer().getItem(use.getItemName()) == null) {
+            use.getMessage().addLine("You don't have a " + use.getItemName());
             return;
         }
 
         use.setSuccessful(true);
-        player.listItems().stream().forEach(item -> item.setActive(false));
-        Item item = player.getItem(use.getItemName());
+        use.getMessage().getPlayer().listItems().stream().forEach(item -> item.setActive(false));
+        Item item = use.getMessage().getPlayer().getItem(use.getItemName());
         item.setActive(true);
-        m.addLine(item.getUseMessage());
-        m.sendMessage();
+        use.getMessage().addLine(item.getUseMessage());
     }
 
-    private void describeLocation() {
-        m.addLine(player.getLocation().getText());
-        java.util.Map<Direction, Link> links = player.getLocation().getLinks();
+    private void describeLocation(Message m) {
+        m.addLine(m.getPlayer().getLocation().getText());
+        java.util.Map<Direction, Link> links = m.getPlayer().getLocation().getLinks();
         for (Direction direction : links.keySet()) {
             m.addLine("To the " + direction + " is " + links.get(direction).getDescription());
         }
-        for (Item item : player.getLocation().listItems()) {
+        for (Item item : m.getPlayer().getLocation().listItems()) {
             m.addLine("There is a " + item.getName() + " here");
         }
     }
