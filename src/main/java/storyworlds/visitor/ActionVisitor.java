@@ -1,7 +1,7 @@
 package storyworlds.visitor;
 
 import storyworlds.action.*;
-import storyworlds.model.Error;
+import storyworlds.action.Error;
 
 public interface ActionVisitor {
     public void visit(Create create);

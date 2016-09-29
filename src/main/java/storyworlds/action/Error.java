@@ -1,4 +1,4 @@
-package storyworlds.model;
+package storyworlds.action;
 
 import storyworlds.action.AbstractAction;
 import storyworlds.create.Creatable;

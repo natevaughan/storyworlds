@@ -4,8 +4,6 @@ import storyworlds.action.*;
 import storyworlds.action.parser.DirectionParser;
 import storyworlds.create.CreatableFactory;
 import storyworlds.model.Direction;
-import storyworlds.model.Error;
-import storyworlds.model.Player;
 
 /**
  * Responsibilities:
@@ -16,13 +14,7 @@ public class SecondaryParserVisitor implements ActionVisitor {
 
     private String secondary = null;
 
-    private final Player player;
-
     private final DirectionParser dirp = new DirectionParser();
-    
-    public SecondaryParserVisitor(Player player) {
-        this.player = player;
-    }
 
     public void visit(Create create) {
         String[] createArgs = secondary.split("\\s+");
@@ -33,15 +25,21 @@ public class SecondaryParserVisitor implements ActionVisitor {
             create.setDirection(dirp.parse(createArgs[1]));
         }
     }
-    
-    public void visit(Error error) {
-        if (secondary != null) {
-            error.setMessage(error.getMessage() + ", unreconginzed modifier: " + secondary);
-        }
-    }
+//
+//    public void visit(Error error) {
+//        if (secondary != null) {
+//            error.getMessage().addLine("Unreconginzed modifier: " + secondary);
+//        }
+//    }
 
     public void visit(Edit edit) {
-
+        String[] createArgs = secondary.split("\\s+");
+        if (createArgs.length > 0) {
+            edit.setCreatable(CreatableFactory.parse(createArgs[0]));
+        }
+        if (createArgs.length > 1) {
+            edit.setDirection(dirp.parse(createArgs[1]));
+        }
     }
 
     public void visit(Help help) {
@@ -80,7 +78,7 @@ public class SecondaryParserVisitor implements ActionVisitor {
 
     private void setUnrecognizedModifier(Actionable actionable) {
         if (secondary != null) {
-            actionable.setMessage("Unreconginzed modifier: " + secondary);
+            actionable.getMessage().addLine("Unreconginzed modifier: " + secondary);
         }
     }
 }

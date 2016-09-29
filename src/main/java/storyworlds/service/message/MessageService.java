@@ -1,40 +1,24 @@
 package storyworlds.service.message;
 
-import storyworlds.action.ActionFactory;
 import storyworlds.action.Actionable;
-import storyworlds.visitor.ActionDoVisitor;
-import storyworlds.visitor.SecondaryParserVisitor;
+import storyworlds.exception.InvalidActionException;
 
 public class MessageService {
 
     public Actionable process(Message message) {
         System.out.println("Message " + message.getText() + " received from " + message.getPlayer().getName() + " at " + message.getTime().toString());
 
-        ActionDoVisitor actionDoVisitor = new ActionDoVisitor(message.getPlayer());
-        SecondaryParserVisitor secondaryParser = new SecondaryParserVisitor(message.getPlayer());
+        MessageTransport transport = new MessageTransport(message);
 
-        String input = message.getText().trim();
-
-        String primary = null;
-        String secondary = null;
-
-        if (!input.isEmpty()) {
-            if (input.contains(" ")) {
-                primary = input.substring(0, input.indexOf(" "));
-                secondary = input.substring(input.indexOf(" ") + 1);
-            } else {
-                primary = input;
-            }
+        try {
+            transport.accept(new PrimaryMessageParser());
+            transport.accept(new SecondaryMessageParser());
+            transport.accept(new MessageExecutor());
+        } catch (InvalidActionException e) {
+            storyworlds.action.Error error = new storyworlds.action.Error();
+            error.setMessage(new Message(message.getPlayer(), e.getMessage()));
         }
 
-        Actionable actionable = ActionFactory.get(primary);
-
-        secondaryParser.setSecondary(secondary);
-
-        actionable.accept(secondaryParser);
-
-        actionable.accept(actionDoVisitor);
-
-        return actionable;
+        return transport.getResponse();
     }
 }

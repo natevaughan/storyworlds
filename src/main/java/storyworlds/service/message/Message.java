@@ -1,5 +1,6 @@
 package storyworlds.service.message;
 
+import storyworlds.action.Actionable;
 import storyworlds.model.Player;
 
 import java.time.Instant;
@@ -11,14 +12,15 @@ public class Message {
 
     private Player player;
     private Instant time = Instant.now();
-    private String text;
+    private String command;
+    private StringBuilder sb = new StringBuilder();
 
     public Message() {
     }
 
-    public Message(Player player, String text) {
+    public Message(Player player, String command) {
         this.player = player;
-        this.text = text;
+        this.command = command;
     }
 
     public Player getPlayer() {
@@ -37,12 +39,20 @@ public class Message {
         this.time = time;
     }
 
+    public String getCommand() {
+        return command;
+    }
+
+    public void setCommand(String command) {
+        this.command = command;
+    }
+
     public String getText() {
-        return text;
+        return sb.toString();
     }
-
-    public void setText(String text) {
-        this.text = text;
+    
+    public void addLine(String text) {
+        sb.append("\n");
+        sb.append(text);
     }
-
 }

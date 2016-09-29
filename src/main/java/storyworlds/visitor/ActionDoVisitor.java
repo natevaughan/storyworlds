@@ -4,7 +4,7 @@ import storyworlds.action.*;
 import storyworlds.create.Createables;
 import storyworlds.create.LocationFactory;
 import storyworlds.model.*;
-import storyworlds.model.Error;
+import storyworlds.action.Error;
 import storyworlds.model.implementation.Links;
 import storyworlds.service.message.ConsoleMessenger;
 import storyworlds.service.message.Messenger;
@@ -17,31 +17,22 @@ import storyworlds.service.message.Messenger;
  */
 public class ActionDoVisitor implements ActionVisitor {
 
-    private Player player;
-    private Messenger m;
-
-
-    public ActionDoVisitor(Player player) {
-        this.player = player;
-        m = new ConsoleMessenger(player);
-    }
-
     public void visit(Create create) {
         if (Direction.ERROR.equals(create.getDirection()) || Createables.ERROR.equals(create.getCreatable())) {
             return;
         }
-
-        m.sendMessage("What would you like the text of your location to say?");
-        String mainText = m.getMessage().getText();
-        m.addLine("How would you like to link to this location? Link types include:");
-
-        for (Links l : Links.values()) {
-            m.addLine(l + ": " + l.getDescription());
-        }
-        m.sendMessage();
-
-
-        LocationFactory locationCreator = new LocationFactory(player);
+//
+//        m.sendMessage("What would you like the text of your location to say?");
+//        String mainText = m.getMessage().getText();
+//        m.addLine("How would you like to link to this location? Link types include:");
+//
+//        for (Links l : Links.values()) {
+//            m.addLine(l + ": " + l.getDescription());
+//        }
+//        m.sendMessage();
+//
+//
+//        LocationFactory locationCreator = new LocationFactory(player);
 
 //        locationCreator.setLocationType(create.getCreatable());
 //        locationCreator.getText();

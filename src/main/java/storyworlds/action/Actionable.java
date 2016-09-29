@@ -1,17 +1,17 @@
 package storyworlds.action;
 
+import storyworlds.service.message.Message;
 import storyworlds.visitor.ActionVisitor;
 
 public interface Actionable {
 
     public void accept(ActionVisitor visitor);
 
-    public void setMessage(String message);
+    public void setMessage(Message message);
 
-    public String getMessage();
+    public Message getMessage();
 
     public void setSuccessful(boolean successful);
 
     public boolean isSuccessful();
-
 }

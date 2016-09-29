@@ -1,9 +1,9 @@
 package storyworlds.action;
 
-import storyworlds.model.Error;
+import storyworlds.exception.InvalidActionException;
 
 public class ActionFactory {
-    public static Actionable get(String input) {
+    public static Actionable get(String input) throws InvalidActionException {
         Action action = parse(input);
         switch (action) {
             case CREATE:
@@ -25,7 +25,7 @@ public class ActionFactory {
             case USE:
                 return new Use();
             default:
-                return new Error("Unhandled action: " + input);
+                throw new InvalidActionException("Unhandled action: " + input);
         }
     }
 

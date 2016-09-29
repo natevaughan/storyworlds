@@ -1,16 +1,17 @@
 package storyworlds.action;
 
+import storyworlds.service.message.Message;
+
 public abstract class AbstractAction implements Actionable {
 
-    protected String message;
+    protected Message message = new Message();
     protected boolean successful = false;
-    private Action action;
 
-    public String getMessage() {
+    public Message getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+    public void setMessage(Message message) {
         this.message = message;
     }
 
