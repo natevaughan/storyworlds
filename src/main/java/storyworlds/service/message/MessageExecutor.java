@@ -1,6 +1,6 @@
 package storyworlds.service.message;
 
-import storyworlds.visitor.ActionDoVisitor;
+import storyworlds.action.visitor.ActionDoVisitor;
 
 public class MessageExecutor implements MessageProcessor {
 

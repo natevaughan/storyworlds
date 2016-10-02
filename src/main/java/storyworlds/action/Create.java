@@ -1,8 +1,8 @@
 package storyworlds.action;
 
+import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.model.enumeration.Links;
 import storyworlds.model.enumeration.Locations;
-import storyworlds.visitor.ActionVisitor;
 
 public class Create extends AbstractCreatableAction {
 

@@ -5,7 +5,6 @@ import storyworlds.action.Create;
 import storyworlds.constants.PropertyKeys;
 import storyworlds.model.Link;
 import storyworlds.model.Location;
-import storyworlds.model.Player;
 import storyworlds.model.enumeration.Links;
 import storyworlds.model.enumeration.Locations;
 import storyworlds.model.implementation.DirectionalLink;

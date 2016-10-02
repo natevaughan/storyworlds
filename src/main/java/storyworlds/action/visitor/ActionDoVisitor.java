@@ -1,4 +1,4 @@
-package storyworlds.visitor;
+package storyworlds.action.visitor;
 
 import storyworlds.action.*;
 import storyworlds.action.Error;
@@ -7,11 +7,6 @@ import storyworlds.create.Createables;
 import storyworlds.model.Direction;
 import storyworlds.model.Item;
 import storyworlds.model.Link;
-import storyworlds.model.Location;
-import storyworlds.model.enumeration.Links;
-import storyworlds.model.enumeration.Locations;
-import storyworlds.model.implementation.DirectionalLink;
-import storyworlds.model.implementation.ImmutableLocation;
 import storyworlds.service.message.Message;
 
 import java.util.Collection;
@@ -30,7 +25,7 @@ public class ActionDoVisitor implements ActionVisitor, PropertyKeys {
         }
 
         create.getMessage().addLine("OK, creating " + create.getCreatable() + " to the " + create.getDirection());
-        
+
     }
 
     public void visit(Error error) {

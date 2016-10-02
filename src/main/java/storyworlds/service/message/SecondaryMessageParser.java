@@ -1,6 +1,6 @@
 package storyworlds.service.message;
 
-import storyworlds.visitor.SecondaryParserVisitor;
+import storyworlds.action.visitor.SecondaryParserVisitor;
 
 /**
  * Created by nvaughan on 9/28/2016.

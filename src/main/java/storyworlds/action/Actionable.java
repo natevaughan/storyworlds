@@ -1,7 +1,7 @@
 package storyworlds.action;
 
+import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.service.message.Message;
-import storyworlds.visitor.ActionVisitor;
 
 public interface Actionable {
 

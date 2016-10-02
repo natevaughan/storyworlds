@@ -2,6 +2,7 @@ package storyworlds.service.console;
 
 import storyworlds.action.*;
 import storyworlds.action.Error;
+import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.constants.GameTextConstants;
 import storyworlds.create.LocationService;
 import storyworlds.factory.MapFactory;
@@ -12,7 +13,6 @@ import storyworlds.model.enumeration.Locations;
 import storyworlds.model.implementation.User;
 import storyworlds.service.message.Message;
 import storyworlds.service.message.MessageService;
-import storyworlds.visitor.ActionVisitor;
 
 import java.util.Scanner;
 

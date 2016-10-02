@@ -1,6 +1,6 @@
 package storyworlds.action;
 
-import storyworlds.visitor.ActionVisitor;
+import storyworlds.action.visitor.ActionVisitor;
 
 public class Move extends DirectionedAction {
     public void accept(ActionVisitor visitor) {
