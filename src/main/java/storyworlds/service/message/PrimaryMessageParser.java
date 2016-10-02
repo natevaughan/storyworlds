@@ -22,7 +22,12 @@ public class PrimaryMessageParser implements MessageProcessor {
         }
 
         Actionable actionable = ActionFactory.get(transport.getPrimary());
+
+        // XXX: todo
+        String possibleErrorMessage = actionable.getMessage().getText();
+
         actionable.setMessage(transport.getMessage());
+        actionable.getMessage().addLine(possibleErrorMessage);
         transport.setActionable(actionable);
     }
 }

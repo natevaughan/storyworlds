@@ -8,6 +8,8 @@ import storyworlds.model.Item;
 import storyworlds.model.Link;
 import storyworlds.service.message.Message;
 
+import java.util.Collection;
+
 /**
  * Responsibilities
  * -Executing action
@@ -22,7 +24,7 @@ public class ActionDoVisitor implements ActionVisitor {
         }
 //
 //        m.sendMessage("What would you like the text of your location to say?");
-//        String mainText = m.getMessage().getText();
+//        String mainText = m.getCommand().getText();
 //        m.addLine("How would you like to link to this location? Link types include:");
 //
 //        for (Links l : Links.values()) {
@@ -40,7 +42,7 @@ public class ActionDoVisitor implements ActionVisitor {
     }
 
     public void visit(Error error) {
-//        error.getMessage().addLine(error.getMessage());
+//        error.getCommand().addLine(error.getCommand());
     }
 
     public void visit(Edit edit) {
@@ -114,16 +116,20 @@ public class ActionDoVisitor implements ActionVisitor {
     }
 
     public void visit(Use use) {
-        if (use.getMessage().getPlayer().getItem(use.getItemName()) == null) {
+        Collection<Item> items = use.getMessage().getPlayer().listItems();
+
+        if (use.getItemName() == null) {
             use.getMessage().addLine("You don't have a " + use.getItemName());
             return;
         }
 
-        use.setSuccessful(true);
-        use.getMessage().getPlayer().listItems().stream().forEach(item -> item.setActive(false));
-        Item item = use.getMessage().getPlayer().getItem(use.getItemName());
-        item.setActive(true);
-        use.getMessage().addLine(item.getUseMessage());
+        for (Item i : items) {
+            if (i.getName().equals(use.getItemName())) {
+                use.getMessage().getPlayer().activate(i);
+                use.setSuccessful(true);
+                use.getMessage().addLine(i.getUseMessage());
+            }
+        }
     }
 
     private void describeLocation(Message m) {

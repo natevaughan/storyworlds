@@ -14,5 +14,7 @@ public interface Player {
 
     public void addItem(Item item);
 
-    public Item getItem(String name);
+    public Item getActiveItem();
+
+    public void activate(Item item);
 }

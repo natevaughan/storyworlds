@@ -13,7 +13,6 @@ public class ImmutableLocation implements Location {
     private final String text;
     private final Map<Direction, Link> links;
     private final Map<String, Item> items;
-    private final Collection<Player> currentPlayers;
     
     public ImmutableLocation(String text) {
         this(text, new HashSet<Item>());
@@ -31,7 +30,6 @@ public class ImmutableLocation implements Location {
         }
         this.text = text;
         this.links = links;
-        this.currentPlayers = new HashSet<Player>();
     }
 
 
@@ -49,10 +47,6 @@ public class ImmutableLocation implements Location {
 
     public Item takeItem(String name) {
         return items.remove(name.toUpperCase());
-    }
-
-    public Collection<Player> listPlayers() {
-        return currentPlayers;
     }
 
     public Map<Direction, Link> getLinks() {

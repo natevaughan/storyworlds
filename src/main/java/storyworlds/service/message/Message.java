@@ -4,6 +4,7 @@ import storyworlds.action.Actionable;
 import storyworlds.model.Player;
 
 import java.time.Instant;
+import java.util.HashMap;
 
 /**
  * Created by nvaughan on 9/27/2016.
@@ -14,6 +15,7 @@ public class Message {
     private Instant time = Instant.now();
     private String command;
     private StringBuilder sb = new StringBuilder();
+    private HashMap<String, String> fields;
 
     public Message() {
     }
@@ -35,10 +37,6 @@ public class Message {
         return time;
     }
 
-    public void setTime(Instant time) {
-        this.time = time;
-    }
-
     public String getCommand() {
         return command;
     }
@@ -54,5 +52,13 @@ public class Message {
     public void addLine(String text) {
         sb.append("\n");
         sb.append(text);
+    }
+
+    public HashMap<String, String> getFields() {
+        return fields;
+    }
+
+    public void setFields(HashMap<String, String> fields) {
+        this.fields = fields;
     }
 }

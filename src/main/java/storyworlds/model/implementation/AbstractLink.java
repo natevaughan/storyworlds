@@ -6,7 +6,7 @@ import storyworlds.model.Location;
  * Created by nvaughan on 9/24/2016.
  */
 public class AbstractLink {
-    protected String description;
+    protected final String description;
     protected final Location endLocation;
 
     public AbstractLink(String description, Location endLocation) {
@@ -18,7 +18,7 @@ public class AbstractLink {
         return description;
     }
 
-    public Location getLinkedLocation(Location location) {
+    public Location getLinkedLocation(Location startLocation) {
         return endLocation;
     }
 }

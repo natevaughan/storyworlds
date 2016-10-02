@@ -21,14 +21,14 @@ public class ConsoleIO implements GameTextConstants {
 
     public void run() {
         sendMessage(WELCOME_MESSAGE);
-        String name = getMessage();
+        String name = getCommand();
         Location start = MapFactory.getStartMap();
         player = new User(name);
         player.setLocation(start);
         Actionable response = messageService.process(new Message(player, "status"));
         while (!Quit.class.equals(response.getClass())) {
             sendMessage("What's your next move?");
-            response = messageService.process(new Message(player, getMessage()));
+            response = messageService.process(new Message(player, getCommand()));
             sendMessage(response.getMessage().getText());
         }
     }
@@ -48,7 +48,7 @@ public class ConsoleIO implements GameTextConstants {
         sendMessage();
     }
 
-    public String getMessage() {
+    public String getCommand() {
         return scanner.nextLine();
     }
 }

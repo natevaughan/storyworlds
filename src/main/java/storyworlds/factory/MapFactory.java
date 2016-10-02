@@ -37,7 +37,6 @@ public class MapFactory implements GameTextConstants {
         Location location = new ImmutableLocation(DEFAULT_LOCATION_TEXT,  createItems());
         location.setLink(Direction.UP, new DirectionalLink(DEFAULT_LOCATION_TEXT_UP,  DEFAULT_LOCATION_PASS_TEXT_UP, getBlankLocation(Direction.DOWN, location)));
         Item key = new UsableItem(KEY_NAME, KEY_USE_MESSAGE, KEY_DESCRIPTION);
-        key.setActive(true);
         BlockableLink lockedLink = new BlockableLink(DEFAULT_LOCATION_TEXT_DOWN, DEFAULT_LOCATION_PASS_TEXT_DOWN, DEFAULT_LOCATION_FAIL_TEXT_DOWN, key, getBlankLocation(Direction.UP, location));
 
         location.setLink(Direction.DOWN, lockedLink);

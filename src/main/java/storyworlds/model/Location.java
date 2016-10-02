@@ -7,8 +7,6 @@ public interface Location {
 
     public String getText();
 
-    public Collection<Player> listPlayers();
-
     public Collection<Item> listItems();
 
     public Item getItem(String name);

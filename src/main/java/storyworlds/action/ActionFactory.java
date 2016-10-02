@@ -25,7 +25,7 @@ public class ActionFactory {
             case USE:
                 return new Use();
             default:
-                throw new InvalidActionException("Unhandled action: " + input);
+                return new Error("Invalid command: " + input);
         }
     }
 

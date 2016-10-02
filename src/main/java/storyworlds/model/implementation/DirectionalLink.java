@@ -6,7 +6,6 @@ import storyworlds.model.Player;
 
 public class DirectionalLink extends AbstractLink implements Link {
 
-
     protected final String                  passText;
 
     public DirectionalLink(String description, String passText, Location endLocation) {

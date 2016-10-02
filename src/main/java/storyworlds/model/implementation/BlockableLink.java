@@ -10,21 +10,20 @@ import storyworlds.model.Player;
  */
 public class BlockableLink  extends AbstractLink implements Link {
     
-    private final Item requiredItem;
+    private final Item                    requiredItem;
     private final String                  passText;
     private final String                  failText;
 
     public BlockableLink(String description, String passText, String failText, Item requiredItem, Location endLocation) {
         super(description, endLocation);
-        requiredItem.setActive(true);
         this.requiredItem = requiredItem;
         this.passText = passText;
         this.failText = failText;
     }
 
     public boolean isPassable(Player player) {
-        for (Item item : player.listItems()) {
-            if (item.equals(requiredItem)) {
+        if (player.getActiveItem() != null)  {
+            if (player.getActiveItem().equals(requiredItem)) {
                 return true;
             }
         }
