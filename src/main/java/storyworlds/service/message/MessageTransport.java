@@ -1,8 +1,6 @@
 package storyworlds.service.message;
 
 import storyworlds.action.Actionable;
-import storyworlds.exception.InvalidActionException;
-import storyworlds.visitor.ActionVisitor;
 
 /**
  * Created by nvaughan on 9/28/2016.
@@ -20,7 +18,7 @@ public class MessageTransport {
         secondary = null;
     }
 
-    public void accept(MessageProcessor processor) throws InvalidActionException {
+    public void accept(MessageProcessor processor) {
         processor.process(this);
     }
 

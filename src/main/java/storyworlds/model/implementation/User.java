@@ -4,7 +4,9 @@ import storyworlds.model.Item;
 import storyworlds.model.Location;
 import storyworlds.model.Player;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class User implements Player {
 

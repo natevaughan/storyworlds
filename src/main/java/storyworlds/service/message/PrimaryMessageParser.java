@@ -2,14 +2,13 @@ package storyworlds.service.message;
 
 import storyworlds.action.ActionFactory;
 import storyworlds.action.Actionable;
-import storyworlds.exception.InvalidActionException;
 
 /**
  * Created by nvaughan on 9/28/2016.
  */
 public class PrimaryMessageParser implements MessageProcessor {
 
-    public void process(MessageTransport transport) throws InvalidActionException {
+    public void process(MessageTransport transport) {
         String input = transport.getMessage().getCommand().trim();
 
         if (!input.isEmpty()) {

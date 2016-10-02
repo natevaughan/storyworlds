@@ -3,7 +3,6 @@ package storyworlds.create;
 
 import storyworlds.model.Location;
 import storyworlds.model.Player;
-import storyworlds.model.implementation.ImmutableLocation;
 
 public class LocationFactory implements Creatable {
 

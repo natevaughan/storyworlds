@@ -1,6 +1,5 @@
 package storyworlds.service.message;
 
-import storyworlds.action.Actionable;
 import storyworlds.model.Player;
 
 import java.time.Instant;

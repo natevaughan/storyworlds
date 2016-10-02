@@ -22,6 +22,8 @@ public class ActionDoVisitor implements ActionVisitor {
         if (Direction.ERROR.equals(create.getDirection()) || Createables.ERROR.equals(create.getCreatable())) {
             return;
         }
+
+        create.getMessage().addLine("OK, creating " + create.getCreatable());
 //
 //        m.sendMessage("What would you like the text of your location to say?");
 //        String mainText = m.getCommand().getText();

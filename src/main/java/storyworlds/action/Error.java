@@ -1,6 +1,5 @@
 package storyworlds.action;
 
-import storyworlds.action.AbstractAction;
 import storyworlds.create.Creatable;
 import storyworlds.visitor.ActionVisitor;
 

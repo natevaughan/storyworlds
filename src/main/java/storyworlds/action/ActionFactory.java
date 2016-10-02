@@ -1,9 +1,7 @@
 package storyworlds.action;
 
-import storyworlds.exception.InvalidActionException;
-
 public class ActionFactory {
-    public static Actionable get(String input) throws InvalidActionException {
+    public static Actionable get(String input) {
         Action action = parse(input);
         switch (action) {
             case CREATE:

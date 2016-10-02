@@ -1,7 +1,10 @@
 
 package storyworlds.model.implementation;
 
-import storyworlds.model.*;
+import storyworlds.model.Direction;
+import storyworlds.model.Item;
+import storyworlds.model.Link;
+import storyworlds.model.Location;
 
 import java.util.Collection;
 import java.util.HashMap;
