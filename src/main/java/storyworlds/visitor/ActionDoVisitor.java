@@ -2,10 +2,16 @@ package storyworlds.visitor;
 
 import storyworlds.action.*;
 import storyworlds.action.Error;
+import storyworlds.constants.PropertyKeys;
 import storyworlds.create.Createables;
 import storyworlds.model.Direction;
 import storyworlds.model.Item;
 import storyworlds.model.Link;
+import storyworlds.model.Location;
+import storyworlds.model.enumeration.Links;
+import storyworlds.model.enumeration.Locations;
+import storyworlds.model.implementation.DirectionalLink;
+import storyworlds.model.implementation.ImmutableLocation;
 import storyworlds.service.message.Message;
 
 import java.util.Collection;
@@ -16,31 +22,15 @@ import java.util.Collection;
  * -Setting action success
  * -Setting message text
  */
-public class ActionDoVisitor implements ActionVisitor {
+public class ActionDoVisitor implements ActionVisitor, PropertyKeys {
 
     public void visit(Create create) {
         if (Direction.ERROR.equals(create.getDirection()) || Createables.ERROR.equals(create.getCreatable())) {
             return;
         }
 
-        create.getMessage().addLine("OK, creating " + create.getCreatable());
-//
-//        m.sendMessage("What would you like the text of your location to say?");
-//        String mainText = m.getCommand().getText();
-//        m.addLine("How would you like to link to this location? Link types include:");
-//
-//        for (Links l : Links.values()) {
-//            m.addLine(l + ": " + l.getDescription());
-//        }
-//        m.sendMessage();
-//
-//
-//        LocationFactory locationCreator = new LocationFactory(player);
-
-//        locationCreator.setLocationType(create.getCreatable());
-//        locationCreator.getText();
-
-        create.setSuccessful(true);
+        create.getMessage().addLine("OK, creating " + create.getCreatable() + " to the " + create.getDirection());
+        
     }
 
     public void visit(Error error) {

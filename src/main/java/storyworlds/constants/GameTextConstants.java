@@ -1,6 +1,6 @@
 package storyworlds.constants; 
 
-public interface GameTextConstants {
+public interface GameTextConstants extends PropertyKeys {
 
     public final String WELCOME_MESSAGE = "Welcome to Adventureland!\nPlease enter your name to begin:";
 

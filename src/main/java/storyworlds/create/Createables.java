@@ -6,5 +6,6 @@ package storyworlds.create;
 public enum Createables {
     LOCATION,
     LINK,
+    ITEM,
     ERROR
 }

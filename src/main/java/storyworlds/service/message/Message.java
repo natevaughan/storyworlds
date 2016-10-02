@@ -14,7 +14,7 @@ public class Message {
     private Instant time = Instant.now();
     private String command;
     private StringBuilder sb = new StringBuilder();
-    private HashMap<String, String> fields;
+    private HashMap<String, String> fields = new HashMap<>();
 
     public Message() {
     }
@@ -59,5 +59,9 @@ public class Message {
 
     public void setFields(HashMap<String, String> fields) {
         this.fields = fields;
+    }
+
+    public void resetText() {
+        sb.setLength(0);
     }
 }
