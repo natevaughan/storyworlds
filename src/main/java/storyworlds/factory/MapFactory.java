@@ -35,14 +35,14 @@ testPermissionMap = Collections.unmodifiableMap(map);
 public class MapFactory implements GameTextConstants {
     public static Location getStartMap() {
         Location location = new ImmutableLocation(DEFAULT_LOCATION_TEXT,  createItems());
-        location.setLink(Direction.UP, new DirectionalLink(DEFAULT_LOCATION_TEXT_UP,  DEFAULT_LOCATION_PASS_TEXT_UP, getBlankLocation(Direction.DOWN, location)));
+        location.addLink(new DirectionalLink(DEFAULT_LOCATION_TEXT_UP, getBlankLocation(Direction.DOWN, location), location, Direction.UP, DEFAULT_LOCATION_PASS_TEXT_UP));
         Item key = new UsableItem(KEY_NAME, KEY_USE_MESSAGE, KEY_DESCRIPTION);
-        BlockableLink lockedLink = new BlockableLink(DEFAULT_LOCATION_TEXT_DOWN, DEFAULT_LOCATION_PASS_TEXT_DOWN, DEFAULT_LOCATION_FAIL_TEXT_DOWN, key, getBlankLocation(Direction.UP, location));
+        BlockableLink lockedLink = new BlockableLink(DEFAULT_LOCATION_TEXT_DOWN, getBlankLocation(Direction.UP, location), location, Direction.DOWN, DEFAULT_LOCATION_PASS_TEXT_DOWN, DEFAULT_LOCATION_FAIL_TEXT_DOWN, key);
 
-        location.setLink(Direction.DOWN, lockedLink);
+        location.addLink(lockedLink);
 
-        location.setLink(Direction.NORTH, new DirectionalLink(DEFAULT_LOCATION_TEXT_NORTH, DEFAULT_LOCATION_PASS_TEXT_NORTH, getBlankLocation(Direction.SOUTH, location)));
-        location.setLink(Direction.SOUTH, new DirectionalLink(DEFAULT_LOCATION_TEXT_SOUTH, DEFAULT_LOCATION_PASS_TEXT_SOUTH, getBlankLocation(Direction.NORTH, location)));
+        location.addLink(new DirectionalLink(DEFAULT_LOCATION_TEXT_NORTH, getBlankLocation(Direction.SOUTH, location),  location, Direction.NORTH, DEFAULT_LOCATION_PASS_TEXT_NORTH));
+        location.addLink(new DirectionalLink(DEFAULT_LOCATION_TEXT_SOUTH, getBlankLocation(Direction.NORTH, location), location, Direction.SOUTH, DEFAULT_LOCATION_PASS_TEXT_SOUTH));
         return location;
     }
 
@@ -61,7 +61,7 @@ public class MapFactory implements GameTextConstants {
 
     public static Location getBlankLocation(Direction fromDirection, Location fromLocation) {
         Location location = getBlankLocation();
-        location.setLink(fromDirection, new DirectionalLink(RETURN_DESCRIPTION, RETURN_PASS_TEXT, fromLocation));
+        location.addLink(new DirectionalLink(RETURN_DESCRIPTION, fromLocation, location, fromDirection, RETURN_PASS_TEXT));
         return location;
     }
 }

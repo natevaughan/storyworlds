@@ -8,6 +8,10 @@ public interface Link {
     
     public String getPassText(Player player);
 
-    public Location getLinkedLocation(Location startLocation);
+    public Location getFromLocation();
+
+    public Direction getFromDirection();
+
+    public Location getToLocation();
 
 }	

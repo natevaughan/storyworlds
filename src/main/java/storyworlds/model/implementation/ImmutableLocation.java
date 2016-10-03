@@ -6,10 +6,7 @@ import storyworlds.model.Item;
 import storyworlds.model.Link;
 import storyworlds.model.Location;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 public class ImmutableLocation implements Location { 
 
@@ -21,18 +18,18 @@ public class ImmutableLocation implements Location {
         this(text, new HashSet<Item>());
     }
 
-
     public ImmutableLocation(String text, Collection<Item> items) {
         this(text, items, new HashMap<Direction, Link>());
     }
 
     public ImmutableLocation(String text, Collection<Item> items, Map<Direction, Link> links) {
-        this.items = new HashMap<String, Item>();
+        Map<String, Item> itemsMap = new HashMap<String, Item>();
         for (Item item : items) {
-            this.items.put(item.getName().toUpperCase(), item);
+            itemsMap.put(item.getName().toUpperCase(), item);
         }
         this.text = text;
         this.links = links;
+        this.items = Collections.unmodifiableMap(new LinkedHashMap<>(itemsMap));
     }
 
 
@@ -49,7 +46,7 @@ public class ImmutableLocation implements Location {
     }
 
     public Item takeItem(String name) {
-        return items.remove(name.toUpperCase());
+        return getItem(name);
     }
 
     public Map<Direction, Link> getLinks() {
@@ -60,7 +57,7 @@ public class ImmutableLocation implements Location {
         return links.get(direction);
     }
 
-    public void setLink(Direction direction, Link link) {
-        links.put(direction, link);
+    public void addLink(Link link) {
+        links.put(link.getFromDirection(), link);
     }
 }

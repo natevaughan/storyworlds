@@ -33,7 +33,11 @@ public class ActionDoVisitor implements ActionVisitor, PropertyKeys {
     }
 
     public void visit(Edit edit) {
+        if (Direction.ERROR.equals(edit.getDirection()) || Createables.ERROR.equals(edit.getCreatable())) {
+            return;
+        }
 
+        edit.getMessage().addLine("OK, editing " + edit.getCreatable() + " to the " + edit.getDirection());
     }
 
     public void visit(Help help) {
@@ -83,7 +87,7 @@ public class ActionDoVisitor implements ActionVisitor, PropertyKeys {
 
         move.setSuccessful(true);
 
-        move.getMessage().getPlayer().setLocation(move.getMessage().getPlayer().getLocation().getLink(move.getDirection()).getLinkedLocation(move.getMessage().getPlayer().getLocation()));
+        move.getMessage().getPlayer().setLocation(move.getMessage().getPlayer().getLocation().getLink(move.getDirection()).getToLocation());
         describeLocation(move.getMessage());
     }
 

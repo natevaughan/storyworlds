@@ -37,6 +37,6 @@ public class TakeTest extends AbstractGameplayTest {
         messageService.process(new Message(user, "take key"));
         messageService.process(new Message(user, "use key"));
         messageService.process(new Message(user, "move down"));
-        assertTrue("user should move down", user.getLocation().equals(location.getLink(Direction.DOWN).getLinkedLocation(location)));
+        assertTrue("user should move down", user.getLocation().equals(location.getLink(Direction.DOWN).getToLocation()));
     }
 }

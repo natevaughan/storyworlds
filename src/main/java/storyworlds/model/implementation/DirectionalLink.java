@@ -1,15 +1,15 @@
 package storyworlds.model.implementation;
 
-import storyworlds.model.Link;
+import storyworlds.model.Direction;
 import storyworlds.model.Location;
 import storyworlds.model.Player;
 
-public class DirectionalLink extends AbstractLink implements Link {
+public class DirectionalLink extends AbstractLink {
 
     protected final String                  passText;
 
-    public DirectionalLink(String description, String passText, Location endLocation) {
-        super(description, endLocation);
+    public DirectionalLink(String description, Location toLocation, Location fromLocation, Direction fromDirection, String passText) {
+        super(description, toLocation, fromLocation, fromDirection);
         this.passText = passText;
     }
 

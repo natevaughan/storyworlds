@@ -4,13 +4,14 @@ import storyworlds.action.*;
 import storyworlds.action.Error;
 import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.constants.GameTextConstants;
-import storyworlds.create.LocationService;
 import storyworlds.factory.MapFactory;
 import storyworlds.model.Location;
 import storyworlds.model.Player;
 import storyworlds.model.enumeration.Links;
 import storyworlds.model.enumeration.Locations;
 import storyworlds.model.implementation.User;
+import storyworlds.service.LinkService;
+import storyworlds.service.LocationService;
 import storyworlds.service.message.Message;
 import storyworlds.service.message.MessageService;
 
@@ -21,6 +22,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
     private StringBuilder sb = new StringBuilder();
     MessageService messageService = new MessageService();
     LocationService locationService = new LocationService();
+    LinkService linkService = new LinkService();
     private Scanner scanner = new Scanner(System.in);
     private Player player;
 
@@ -78,7 +80,22 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
     }
 
     public void visit(Edit edit) {
-
+        edit.getMessage().resetText();
+        switch(edit.getCreatable()) {
+            case LOCATION:
+                sendMessage("What would you like the text of the location to be once the user arrives?");
+                edit.getMessage().getFields().put(KEY_LOCATION_TEXT, getCommand());
+                locationService.edit(edit);
+            case LINK:
+                sendMessage("What would you like the text describing the link to the location to say? \n" +
+                        "It should complete this sentence: To the " + edit.getDirection() + " there is a...");
+                edit.getMessage().getFields().put(KEY_LINK_DESCRIPTION, getCommand());
+                sendMessage("What would you like the text of the link to be while the user moves to the new location?");
+                edit.getMessage().getFields().put(KEY_LINK_PASS_TEXT, getCommand());
+                linkService.edit(edit);
+            case ERROR:
+                sendMessage("invalid creatable");
+        }
     }
 
     public void visit(Help help) {

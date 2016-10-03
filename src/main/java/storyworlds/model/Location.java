@@ -17,5 +17,5 @@ public interface Location {
 
     public Link getLink(Direction direction);
 
-    public void setLink(Direction direction, Link link);
+    public void addLink(Link link);
 }
