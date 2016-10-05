@@ -10,6 +10,7 @@ import storyworlds.model.Link;
 import storyworlds.service.message.Message;
 
 import java.util.Collection;
+import java.util.regex.Pattern;
 
 /**
  * Responsibilities
@@ -20,24 +21,14 @@ import java.util.Collection;
 public class ActionDoVisitor implements ActionVisitor, PropertyKeys {
 
     public void visit(Create create) {
-        if (Direction.ERROR.equals(create.getDirection()) || Createables.ERROR.equals(create.getCreatable())) {
-            return;
-        }
-
-        create.getMessage().addLine("OK, creating " + create.getCreatable() + " to the " + create.getDirection());
-
+        validateCreateable(create);
     }
 
     public void visit(Error error) {
-//        error.getCommand().addLine(error.getCommand());
     }
 
     public void visit(Edit edit) {
-        if (Direction.ERROR.equals(edit.getDirection()) || Createables.ERROR.equals(edit.getCreatable())) {
-            return;
-        }
-
-        edit.getMessage().addLine("OK, editing " + edit.getCreatable() + " to the " + edit.getDirection());
+        validateCreateable(edit);
     }
 
     public void visit(Help help) {
@@ -127,11 +118,55 @@ public class ActionDoVisitor implements ActionVisitor, PropertyKeys {
         m.addLine(m.getPlayer().getLocation().getText());
         java.util.Map<Direction, Link> links = m.getPlayer().getLocation().getLinks();
         for (Direction direction : links.keySet()) {
-            m.addLine("To the " + direction + " is " + links.get(direction).getDescription());
+            m.addLine(direction.formatted() + " is " + links.get(direction).getDescription());
         }
         for (Item item : m.getPlayer().getLocation().listItems()) {
-            m.addLine("There is a " + item.getName() + " here");
+            if (!m.getPlayer().listItems().contains(item)) {
+                m.addLine("There is a " + item.getName() + " here");
+            }
         }
     }
 
+    private void validateCreateable(CreateableAction actionable) {
+        String type = actionable.getClass().getName().replaceAll(Pattern.quote(actionable.getClass().getPackage().getName() + "."), "").toLowerCase();
+
+        if (actionable.isCreateable()) {
+            actionable.getMessage().addLine("OK, " + type    + "ing " + actionable.getCreateable() + " " + actionable.getDirection());
+            return;
+        }
+        if (actionable.getCreateable() == null || Createables.ERROR.equals(actionable.getCreateable())) {
+            actionable.getMessage().addLine(enumerateCreatables(type));
+        }
+        if (actionable.getDirection() == null || Direction.ERROR.equals(actionable.getDirection())) {
+            actionable.getMessage().addLine(enumerateDirections());
+        }
+    }
+
+    private String enumerateDirections() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Please specify a direction: ");
+        int i = 0;
+        for (Direction direction : Direction.values()) {
+            if (i > 0)
+                sb.append(", ");
+            if (!Direction.ERROR.equals(direction))
+                sb.append(direction);
+            ++i;
+        }
+        return sb.toString();
+    }
+
+    private String enumerateCreatables(String type) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Please specify something to ").append(type).append(": ");
+        int i = 0;
+        for (Createables createables : Createables.values()) {
+            if (i > 0)
+                sb.append(", ");
+            if (!Createables.ERROR.equals(createables))
+                sb.append(createables);
+            ++i;
+        }
+        return sb.toString();
+    }
 }

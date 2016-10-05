@@ -4,6 +4,7 @@ import storyworlds.action.*;
 import storyworlds.action.Error;
 import storyworlds.action.parser.DirectionParser;
 import storyworlds.create.CreatableFactory;
+import storyworlds.create.Createables;
 import storyworlds.model.Direction;
 
 /**
@@ -18,30 +19,16 @@ public class SecondaryParserVisitor implements ActionVisitor {
     private final DirectionParser dirp = new DirectionParser();
 
     public void visit(Create create) {
-        String[] createArgs = secondary.split("\\s+");
-        if (createArgs.length > 0) {
-            create.setCreatable(CreatableFactory.parse(createArgs[0]));
-        }
-        if (createArgs.length > 1) {
-            create.setDirection(dirp.parse(createArgs[1]));
-        }
+        getCreateArgs(create);
     }
 
 
     public void visit(Error error) {
-        if (secondary != null) {
-            error.getMessage().addLine("Unreconginzed modifier: " + secondary);
-        }
+        setUnrecognizedModifier(error);
     }
 
     public void visit(Edit edit) {
-        String[] createArgs = secondary.split("\\s+");
-        if (createArgs.length > 0) {
-            edit.setCreatable(CreatableFactory.parse(createArgs[0]));
-        }
-        if (createArgs.length > 1) {
-            edit.setDirection(dirp.parse(createArgs[1]));
-        }
+        getCreateArgs(edit);
     }
 
     public void visit(Help help) {
@@ -80,7 +67,30 @@ public class SecondaryParserVisitor implements ActionVisitor {
 
     private void setUnrecognizedModifier(Actionable actionable) {
         if (secondary != null) {
-            actionable.getMessage().addLine("Unreconginzed modifier: " + secondary);
+            setUnrecognizedModifier(actionable, secondary);
+        }
+    }
+
+    private void setUnrecognizedModifier(Actionable actionable, String modifier) {
+        actionable.getMessage().addLine("Unreconginzed modifier: " + modifier);
+    }
+
+    private void getCreateArgs(CreateableAction actionable) {
+        if (secondary != null) {
+            String[] createArgs = secondary.split("\\s+");
+
+            if (createArgs.length > 0) {
+                actionable.setCreateable(CreatableFactory.parse(createArgs[0]));
+                if (Createables.ERROR.equals(actionable.getCreateable())) {
+                    setUnrecognizedModifier(actionable, createArgs[0]);
+                }
+            }
+            if (createArgs.length > 1) {
+                actionable.setDirection(dirp.parse(createArgs[1]));
+                if (Direction.ERROR.equals(actionable.getDirection())) {
+                    setUnrecognizedModifier(actionable, createArgs[1]);
+                }
+            }
         }
     }
 }

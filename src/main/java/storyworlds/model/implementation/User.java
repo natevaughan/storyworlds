@@ -5,7 +5,7 @@ import storyworlds.model.Location;
 import storyworlds.model.Player;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class User implements Player {
@@ -14,10 +14,12 @@ public class User implements Player {
     protected final Set<Item> items;
     protected Location location;
     protected Item activeItem;
+    protected final Set<Location> locationHistory;
     
     public User(String name) {
         this.name = name;
-        this.items = new HashSet<Item>();
+        this.items = new LinkedHashSet<Item>();
+        this.locationHistory = new LinkedHashSet<>();
     }
 
     public String getName() {
@@ -38,6 +40,7 @@ public class User implements Player {
 
     public void setLocation(Location location) {
         this.location = location;
+        locationHistory.add(location);
     }
 
     public Item getActiveItem() {
@@ -49,6 +52,10 @@ public class User implements Player {
             return;
         }
         this.activeItem = item;
+    }
+
+    public Collection<Location> getLocationHistory() {
+        return locationHistory;
     }
 }
 

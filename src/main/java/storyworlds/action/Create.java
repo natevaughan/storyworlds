@@ -1,31 +1,11 @@
 package storyworlds.action;
 
 import storyworlds.action.visitor.ActionVisitor;
-import storyworlds.model.enumeration.Links;
-import storyworlds.model.enumeration.Locations;
 
-public class Create extends AbstractCreatableAction {
+public class Create extends AbstractCreateableAction {
 
     public void accept(ActionVisitor visitor) {
         visitor.visit(this);
     }
 
-    Links linkType;
-    Locations locationType;
-
-    public void setLinkType(Links linkType) {
-        this.linkType = linkType;
-    }
-
-    public Links getLinkType() {
-        return linkType;
-    }
-
-    public Locations getLocationType() {
-        return locationType;
-    }
-
-    public void setLocationType(Locations locationType) {
-        this.locationType = locationType;
-    }
 }

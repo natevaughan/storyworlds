@@ -4,7 +4,6 @@ package storyworlds.service;
 import storyworlds.action.Create;
 import storyworlds.action.Edit;
 import storyworlds.constants.PropertyKeys;
-import storyworlds.create.Creatable;
 import storyworlds.model.Link;
 import storyworlds.model.Location;
 import storyworlds.model.enumeration.Links;
@@ -12,7 +11,7 @@ import storyworlds.model.enumeration.Locations;
 import storyworlds.model.implementation.DirectionalLink;
 import storyworlds.model.implementation.ImmutableLocation;
 
-public class LocationService implements Creatable, PropertyKeys {
+public class LocationService implements PropertyKeys {
 
     public void build(Create create) {
         // XXX: todo

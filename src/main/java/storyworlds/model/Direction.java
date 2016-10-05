@@ -1,5 +1,20 @@
 package storyworlds.model;
 
 public enum Direction {
-    ERROR, NORTH, SOUTH, EAST, WEST, UP, DOWN
+    NORTH("To the "),
+    SOUTH("To the "),
+    EAST("To the "),
+    WEST("To the "),
+    UP(""),
+    DOWN(""),
+    ERROR("");
+
+    Direction(String prefix) {
+        this.prefix = prefix;
+    }
+    private String prefix;
+    public String formatted() {
+        return this.prefix + this.toString();
+    }
+
 }

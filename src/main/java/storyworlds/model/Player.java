@@ -17,4 +17,6 @@ public interface Player {
     public Item getActiveItem();
 
     public void activate(Item item);
+
+    public Collection<Location> getLocationHistory();
 }
