@@ -21,4 +21,13 @@ public class DirectionalLink extends AbstractLink {
         return true;
     }
 
+    public DirectionalLink clone(Location newToLocation) {
+        return new DirectionalLink(description, newToLocation, fromLocation, fromDirection, passText);
+    }
+    public DirectionalLink clone(Location newFromLocation, Direction newFromDirection) {
+        return new DirectionalLink(description, toLocation, newFromLocation, newFromDirection, passText);
+    }
+    public DirectionalLink clone(String newDescription, String newPassText) {
+        return new DirectionalLink(newDescription, toLocation, fromLocation, fromDirection, newPassText);
+    }
 }

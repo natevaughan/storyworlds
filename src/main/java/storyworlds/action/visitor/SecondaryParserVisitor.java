@@ -78,7 +78,6 @@ public class SecondaryParserVisitor implements ActionVisitor {
     private void getCreateArgs(CreateableAction actionable) {
         if (secondary != null) {
             String[] createArgs = secondary.split("\\s+");
-
             if (createArgs.length > 0) {
                 actionable.setCreateable(CreatableFactory.parse(createArgs[0]));
                 if (Createables.ERROR.equals(actionable.getCreateable())) {

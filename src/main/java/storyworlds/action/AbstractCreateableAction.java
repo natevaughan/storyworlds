@@ -7,10 +7,10 @@ import storyworlds.model.enumeration.Locations;
 
 public abstract class AbstractCreateableAction extends DirectionedAction implements CreateableAction {
 
-    private Createables creatable;
-    private Links linkType;
-    private Locations locationType;
-    private Integer locationIndex;
+    protected Createables creatable;
+    protected Links linkType;
+    protected Locations locationType;
+    protected Integer locationIndex;
 
     public Createables getCreateable() {
         return creatable;
@@ -18,10 +18,6 @@ public abstract class AbstractCreateableAction extends DirectionedAction impleme
 
     public void setCreateable(Createables creatable) {
         this.creatable = creatable;
-    }
-
-    public boolean isCreateable() {
-        return creatable != null && direction != null && !Createables.ERROR.equals(creatable) && !Direction.ERROR.equals(direction);
     }
 
     public void setLinkType(Links linkType) {

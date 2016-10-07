@@ -11,7 +11,8 @@ import java.util.*;
 public class ImmutableLocation implements Location { 
 
     private final String text;
-    private final Map<Direction, Link> links;
+    private final Map<Direction, Link> outboundLinks;
+    private final Collection<Link> inboundLinks;
     private final Map<String, Item> items;
     
     public ImmutableLocation(String text) {
@@ -19,16 +20,19 @@ public class ImmutableLocation implements Location {
     }
 
     public ImmutableLocation(String text, Collection<Item> items) {
-        this(text, items, new HashMap<Direction, Link>());
+        this(text, items, new HashSet<Link>(), new HashSet<Link>());
     }
 
-    public ImmutableLocation(String text, Collection<Item> items, Map<Direction, Link> links) {
+    public ImmutableLocation(String text, Collection<Item> items, Collection<Link> outboundLinks, Collection<Link> inboundLinks) {
         Map<String, Item> itemsMap = new HashMap<String, Item>();
         for (Item item : items) {
             itemsMap.put(item.getName().toUpperCase(), item);
         }
         this.text = text;
-        this.links = links;
+        this.outboundLinks = new HashMap<>();
+        outboundLinks.forEach(Link::bind);
+        this.inboundLinks = new HashSet<Link>(inboundLinks);
+        inboundLinks.forEach(Link::bind);
         this.items = Collections.unmodifiableMap(new LinkedHashMap<>(itemsMap));
     }
 
@@ -49,15 +53,23 @@ public class ImmutableLocation implements Location {
         return getItem(name);
     }
 
-    public Map<Direction, Link> getLinks() {
-        return links;
+    public Map<Direction, Link> getOutboundLinks() {
+        return outboundLinks;
     }
 
-    public Link getLink(Direction direction) {
-        return links.get(direction);
+    public Link getOutboundLink(Direction direction) {
+        return outboundLinks.get(direction);
     }
 
-    public void addLink(Link link) {
-        links.put(link.getFromDirection(), link);
+    public Collection<Link> getInboundLinks() {
+        return inboundLinks;
+    }
+
+    public void addInboundLink(Link link) {
+        inboundLinks.add(link);
+    }
+
+    public void addOutboundLink(Link link) {
+        outboundLinks.put(link.getFromDirection(), link);
     }
 }

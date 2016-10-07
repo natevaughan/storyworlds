@@ -3,6 +3,7 @@ package storyworlds.action.visitor;
 import storyworlds.action.*;
 import storyworlds.action.Error;
 import storyworlds.constants.PropertyKeys;
+import storyworlds.create.Creatable;
 import storyworlds.create.Createables;
 import storyworlds.model.Direction;
 import storyworlds.model.Item;
@@ -14,6 +15,7 @@ import java.util.regex.Pattern;
 
 /**
  * Responsibilities
+ * -Validating action
  * -Executing action
  * -Setting action success
  * -Setting message text
@@ -21,14 +23,45 @@ import java.util.regex.Pattern;
 public class ActionDoVisitor implements ActionVisitor, PropertyKeys {
 
     public void visit(Create create) {
-        validateCreateable(create);
+        StringBuilder sb = new StringBuilder();
+        if (create.isCreateable()) {
+            sb.append("OK, creating ").append(create.getCreateable()).append(" ").append(create.getDirection());
+            create.setSuccessful(true);
+        } else {
+            sb.append("Unable to create ").append(create.getCreateable()).append("\n");
+
+            if (create.getCreateable() == null || Createables.ERROR.equals(create.getCreateable())) {
+                sb.append(enumerateCreatables("create"));
+            }
+            if (create.getDirection() == null || Direction.ERROR.equals(create.getDirection())) {
+                sb.append(enumerateDirections());
+            }
+            if (create.getMessage().getPlayer().getLocation().getOutboundLink(create.getDirection()) != null) {
+                sb.append(create.getCreateable()).append(" already exists ").append(create.getDirection().formatted().toLowerCase());
+            }
+        }
+        create.getMessage().addLine(sb.toString());
     }
 
     public void visit(Error error) {
     }
 
     public void visit(Edit edit) {
-        validateCreateable(edit);
+        StringBuilder sb = new StringBuilder();
+        if (edit.isCreateable()) {
+            sb.append("OK, editing ");
+            if (edit.getDirection() != null) {
+                sb.append(edit.getCreateable() + " " + edit.getDirection());
+            } else {
+                sb.append("this " + edit.getCreateable());
+            }
+            edit.setSuccessful(true);
+        } else {
+            if (Createables.LOCATION.equals(edit.getCreateable()) && edit.getDirection() != null) {
+                edit.getMessage().addLine("To edit a location, first travel to it.");
+            }
+        }
+        edit.getMessage().addLine(sb.toString());
     }
 
     public void visit(Help help) {
@@ -63,14 +96,14 @@ public class ActionDoVisitor implements ActionVisitor, PropertyKeys {
             return;
         }
 
-        Link link = move.getMessage().getPlayer().getLocation().getLink(move.getDirection());
+        Link link = move.getMessage().getPlayer().getLocation().getOutboundLink(move.getDirection());
 
         if (link == null) {
             move.getMessage().addLine("Nothing to the " + move.getDirection());
             return;
         }
 
-        move.getMessage().addLine(move.getMessage().getPlayer().getLocation().getLink(move.getDirection()).getPassText(move.getMessage().getPlayer()));
+        move.getMessage().addLine(move.getMessage().getPlayer().getLocation().getOutboundLink(move.getDirection()).getPassText(move.getMessage().getPlayer()));
 
         if (!link.isPassable(move.getMessage().getPlayer())) {
             return;
@@ -78,7 +111,7 @@ public class ActionDoVisitor implements ActionVisitor, PropertyKeys {
 
         move.setSuccessful(true);
 
-        move.getMessage().getPlayer().setLocation(move.getMessage().getPlayer().getLocation().getLink(move.getDirection()).getToLocation());
+        move.getMessage().getPlayer().setLocation(move.getMessage().getPlayer().getLocation().getOutboundLink(move.getDirection()).getToLocation());
         describeLocation(move.getMessage());
     }
 
@@ -116,7 +149,7 @@ public class ActionDoVisitor implements ActionVisitor, PropertyKeys {
 
     private void describeLocation(Message m) {
         m.addLine(m.getPlayer().getLocation().getText());
-        java.util.Map<Direction, Link> links = m.getPlayer().getLocation().getLinks();
+        java.util.Map<Direction, Link> links = m.getPlayer().getLocation().getOutboundLinks();
         for (Direction direction : links.keySet()) {
             m.addLine(direction.formatted() + " is " + links.get(direction).getDescription());
         }
@@ -124,21 +157,6 @@ public class ActionDoVisitor implements ActionVisitor, PropertyKeys {
             if (!m.getPlayer().listItems().contains(item)) {
                 m.addLine("There is a " + item.getName() + " here");
             }
-        }
-    }
-
-    private void validateCreateable(CreateableAction actionable) {
-        String type = actionable.getClass().getName().replaceAll(Pattern.quote(actionable.getClass().getPackage().getName() + "."), "").toLowerCase();
-
-        if (actionable.isCreateable()) {
-            actionable.getMessage().addLine("OK, " + type    + "ing " + actionable.getCreateable() + " " + actionable.getDirection());
-            return;
-        }
-        if (actionable.getCreateable() == null || Createables.ERROR.equals(actionable.getCreateable())) {
-            actionable.getMessage().addLine(enumerateCreatables(type));
-        }
-        if (actionable.getDirection() == null || Direction.ERROR.equals(actionable.getDirection())) {
-            actionable.getMessage().addLine(enumerateDirections());
         }
     }
 

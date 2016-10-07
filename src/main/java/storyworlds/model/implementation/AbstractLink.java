@@ -35,4 +35,9 @@ public abstract class AbstractLink implements Link {
     public Direction getFromDirection() {
         return fromDirection;
     }
+
+    public void bind() {
+        fromLocation.addOutboundLink(this);
+        toLocation.addInboundLink(this);
+    }
 }

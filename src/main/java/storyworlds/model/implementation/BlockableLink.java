@@ -37,4 +37,15 @@ public class BlockableLink  extends AbstractLink {
             return failText;
         }
     }
+
+    public BlockableLink clone(Location newToLocation) {
+        return new BlockableLink(description, newToLocation, fromLocation, fromDirection, passText, failText, requiredItem);
+    }
+    public BlockableLink clone(Location newFromLocation, Direction newFromDirection) {
+        return new BlockableLink(description, toLocation, newFromLocation, newFromDirection, passText, failText, requiredItem);
+    }
+
+    public BlockableLink clone(String newDescription, String newPassText) {
+        return new BlockableLink(newDescription, toLocation, fromLocation, fromDirection, newPassText, failText, requiredItem);
+    }
 }

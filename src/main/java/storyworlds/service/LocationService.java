@@ -21,7 +21,7 @@ public class LocationService implements PropertyKeys {
                 if (Links.DIRECTIONAL.equals(create.getLinkType())) {
                     if (create.getMessage().getFields().containsKey(KEY_LINK_PASS_TEXT) && create.getMessage().getFields().containsKey(KEY_LINK_DESCRIPTION)) {
                         Link link = new DirectionalLink(create.getMessage().getFields().get(KEY_LINK_DESCRIPTION), location, create.getMessage().getPlayer().getLocation(), create.getDirection(), create.getMessage().getFields().get(KEY_LINK_PASS_TEXT));
-                        create.getMessage().getPlayer().getLocation().addLink(link);
+                        create.getMessage().getPlayer().getLocation().addOutboundLink(link);
                         create.setSuccessful(true);
                     }
                 }
@@ -32,9 +32,15 @@ public class LocationService implements PropertyKeys {
     public void edit(Edit edit) {
         if (edit.getMessage().getFields().containsKey(KEY_LOCATION_TEXT)) {
             Location location = new ImmutableLocation(edit.getMessage().getFields().get(KEY_LOCATION_TEXT));
-            for (Link l : edit.getMessage().getPlayer().getLocation().getLinks().values()) {
-                location.addLink(l);
+            for (Link l : edit.getMessage().getPlayer().getLocation().getOutboundLinks().values()) {
+                Link outbound = l.clone(location, l.getFromDirection());
+                outbound.bind();
             }
+            for (Link l : edit.getMessage().getPlayer().getLocation().getInboundLinks()) {
+                Link inbound = l.clone(location);
+                inbound.bind();
+            }
+            edit.getMessage().getPlayer().setLocation(location);
         }
     }
 }

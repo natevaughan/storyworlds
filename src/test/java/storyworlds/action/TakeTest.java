@@ -14,6 +14,7 @@ import storyworlds.service.message.Message;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import static org.junit.Assert.assertTrue;
 
@@ -24,7 +25,7 @@ public class TakeTest extends AbstractGameplayTest {
         Item item = new UsableItem("bar", "", "");
         Collection<Item> items = new ArrayList<>();
         items.add(item);
-        Location location = new ImmutableLocation("", items, new HashMap<Direction, Link>());
+        Location location = new ImmutableLocation("", items, new ArrayList<Link>(), new HashSet<Link>());
         user.setLocation(location);
         Actionable a = messageService.process(new Message(user, "take foo"));
         assertTrue(Take.class.equals(a.getClass()));
@@ -37,6 +38,6 @@ public class TakeTest extends AbstractGameplayTest {
         messageService.process(new Message(user, "take key"));
         messageService.process(new Message(user, "use key"));
         messageService.process(new Message(user, "move down"));
-        assertTrue("user should move down", user.getLocation().equals(location.getLink(Direction.DOWN).getToLocation()));
+        assertTrue("user should move down", user.getLocation().equals(location.getOutboundLink(Direction.DOWN).getToLocation()));
     }
 }

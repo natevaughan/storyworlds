@@ -21,7 +21,7 @@ public class LinkService implements PropertyKeys {
             if (Links.DIRECTIONAL.equals(create.getLinkType())) {
                 if (create.getMessage().getFields().containsKey(KEY_LINK_PASS_TEXT) && create.getMessage().getFields().containsKey(KEY_LINK_DESCRIPTION)) {
                     Link link = new DirectionalLink(create.getMessage().getFields().get(KEY_LINK_DESCRIPTION), location, create.getMessage().getPlayer().getLocation(), create.getDirection(), create.getMessage().getFields().get(KEY_LINK_PASS_TEXT));
-                    create.getMessage().getPlayer().getLocation().addLink(link);
+                    create.getMessage().getPlayer().getLocation().addOutboundLink(link);
                     create.setSuccessful(true);
                 }
             }
@@ -29,6 +29,12 @@ public class LinkService implements PropertyKeys {
     }
 
     public void edit(Edit edit) {
-
+        if (Links.DIRECTIONAL.equals(edit.getLinkType())) {
+            if (edit.getMessage().getFields().containsKey(KEY_LINK_PASS_TEXT) && edit.getMessage().getFields().containsKey(KEY_LINK_DESCRIPTION)) {
+                Link newLink = edit.getMessage().getPlayer().getLocation().getOutboundLink(edit.getDirection()).clone(edit.getMessage().getFields().get(KEY_LINK_DESCRIPTION), edit.getMessage().getFields().get(KEY_LINK_PASS_TEXT));
+                newLink.bind();
+                edit.setSuccessful(true);
+            }
+        }
     }
 }

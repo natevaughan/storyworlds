@@ -26,7 +26,6 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
     private Scanner scanner = new Scanner(System.in);
     private Player player;
 
-
     public void run() {
         sendMessage(WELCOME_MESSAGE);
         String name = getCommand();
@@ -34,8 +33,9 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
         player = new User(name);
         player.setLocation(start);
         Actionable response = messageService.process(new Message(player, "status"));
+        sendMessage(response.getMessage().getText());
         while (!Quit.class.equals(response.getClass())) {
-            sendMessage("What's your next move?");
+            sendMessage("Next instruction:");
             response = messageService.process(new Message(player, getCommand()));
             sendMessage(response.getMessage().getText());
             response.accept(this);
@@ -124,21 +124,28 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
     }
 
     public void visit(Edit edit) {
+        if (!edit.isCreateable()) {
+            return;
+        }
         edit.getMessage().resetText();
         switch(edit.getCreateable()) {
             case LOCATION:
                 sendMessage("What would you like the text of the location to be once the user arrives?");
                 edit.getMessage().getFields().put(KEY_LOCATION_TEXT, getCommand());
                 locationService.edit(edit);
+                break;
             case LINK:
                 sendMessage("What would you like the text describing the link to the location to say? \n" +
                         "It should complete this sentence: To the " + edit.getDirection() + " there is a...");
                 edit.getMessage().getFields().put(KEY_LINK_DESCRIPTION, getCommand());
                 sendMessage("What would you like the text of the link to be while the user moves to the new location?");
                 edit.getMessage().getFields().put(KEY_LINK_PASS_TEXT, getCommand());
+                edit.setLinkType(Links.DIRECTIONAL);
                 linkService.edit(edit);
-            case ERROR:
+                break;
+            default:
                 sendMessage("invalid creatable");
+                break;
         }
     }
 

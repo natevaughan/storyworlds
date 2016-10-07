@@ -13,9 +13,14 @@ public interface Location {
 
     public Item takeItem(String name);
 
-    public Map<Direction, Link> getLinks();
+    public Map<Direction, Link> getOutboundLinks();
 
-    public Link getLink(Direction direction);
+    public Link getOutboundLink(Direction direction);
 
-    public void addLink(Link link);
+    public void addOutboundLink(Link link);
+
+    public Collection<Link> getInboundLinks();
+
+    public void addInboundLink(Link link);
 }
+
