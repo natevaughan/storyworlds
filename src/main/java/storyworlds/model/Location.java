@@ -22,5 +22,7 @@ public interface Location {
     public Collection<Link> getInboundLinks();
 
     public void addInboundLink(Link link);
+
+    public Location getPreviousLocation();
 }
 

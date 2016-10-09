@@ -1,22 +1,21 @@
 package storyworlds.action;
 
-import storyworlds.create.Createables;
-import storyworlds.model.Direction;
+import storyworlds.create.Createable;
 import storyworlds.model.enumeration.Links;
 import storyworlds.model.enumeration.Locations;
 
 public abstract class AbstractCreateableAction extends DirectionedAction implements CreateableAction {
 
-    protected Createables creatable;
+    protected Createable creatable;
     protected Links linkType;
     protected Locations locationType;
     protected Integer locationIndex;
 
-    public Createables getCreateable() {
+    public Createable getCreateable() {
         return creatable;
     }
 
-    public void setCreateable(Createables creatable) {
+    public void setCreateable(Createable creatable) {
         this.creatable = creatable;
     }
 

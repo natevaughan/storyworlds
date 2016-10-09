@@ -1,4 +1,4 @@
-package storyworlds.factory;
+package storyworlds.initial.map;
 
 import org.junit.Test;
 import storyworlds.model.Direction;

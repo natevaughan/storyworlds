@@ -4,12 +4,14 @@ import storyworlds.action.*;
 import storyworlds.action.Error;
 import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.constants.GameTextConstants;
-import storyworlds.factory.MapFactory;
+import storyworlds.exception.UncreateableItemException;
+import storyworlds.initial.map.MapFactory;
 import storyworlds.model.Location;
 import storyworlds.model.Player;
 import storyworlds.model.enumeration.Links;
 import storyworlds.model.enumeration.Locations;
 import storyworlds.model.implementation.User;
+import storyworlds.service.ItemService;
 import storyworlds.service.LinkService;
 import storyworlds.service.LocationService;
 import storyworlds.service.message.Message;
@@ -23,6 +25,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
     MessageService messageService = new MessageService();
     LocationService locationService = new LocationService();
     LinkService linkService = new LinkService();
+    ItemService itemService = new ItemService();
     private Scanner scanner = new Scanner(System.in);
     private Player player;
 
@@ -66,9 +69,9 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
             return;
         }
 
+        create.getMessage().resetText();
         switch (create.getCreateable()) {
             case LOCATION:
-                create.getMessage().resetText();
                 sendMessage("What would you like the text describing the link to the location to say? \n" +
                         "It should complete this sentence: To the " + create.getDirection() + " there is a...");
                 create.getMessage().getFields().put(KEY_LINK_DESCRIPTION, getCommand());
@@ -81,7 +84,6 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
                 locationService.build(create);
                 break;
             case LINK:
-                create.getMessage().resetText();
                 sendMessage("What would you like the text describing the link to say? \n" +
                         "It should complete this sentence: To the " + create.getDirection() + " there is a...");
                 create.getMessage().getFields().put(KEY_LINK_DESCRIPTION, getCommand());
@@ -110,12 +112,22 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
                 create.setLinkType(Links.DIRECTIONAL);
                 linkService.create(create);
                 break;
+            case ITEM:
+                sendMessage("What would you like the one-word name of the item to be?");
+                create.getMessage().getFields().put(KEY_ITEM_NAME, getCommand());
+                sendMessage("What would you like the description of the item to be?");
+                create.getMessage().getFields().put(KEY_ITEM_DESCRIPTION, getCommand());
+                sendMessage("What would you like the description of using the item to be?");
+                create.getMessage().getFields().put(KEY_ITEM_USE_TEXT, getCommand());
+
+                try {
+                    itemService.create(create);
+                } catch (UncreateableItemException e) {
+                    sendMessage(e.getMessage());
+                }
+                break;
             default:
                 break;
-        }
-
-        if (create.isSuccessful()) {
-            sendMessage("Successfully created location");
         }
     }
 

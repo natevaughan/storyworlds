@@ -31,16 +31,21 @@ public class LocationService implements PropertyKeys {
 
     public void edit(Edit edit) {
         if (edit.getMessage().getFields().containsKey(KEY_LOCATION_TEXT)) {
-            Location location = new ImmutableLocation(edit.getMessage().getFields().get(KEY_LOCATION_TEXT));
-            for (Link l : edit.getMessage().getPlayer().getLocation().getOutboundLinks().values()) {
-                Link outbound = l.clone(location, l.getFromDirection());
-                outbound.bind();
-            }
-            for (Link l : edit.getMessage().getPlayer().getLocation().getInboundLinks()) {
-                Link inbound = l.clone(location);
-                inbound.bind();
-            }
+            Location formerLocation = edit.getMessage().getPlayer().getLocation();
+            Location location = new ImmutableLocation(edit.getMessage().getFields().get(KEY_LOCATION_TEXT), formerLocation);
+            cloneLinks(location, formerLocation);
             edit.getMessage().getPlayer().setLocation(location);
+        }
+    }
+
+    public void cloneLinks(Location location, Location formerLocation) {
+        for (Link l : formerLocation.getOutboundLinks().values()) {
+            Link outbound = l.clone(location, l.getFromDirection());
+            outbound.bind();
+        }
+        for (Link l : formerLocation.getInboundLinks()) {
+            Link inbound = l.clone(location);
+            inbound.bind();
         }
     }
 }

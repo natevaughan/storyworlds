@@ -2,20 +2,11 @@ package storyworlds.create;
 
 public class CreatableFactory {
 
-    public static Createables get(String input) {
-        Createables createables = parse(input);
-//        switch (createables) {
-//            default:
-//                return new Error("Unhandled createables: " + input);
-//        }
-        return createables;
-    }
+    public static Createable parse(String input) {
 
-    public static Createables parse(String input) {
+        Createable c = Createable.ERROR;
 
-        Createables c = Createables.ERROR;
-
-        for (Createables createables : Createables.values()) {
+        for (Createable createables : Createable.values()) {
             if (createables.toString().equalsIgnoreCase(input)) {
                 c = createables;
             }

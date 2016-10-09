@@ -1,7 +1,7 @@
 package storyworlds.action;
 
 import storyworlds.action.visitor.ActionVisitor;
-import storyworlds.create.Createables;
+import storyworlds.create.Createable;
 import storyworlds.model.Direction;
 
 public class Edit extends AbstractCreateableAction {
@@ -12,9 +12,12 @@ public class Edit extends AbstractCreateableAction {
 
     public boolean isCreateable() {
         if (direction == null) {
-            return Createables.LOCATION.equals(creatable);
+            return Createable.LOCATION.equals(creatable);
         } else {
-            return creatable != null && !Createables.LOCATION.equals(creatable) && !Createables.ERROR.equals(creatable) && !Direction.ERROR.equals(direction);
+            return creatable != null
+                    && !Createable.LOCATION.equals(creatable)
+                    && !Createable.ERROR.equals(creatable)
+                    && !Direction.ERROR.equals(direction);
         }
     }
 }

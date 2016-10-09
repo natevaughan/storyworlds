@@ -3,15 +3,13 @@ package storyworlds.action.visitor;
 import storyworlds.action.*;
 import storyworlds.action.Error;
 import storyworlds.constants.PropertyKeys;
-import storyworlds.create.Creatable;
-import storyworlds.create.Createables;
+import storyworlds.create.Createable;
 import storyworlds.model.Direction;
 import storyworlds.model.Item;
 import storyworlds.model.Link;
 import storyworlds.service.message.Message;
 
 import java.util.Collection;
-import java.util.regex.Pattern;
 
 /**
  * Responsibilities
@@ -25,12 +23,15 @@ public class ActionDoVisitor implements ActionVisitor, PropertyKeys {
     public void visit(Create create) {
         StringBuilder sb = new StringBuilder();
         if (create.isCreateable()) {
-            sb.append("OK, creating ").append(create.getCreateable()).append(" ").append(create.getDirection());
+            sb.append("OK, creating ").append(create.getCreateable());
+            if (!Createable.ITEM.equals(create.getCreateable())) {
+                sb.append(" ").append(create.getDirection());
+            }
             create.setSuccessful(true);
         } else {
             sb.append("Unable to create ").append(create.getCreateable()).append("\n");
 
-            if (create.getCreateable() == null || Createables.ERROR.equals(create.getCreateable())) {
+            if (create.getCreateable() == null || Createable.ERROR.equals(create.getCreateable())) {
                 sb.append(enumerateCreatables("create"));
             }
             if (create.getDirection() == null || Direction.ERROR.equals(create.getDirection())) {
@@ -57,7 +58,7 @@ public class ActionDoVisitor implements ActionVisitor, PropertyKeys {
             }
             edit.setSuccessful(true);
         } else {
-            if (Createables.LOCATION.equals(edit.getCreateable()) && edit.getDirection() != null) {
+            if (Createable.LOCATION.equals(edit.getCreateable()) && edit.getDirection() != null) {
                 edit.getMessage().addLine("To edit a location, first travel to it.");
             }
         }
@@ -178,13 +179,14 @@ public class ActionDoVisitor implements ActionVisitor, PropertyKeys {
         StringBuilder sb = new StringBuilder();
         sb.append("Please specify something to ").append(type).append(": ");
         int i = 0;
-        for (Createables createables : Createables.values()) {
+        for (Createable createables : Createable.values()) {
             if (i > 0)
                 sb.append(", ");
-            if (!Createables.ERROR.equals(createables))
+            if (!Createable.ERROR.equals(createables))
                 sb.append(createables);
             ++i;
         }
         return sb.toString();
     }
+
 }

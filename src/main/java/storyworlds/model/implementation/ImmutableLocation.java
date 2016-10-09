@@ -14,16 +14,22 @@ public class ImmutableLocation implements Location {
     private final Map<Direction, Link> outboundLinks;
     private final Collection<Link> inboundLinks;
     private final Map<String, Item> items;
-    
+    private Location previousLocation;
+
     public ImmutableLocation(String text) {
-        this(text, new HashSet<Item>());
+        this(text, null);
     }
 
-    public ImmutableLocation(String text, Collection<Item> items) {
-        this(text, items, new HashSet<Link>(), new HashSet<Link>());
+    public ImmutableLocation(String text, Location previousLocation) {
+        this(text, previousLocation, new HashSet<Item>());
     }
 
-    public ImmutableLocation(String text, Collection<Item> items, Collection<Link> outboundLinks, Collection<Link> inboundLinks) {
+    public ImmutableLocation(String text, Location previousLocation, Collection<Item> items) {
+        this(text, previousLocation, items, new HashSet<Link>(), new HashSet<Link>());
+    }
+
+    public ImmutableLocation(String text, Location previousLocation, Collection<Item> items, Collection<Link> outboundLinks, Collection<Link> inboundLinks) {
+        this.previousLocation = previousLocation;
         Map<String, Item> itemsMap = new HashMap<String, Item>();
         for (Item item : items) {
             itemsMap.put(item.getName().toUpperCase(), item);
@@ -71,5 +77,9 @@ public class ImmutableLocation implements Location {
 
     public void addOutboundLink(Link link) {
         outboundLinks.put(link.getFromDirection(), link);
+    }
+
+    public Location getPreviousLocation() {
+        return previousLocation;
     }
 }

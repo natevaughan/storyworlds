@@ -4,7 +4,7 @@ import storyworlds.action.*;
 import storyworlds.action.Error;
 import storyworlds.action.parser.DirectionParser;
 import storyworlds.create.CreatableFactory;
-import storyworlds.create.Createables;
+import storyworlds.create.Createable;
 import storyworlds.model.Direction;
 
 /**
@@ -21,7 +21,6 @@ public class SecondaryParserVisitor implements ActionVisitor {
     public void visit(Create create) {
         getCreateArgs(create);
     }
-
 
     public void visit(Error error) {
         setUnrecognizedModifier(error);
@@ -45,6 +44,7 @@ public class SecondaryParserVisitor implements ActionVisitor {
         }
         move.setDirection(dirp.parse(secondary));
     }
+
     public void visit(Map map) {
         setUnrecognizedModifier(map);
     }
@@ -80,7 +80,7 @@ public class SecondaryParserVisitor implements ActionVisitor {
             String[] createArgs = secondary.split("\\s+");
             if (createArgs.length > 0) {
                 actionable.setCreateable(CreatableFactory.parse(createArgs[0]));
-                if (Createables.ERROR.equals(actionable.getCreateable())) {
+                if (Createable.ERROR.equals(actionable.getCreateable())) {
                     setUnrecognizedModifier(actionable, createArgs[0]);
                 }
             }

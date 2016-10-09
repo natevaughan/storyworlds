@@ -1,9 +1,8 @@
 package storyworlds.action;
 
 import storyworlds.action.visitor.ActionVisitor;
-import storyworlds.create.Creatable;
 
-public class Error extends AbstractAction implements Creatable{
+public class Error extends AbstractAction {
 
     public Error(String message) {
         this.message.addLine(message);

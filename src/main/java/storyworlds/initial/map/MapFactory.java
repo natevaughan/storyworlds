@@ -1,4 +1,4 @@
-package storyworlds.factory;
+package storyworlds.initial.map;
 
 import storyworlds.constants.GameTextConstants;
 import storyworlds.model.Direction;
@@ -15,8 +15,9 @@ import java.util.Collection;
 
 public class MapFactory implements GameTextConstants {
     public static Location getStartMap() {
-        Location location = new ImmutableLocation(DEFAULT_LOCATION_TEXT,  createItems());
+        Location location = new ImmutableLocation(DEFAULT_LOCATION_TEXT, null, createItems());
         Link up = new DirectionalLink(DEFAULT_LOCATION_TEXT_UP, getBlankLocation(Direction.DOWN, location), location, Direction.UP, DEFAULT_LOCATION_PASS_TEXT_UP);
+        up.bind();
         Item key = new UsableItem(KEY_NAME, KEY_USE_MESSAGE, KEY_DESCRIPTION);
         BlockableLink lockedLink = new BlockableLink(DEFAULT_LOCATION_TEXT_DOWN, getBlankLocation(Direction.UP, location), location, Direction.DOWN, DEFAULT_LOCATION_PASS_TEXT_DOWN, DEFAULT_LOCATION_FAIL_TEXT_DOWN, key);
         lockedLink.bind();

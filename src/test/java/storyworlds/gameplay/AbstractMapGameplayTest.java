@@ -1,7 +1,7 @@
 package storyworlds.gameplay;
 
 import org.junit.Before;
-import storyworlds.factory.MapFactory;
+import storyworlds.initial.map.MapFactory;
 import storyworlds.model.Location;
 
 /**
