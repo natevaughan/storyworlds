@@ -5,21 +5,11 @@ import storyworlds.model.Location;
 /**
  * Created by nvaughan on 10/10/2016.
  */
-public class DirectionalLinkProperties implements Validateable {
+public class DirectionalLinkProperties extends AbstractCreatableProperties {
 
-    private String description;
     private String passText;
     private Location fromLocation;
     private Location toLocation;
-
-    public String getDescription() {
-        return description;
-    }
-
-    public DirectionalLinkProperties setDescription(String description) {
-        this.description = description;
-        return this;
-    }
 
     public String getPassText() {
         return passText;

@@ -2,7 +2,6 @@ package storyworlds.action.visitor;
 
 import storyworlds.action.*;
 import storyworlds.action.Error;
-import storyworlds.constants.PropertyKeys;
 import storyworlds.create.Createable;
 import storyworlds.model.Direction;
 import storyworlds.model.Item;
@@ -18,7 +17,8 @@ import java.util.Collection;
  * -Setting action success
  * -Setting message text
  */
-public class ActionDoVisitor implements ActionVisitor, PropertyKeys {
+public class ActionDoVisitor implements ActionVisitor
+{
 
     public void visit(Create create) {
         StringBuilder sb = new StringBuilder();
@@ -149,7 +149,7 @@ public class ActionDoVisitor implements ActionVisitor, PropertyKeys {
     }
 
     private void describeLocation(Message m) {
-        m.addLine(m.getPlayer().getLocation().getText());
+        m.addLine(m.getPlayer().getLocation().getDescription());
         java.util.Map<Direction, Link> links = m.getPlayer().getLocation().getOutboundLinks();
         for (Direction direction : links.keySet()) {
             m.addLine(direction.formatted() + " is " + links.get(direction).getDescription());

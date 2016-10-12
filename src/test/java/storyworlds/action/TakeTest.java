@@ -1,8 +1,8 @@
 package storyworlds.action;
 
 import org.junit.Test;
-import storyworlds.initial.map.MapFactory;
 import storyworlds.gameplay.AbstractGameplayTest;
+import storyworlds.initial.map.MapFactory;
 import storyworlds.model.Direction;
 import storyworlds.model.Item;
 import storyworlds.model.Link;

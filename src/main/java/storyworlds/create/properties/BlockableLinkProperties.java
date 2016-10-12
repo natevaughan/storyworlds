@@ -1,7 +1,5 @@
 package storyworlds.create.properties;
 
-import storyworlds.model.Location;
-
 /**
  * Created by nvaughan on 10/10/2016.
  */

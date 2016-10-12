@@ -10,31 +10,31 @@ import java.util.*;
 
 public class ImmutableLocation implements Location { 
 
-    private final String text;
+    private final String description;
     private final Map<Direction, Link> outboundLinks;
     private final Collection<Link> inboundLinks;
     private final Map<String, Item> items;
     private Location previousLocation;
 
-    public ImmutableLocation(String text) {
-        this(text, null);
+    public ImmutableLocation(String description) {
+        this(description, null);
     }
 
-    public ImmutableLocation(String text, Location previousLocation) {
-        this(text, previousLocation, new HashSet<Item>());
+    public ImmutableLocation(String description, Location previousLocation) {
+        this(description, previousLocation, new HashSet<Item>());
     }
 
-    public ImmutableLocation(String text, Location previousLocation, Collection<Item> items) {
-        this(text, previousLocation, items, new HashSet<Link>(), new HashSet<Link>());
+    public ImmutableLocation(String description, Location previousLocation, Collection<Item> items) {
+        this(description, previousLocation, items, new HashSet<Link>(), new HashSet<Link>());
     }
 
-    public ImmutableLocation(String text, Location previousLocation, Collection<Item> items, Collection<Link> outboundLinks, Collection<Link> inboundLinks) {
+    public ImmutableLocation(String description, Location previousLocation, Collection<Item> items, Collection<Link> outboundLinks, Collection<Link> inboundLinks) {
         this.previousLocation = previousLocation;
         Map<String, Item> itemsMap = new HashMap<String, Item>();
         for (Item item : items) {
             itemsMap.put(item.getName().toUpperCase(), item);
         }
-        this.text = text;
+        this.description = description;
         this.outboundLinks = new HashMap<>();
         outboundLinks.forEach(Link::bind);
         this.inboundLinks = new HashSet<Link>(inboundLinks);
@@ -43,8 +43,8 @@ public class ImmutableLocation implements Location {
     }
 
 
-    public String getText() {
-        return text;
+    public String getDescription() {
+        return description;
     }
 
     public Collection<Item> listItems() {

@@ -3,7 +3,7 @@ package storyworlds.create;
 import org.junit.Test;
 import storyworlds.action.Actionable;
 import storyworlds.action.Create;
-import storyworlds.constants.PropertyKeys;
+import storyworlds.create.properties.ItemProperties;
 import storyworlds.exception.UncreateableItemException;
 import storyworlds.gameplay.AbstractMapGameplayTest;
 import storyworlds.model.Item;
@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by nvaughan on 10/7/2016.
  */
-public class ItemCreatorTest extends AbstractMapGameplayTest implements PropertyKeys {
+public class ItemCreatorTest extends AbstractMapGameplayTest {
 
     private final String ITEM_NAME = "arbitrary.item.name";
     private final String ITEM_DESCRIPTION = "arbitrary.item.description";
@@ -27,24 +27,34 @@ public class ItemCreatorTest extends AbstractMapGameplayTest implements Property
     public void createItemTest() throws UncreateableItemException {
         Actionable a = messageService.process(new Message(user, "create item"));
         assertTrue(a.isSuccessful());
-        assertTrue(a instanceof Create);
-
-        ItemService itemService = new ItemService();
-        a.getMessage().getFields().put(KEY_ITEM_NAME, ITEM_NAME);
-        a.getMessage().getFields().put(KEY_ITEM_DESCRIPTION, ITEM_DESCRIPTION);
-        a.getMessage().getFields().put(KEY_ITEM_USE_TEXT, ITEM_USE_TEXT);
-        Item item = itemService.create((Create) a);
-        assertNotNull(item);
+        if (a instanceof Create) {
+            ItemService itemService = new ItemService();
+            ItemProperties itemProperties = new ItemProperties();
+            itemProperties.setName(ITEM_NAME);
+            itemProperties.setDescription(ITEM_DESCRIPTION);
+            itemProperties.setUseText(ITEM_USE_TEXT);
+            ((Create) a).setProperties(itemProperties);
+            Item item = itemService.create((Create) a);
+            assertNotNull(item);
+        } else {
+            assertTrue("Actionable not instance of Create.", false);
+        }
     }
 
     @Test(expected = UncreateableItemException.class)
     public void twoWordNameTest() throws UncreateableItemException {
         Actionable a = messageService.process(new Message(user, "create item"));
 
-        ItemService itemService = new ItemService();
-        a.getMessage().getFields().put(KEY_ITEM_NAME, "foo bar");
-        a.getMessage().getFields().put(KEY_ITEM_DESCRIPTION, ITEM_DESCRIPTION);
-        a.getMessage().getFields().put(KEY_ITEM_USE_TEXT, ITEM_USE_TEXT);
-        Item item = itemService.create((Create) a);
+        if (a instanceof Create) {
+            ItemService itemService = new ItemService();
+            ItemProperties itemProperties = new ItemProperties();
+            itemProperties.setName("foo bar");
+            itemProperties.setDescription(ITEM_DESCRIPTION);
+            itemProperties.setUseText(ITEM_USE_TEXT);
+            ((Create) a).setProperties(itemProperties);
+            Item item = itemService.create((Create) a);
+        } else {
+            assertTrue("Actionable not instance of Create.", false);
+        }
     }
 }

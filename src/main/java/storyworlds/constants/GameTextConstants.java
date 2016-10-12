@@ -1,6 +1,6 @@
 package storyworlds.constants; 
 
-public interface GameTextConstants extends PropertyKeys {
+public interface GameTextConstants {
 
     public final String WELCOME_MESSAGE = "Please enter your name to begin:";
 

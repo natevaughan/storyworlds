@@ -2,8 +2,8 @@ package storyworlds.action;
 
 
 import org.junit.Test;
-import storyworlds.initial.map.MapFactory;
 import storyworlds.gameplay.AbstractMapGameplayTest;
+import storyworlds.initial.map.MapFactory;
 import storyworlds.model.Location;
 import storyworlds.service.message.Message;
 

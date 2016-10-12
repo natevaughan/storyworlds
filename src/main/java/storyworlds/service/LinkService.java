@@ -2,37 +2,38 @@ package storyworlds.service;
 
 import storyworlds.action.Create;
 import storyworlds.action.Edit;
-import storyworlds.constants.PropertyKeys;
+import storyworlds.create.properties.DirectionalLinkProperties;
+import storyworlds.create.properties.Validateable;
 import storyworlds.model.Link;
-import storyworlds.model.Location;
-import storyworlds.model.enumeration.Links;
 import storyworlds.model.implementation.DirectionalLink;
 
-import java.util.ArrayList;
-import java.util.List;
 
-
-public class LinkService implements PropertyKeys {
+public class LinkService {
     public void create(Create create) {
-        // XXX: todo
-        if (create.getLocationIndex() != null) {
-            List<Location> historyList = new ArrayList<>(create.getMessage().getPlayer().getLocationHistory());
-            Location location = historyList.get(create.getLocationIndex());
-            if (Links.DIRECTIONAL.equals(create.getLinkType())) {
-                if (create.getMessage().getFields().containsKey(KEY_LINK_PASS_TEXT) && create.getMessage().getFields().containsKey(KEY_LINK_DESCRIPTION)) {
-                    Link link = new DirectionalLink(create.getMessage().getFields().get(KEY_LINK_DESCRIPTION), location, create.getMessage().getPlayer().getLocation(), create.getDirection(), create.getMessage().getFields().get(KEY_LINK_PASS_TEXT));
-                    create.getMessage().getPlayer().getLocation().addOutboundLink(link);
-                    create.setSuccessful(true);
-                }
+        Validateable properties = create.getProperties();
+        if (properties.isValid()) {
+            if (properties instanceof DirectionalLinkProperties) {
+                Link link = new DirectionalLink(((DirectionalLinkProperties) properties).getDescription(),
+                        ((DirectionalLinkProperties) properties).getToLocation(),
+                        create.getMessage().getPlayer().getLocation(), create.getDirection(),
+                        ((DirectionalLinkProperties) properties).getPassText());
+                create.getMessage().getPlayer().getLocation().addOutboundLink(link);
+                link.bind();
+                create.setSuccessful(true);
             }
         }
     }
 
     public void edit(Edit edit) {
-        if (Links.DIRECTIONAL.equals(edit.getLinkType())) {
-            if (edit.getMessage().getFields().containsKey(KEY_LINK_PASS_TEXT) && edit.getMessage().getFields().containsKey(KEY_LINK_DESCRIPTION)) {
-                Link newLink = edit.getMessage().getPlayer().getLocation().getOutboundLink(edit.getDirection()).clone(edit.getMessage().getFields().get(KEY_LINK_DESCRIPTION), edit.getMessage().getFields().get(KEY_LINK_PASS_TEXT));
-                newLink.bind();
+        Validateable properties = edit.getProperties();
+        if (properties.isValid()) {
+            if (properties instanceof DirectionalLinkProperties) {
+                Link link = new DirectionalLink(((DirectionalLinkProperties) properties).getDescription(),
+                        ((DirectionalLinkProperties) properties).getToLocation(),
+                        edit.getMessage().getPlayer().getLocation(), edit.getDirection(),
+                        ((DirectionalLinkProperties) properties).getPassText());
+                edit.getMessage().getPlayer().getLocation().addOutboundLink(link);
+                link.bind();
                 edit.setSuccessful(true);
             }
         }

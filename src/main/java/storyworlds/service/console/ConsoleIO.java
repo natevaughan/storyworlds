@@ -4,15 +4,13 @@ import storyworlds.action.*;
 import storyworlds.action.Error;
 import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.constants.GameTextConstants;
-import storyworlds.create.properties.BlockableLinkProperties;
 import storyworlds.create.properties.DirectionalLinkProperties;
-import storyworlds.create.properties.Validateable;
+import storyworlds.create.properties.ItemProperties;
+import storyworlds.create.properties.LocationProperties;
 import storyworlds.exception.UncreateableItemException;
 import storyworlds.initial.map.MapFactory;
 import storyworlds.model.Location;
 import storyworlds.model.Player;
-import storyworlds.model.enumeration.Links;
-import storyworlds.model.enumeration.Locations;
 import storyworlds.model.implementation.User;
 import storyworlds.service.ItemService;
 import storyworlds.service.LinkService;
@@ -20,6 +18,8 @@ import storyworlds.service.LocationService;
 import storyworlds.service.message.Message;
 import storyworlds.service.message.MessageService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleIO implements ActionVisitor, GameTextConstants {
@@ -75,31 +75,31 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
         create.getMessage().resetText();
         switch (create.getCreateable()) {
             case LOCATION:
-                DirectionalLinkProperties props = new DirectionalLinkProperties();
+                DirectionalLinkProperties locationProps = new DirectionalLinkProperties();
                 sendMessage("What would you like the text describing the link to the location to say? \n" +
                         "It should complete this sentence: To the " + create.getDirection() + " there is a...");
 //                create.getMessage().getFields().put(KEY_LINK_DESCRIPTION, getCommand());
-                props.setDescription(getCommand());
+                locationProps.setDescription(getCommand());
                 sendMessage("What would you like the text of the link to be while the user moves to the new location?");
 //                create.getMessage().getFields().put(KEY_LINK_PASS_TEXT, getCommand());
                 sendMessage("What would you like the text of the location to be once the user arrives?");
 //                create.getMessage().getFields().put(KEY_LOCATION_TEXT, getCommand());
-                props.setPassText(getCommand());
-                create.setLinkType(Links.DIRECTIONAL);
-                create.setLocationType(Locations.IMMUTABLE);
+                locationProps.setPassText(getCommand());
+                create.setProperties(locationProps);
                 locationService.build(create);
                 break;
             case LINK:
-                BlockableLinkProperties props2 = new BlockableLinkProperties();
+                DirectionalLinkProperties linkProperties = new DirectionalLinkProperties();
                 sendMessage("What would you like the text describing the link to say? \n" +
                         "It should complete this sentence: To the " + create.getDirection() + " there is a...");
-                create.getMessage().getFields().put(KEY_LINK_DESCRIPTION, getCommand());
+                linkProperties.setDescription(getCommand());
                 sendMessage("What would you like the text of the link to be while the user moves to the new location?");
-                create.getMessage().getFields().put(KEY_LINK_PASS_TEXT, getCommand());
+                linkProperties.setPassText(getCommand());
                 sendMessage("Which location would you like to connect the link to?");
                 int i = 1;
-                for (Location loc: create.getMessage().getPlayer().getLocationHistory()) {
-                    String[] text = loc.getText().split("\n");
+                List<Location> locationHistory = new ArrayList<>(create.getMessage().getPlayer().getLocationHistory());
+                for (Location loc: locationHistory) {
+                    String[] text = loc.getDescription().split("\n");
                     int length = (text[0].length() > 30) ? 30 : text[0].length();
                     String abbrev = text[0].substring(0, length)  + "...";
                     sendMessage("previous Location " + i + ": " + abbrev);
@@ -108,25 +108,25 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
                 sendMessage("Enter the number of the desired location:");
                 try {
                     Integer index  = Integer.parseInt(getCommand());
-                    if (index >= i) {
+                    if (index >= i || index < 1) {
                         sendMessage("Invalid number");
                     } else {
-                        create.setLocationIndex(index - 1);
+                        linkProperties.setToLocation(locationHistory.get(i-1));
                     }
                 } catch (NumberFormatException nfe) {
                     sendMessage("invalid number");
                 }
-                create.setLinkType(Links.DIRECTIONAL);
+                create.setProperties(linkProperties);
                 linkService.create(create);
                 break;
             case ITEM:
+                ItemProperties itemProperties = new ItemProperties();
                 sendMessage("What would you like the one-word name of the item to be?");
-                create.getMessage().getFields().put(KEY_ITEM_NAME, getCommand());
+                itemProperties.setName(getCommand());
                 sendMessage("What would you like the description of the item to be?");
-                create.getMessage().getFields().put(KEY_ITEM_DESCRIPTION, getCommand());
+                itemProperties.setDescription(getCommand());
                 sendMessage("What would you like the description of using the item to be?");
-                create.getMessage().getFields().put(KEY_ITEM_USE_TEXT, getCommand());
-
+                itemProperties.setUseText(getCommand());
                 try {
                     itemService.create(create);
                 } catch (UncreateableItemException e) {
@@ -149,17 +149,20 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
         edit.getMessage().resetText();
         switch(edit.getCreateable()) {
             case LOCATION:
+                LocationProperties locationProperties = new LocationProperties();
                 sendMessage("What would you like the text of the location to be once the user arrives?");
-                edit.getMessage().getFields().put(KEY_LOCATION_TEXT, getCommand());
+                locationProperties.setDescription(getCommand());
+                edit.setProperties(locationProperties);
                 locationService.edit(edit);
                 break;
             case LINK:
+                DirectionalLinkProperties directionalLinkProperties = new DirectionalLinkProperties();
                 sendMessage("What would you like the text describing the link to the location to say? \n" +
                         "It should complete this sentence: To the " + edit.getDirection() + " there is a...");
-                edit.getMessage().getFields().put(KEY_LINK_DESCRIPTION, getCommand());
+                directionalLinkProperties.setDescription(getCommand());
                 sendMessage("What would you like the text of the link to be while the user moves to the new location?");
-                edit.getMessage().getFields().put(KEY_LINK_PASS_TEXT, getCommand());
-                edit.setLinkType(Links.DIRECTIONAL);
+                directionalLinkProperties.setPassText(getCommand());
+                edit.setProperties(directionalLinkProperties);
                 linkService.edit(edit);
                 break;
             default:

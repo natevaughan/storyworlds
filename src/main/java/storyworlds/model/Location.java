@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface Location { 
 
-    public String getText();
+    public String getDescription();
 
     public Collection<Item> listItems();
 
