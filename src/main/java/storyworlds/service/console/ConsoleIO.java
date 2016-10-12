@@ -100,6 +100,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
                 break;
             case LINK:
                 DirectionalLinkProperties linkProperties = new DirectionalLinkProperties();
+                linkProperties.setFromLocation(player.getLocation());
                 sendMessage("What would you like the text describing the link to say? \n" +
                         "It should complete this sentence: " + create.getDirection().formatted() + " there is...");
                 linkProperties.setDescription(getCommand());
@@ -121,7 +122,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
                     if (index >= i || index < 1) {
                         sendMessage("Invalid number");
                     } else {
-                        linkProperties.setToLocation(locationHistory.get(i-1));
+                        linkProperties.setToLocation(locationHistory.get(index - 1));
                     }
                 } catch (NumberFormatException nfe) {
                     sendMessage("invalid number");
