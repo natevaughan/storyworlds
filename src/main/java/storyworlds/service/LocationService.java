@@ -5,35 +5,35 @@ import storyworlds.action.Create;
 import storyworlds.action.Edit;
 import storyworlds.create.properties.LocationProperties;
 import storyworlds.create.properties.Validateable;
+import storyworlds.exception.UncreateableException;
 import storyworlds.model.Link;
 import storyworlds.model.Location;
 import storyworlds.model.implementation.ImmutableLocation;
 
 public class LocationService {
 
-    public void build(Create create) {
+    public Location build(Create create) throws UncreateableException {
 
         Validateable properties = create.getProperties();
 
-        if (properties.isValid()) {
-            if (properties instanceof LocationProperties) {
-                Location location = new ImmutableLocation(((LocationProperties) properties).getDescription());
-                // need to add link
-            }
+        if (properties.isValid() && properties instanceof LocationProperties) {
+            Location location = new ImmutableLocation(((LocationProperties) properties).getDescription());
+            return location;
         }
+        throw new UncreateableException("Failed to create location.");
     }
 
-    public void edit(Edit edit) {
+    public Location edit(Edit edit) throws UncreateableException {
         Validateable properties = edit.getProperties();
 
-        if (properties.isValid()) {
-            if (properties instanceof LocationProperties) {
-                Location formerLocation = edit.getMessage().getPlayer().getLocation();
-                Location location = new ImmutableLocation(((LocationProperties) properties).getDescription(), formerLocation);
-                cloneLinks(location, formerLocation);
-                edit.getMessage().getPlayer().setLocation(location);
-            }
+        if (properties.isValid() && properties instanceof LocationProperties) {
+            Location formerLocation = edit.getMessage().getPlayer().getLocation();
+            Location location = new ImmutableLocation(((LocationProperties) properties).getDescription(), formerLocation);
+            cloneLinks(location, formerLocation);
+            edit.getMessage().getPlayer().setLocation(location);
+            return location;
         }
+        throw new UncreateableException("Failed to create location.");
     }
 
     public void cloneLinks(Location location, Location formerLocation) {

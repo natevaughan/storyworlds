@@ -4,7 +4,7 @@ import org.junit.Test;
 import storyworlds.action.Actionable;
 import storyworlds.action.Create;
 import storyworlds.create.properties.ItemProperties;
-import storyworlds.exception.UncreateableItemException;
+import storyworlds.exception.UncreateableException;
 import storyworlds.gameplay.AbstractMapGameplayTest;
 import storyworlds.model.Item;
 import storyworlds.service.ItemService;
@@ -24,7 +24,7 @@ public class ItemCreatorTest extends AbstractMapGameplayTest {
 
 
     @Test
-    public void createItemTest() throws UncreateableItemException {
+    public void createItemTest() throws UncreateableException {
         Actionable a = messageService.process(new Message(user, "create item"));
         assertTrue(a.isSuccessful());
         if (a instanceof Create) {
@@ -41,8 +41,8 @@ public class ItemCreatorTest extends AbstractMapGameplayTest {
         }
     }
 
-    @Test(expected = UncreateableItemException.class)
-    public void twoWordNameTest() throws UncreateableItemException {
+    @Test(expected = UncreateableException.class)
+    public void twoWordNameTest() throws UncreateableException {
         Actionable a = messageService.process(new Message(user, "create item"));
 
         if (a instanceof Create) {

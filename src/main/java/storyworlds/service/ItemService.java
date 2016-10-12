@@ -3,7 +3,7 @@ package storyworlds.service;
 import storyworlds.action.Create;
 import storyworlds.create.properties.ItemProperties;
 import storyworlds.create.properties.Validateable;
-import storyworlds.exception.UncreateableItemException;
+import storyworlds.exception.UncreateableException;
 import storyworlds.model.Item;
 import storyworlds.model.Location;
 import storyworlds.model.implementation.ImmutableLocation;
@@ -19,12 +19,12 @@ public class ItemService {
 
     LocationService locationService = new LocationService();
 
-    public Item create(Create create) throws UncreateableItemException {
+    public Item create(Create create) throws UncreateableException {
         Validateable properties = create.getProperties();
         if (properties.isValid() && properties instanceof ItemProperties) {
             String[] nameArgs = ((ItemProperties) properties).getName().split(" ");
             if (nameArgs.length > 1) {
-                throw new UncreateableItemException("Item name must be one word.");
+                throw new UncreateableException("Item name must be one word.");
             }
 
             Item item = new UsableItem(((ItemProperties) properties).getName(),
@@ -38,6 +38,6 @@ public class ItemService {
             create.getMessage().getPlayer().setLocation(location);
             return item;
         }
-        throw new UncreateableItemException("Uncreatable Item.");
+        throw new UncreateableException("Uncreatable Item.");
     }
 }
