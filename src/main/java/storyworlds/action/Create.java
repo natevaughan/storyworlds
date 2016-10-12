@@ -17,4 +17,6 @@ public class Create extends AbstractCreateableAction {
                 && message.getPlayer().getLocation().getOutboundLink(direction) == null
                 && !(Createable.LOCATION.equals(creatable) && direction == null);
     }
+
+
 }

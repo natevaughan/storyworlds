@@ -4,6 +4,9 @@ import storyworlds.action.*;
 import storyworlds.action.Error;
 import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.constants.GameTextConstants;
+import storyworlds.create.properties.BlockableLinkProperties;
+import storyworlds.create.properties.DirectionalLinkProperties;
+import storyworlds.create.properties.Validateable;
 import storyworlds.exception.UncreateableItemException;
 import storyworlds.initial.map.MapFactory;
 import storyworlds.model.Location;
@@ -72,18 +75,22 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
         create.getMessage().resetText();
         switch (create.getCreateable()) {
             case LOCATION:
+                DirectionalLinkProperties props = new DirectionalLinkProperties();
                 sendMessage("What would you like the text describing the link to the location to say? \n" +
                         "It should complete this sentence: To the " + create.getDirection() + " there is a...");
-                create.getMessage().getFields().put(KEY_LINK_DESCRIPTION, getCommand());
+//                create.getMessage().getFields().put(KEY_LINK_DESCRIPTION, getCommand());
+                props.setDescription(getCommand());
                 sendMessage("What would you like the text of the link to be while the user moves to the new location?");
-                create.getMessage().getFields().put(KEY_LINK_PASS_TEXT, getCommand());
+//                create.getMessage().getFields().put(KEY_LINK_PASS_TEXT, getCommand());
                 sendMessage("What would you like the text of the location to be once the user arrives?");
-                create.getMessage().getFields().put(KEY_LOCATION_TEXT, getCommand());
+//                create.getMessage().getFields().put(KEY_LOCATION_TEXT, getCommand());
+                props.setPassText(getCommand());
                 create.setLinkType(Links.DIRECTIONAL);
                 create.setLocationType(Locations.IMMUTABLE);
                 locationService.build(create);
                 break;
             case LINK:
+                BlockableLinkProperties props2 = new BlockableLinkProperties();
                 sendMessage("What would you like the text describing the link to say? \n" +
                         "It should complete this sentence: To the " + create.getDirection() + " there is a...");
                 create.getMessage().getFields().put(KEY_LINK_DESCRIPTION, getCommand());
