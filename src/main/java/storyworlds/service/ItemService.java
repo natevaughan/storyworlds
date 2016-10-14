@@ -20,8 +20,10 @@ public class ItemService {
     LocationService locationService = new LocationService();
 
     public Item create(Create create) throws UncreateableException {
+        validateAll(create);
         Validateable properties = create.getProperties();
-        if (properties.isValid() && properties instanceof ItemProperties) {
+
+        if (properties instanceof ItemProperties) {
             String[] nameArgs = ((ItemProperties) properties).getName().split(" ");
             if (nameArgs.length > 1) {
                 throw new UncreateableException("Item name must be one word.");
@@ -39,5 +41,23 @@ public class ItemService {
             return item;
         }
         throw new UncreateableException("Uncreatable Item.");
+    }
+
+    private void validateAll(Create create) throws UncreateableException {
+        validate(create != null, "Create was null");
+        validate(create.getMessage() != null, "Message was null");
+        Validateable properties = create.getProperties();
+        validate(properties != null, "Null properties");
+        validate(properties.isValid(), "Invalid properties");
+        validate(properties instanceof ItemProperties, "Wrong properties type");
+        validate(create.getMessage().getPlayer() != null, "Null player");
+        validate(create.getMessage().getPlayer().getLocation() != null, "Null player location.");
+
+    }
+
+    private void validate(boolean condition, String message) throws UncreateableException {
+        if (!condition) {
+            throw new UncreateableException("Uncreateable item: " + message);
+        }
     }
 }

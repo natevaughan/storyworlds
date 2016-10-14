@@ -142,6 +142,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
                 itemProperties.setDescription(getCommand());
                 sendMessage("What would you like the description of using the item to be?");
                 itemProperties.setUseText(getCommand());
+                create.setProperties(itemProperties);
                 try {
                     itemService.create(create);
                 } catch (UncreateableException e) {
@@ -181,6 +182,8 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
                 directionalLinkProperties.setDescription(getCommand());
                 sendMessage("What would you like the text of the link to be while the user moves to the new location?");
                 directionalLinkProperties.setPassText(getCommand());
+                directionalLinkProperties.setFromLocation(player.getLocation());
+                directionalLinkProperties.setToLocation(player.getLocation().getOutboundLink(edit.getDirection()).getToLocation());
                 edit.setProperties(directionalLinkProperties);
                 try {
                     linkService.edit(edit);

@@ -12,7 +12,7 @@ public class Create extends AbstractCreateableAction {
 
     public boolean isCreateable() {
         return creatable != null
-                && direction != null
+                && (Createable.ITEM.equals(creatable) || direction != null)
                 && !Createable.ERROR.equals(creatable)
                 && !Direction.ERROR.equals(direction)
                 && message.getPlayer().getLocation().getOutboundLink(direction) == null

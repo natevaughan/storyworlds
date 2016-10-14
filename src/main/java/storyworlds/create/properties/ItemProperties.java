@@ -26,6 +26,11 @@ public class ItemProperties extends AbstractCreatableProperties {
         return this;
     }
 
+    public ItemProperties setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
     public boolean isValid() {
         return name != null && description != null && useText != null;
     }

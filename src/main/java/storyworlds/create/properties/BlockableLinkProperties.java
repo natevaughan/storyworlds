@@ -27,6 +27,12 @@ public class BlockableLinkProperties extends DirectionalLinkProperties {
     }
 
     @Override
+    public BlockableLinkProperties setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    @Override
     public boolean isValid() {
         return failText != null
                 && requiredItem != null

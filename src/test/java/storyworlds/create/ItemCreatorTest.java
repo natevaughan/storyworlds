@@ -22,7 +22,6 @@ public class ItemCreatorTest extends AbstractMapGameplayTest {
     private final String ITEM_DESCRIPTION = "arbitrary.item.description";
     private final String ITEM_USE_TEXT = "arbitrary.item.use.text";
 
-
     @Test
     public void createItemTest() throws UncreateableException {
         Actionable a = messageService.process(new Message(user, "create item"));

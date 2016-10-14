@@ -27,7 +27,7 @@ public class LinkService {
 
     public Link edit(Edit edit) throws UncreateableException {
         Validateable properties = edit.getProperties();
-        if (properties.isValid() && properties instanceof DirectionalLinkProperties) {
+        if (properties != null && properties.isValid() && properties instanceof DirectionalLinkProperties) {
             Link link = new DirectionalLink(((DirectionalLinkProperties) properties).getDescription(),
                     ((DirectionalLinkProperties) properties).getToLocation(),
                     edit.getMessage().getPlayer().getLocation(), edit.getDirection(),

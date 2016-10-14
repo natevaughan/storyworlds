@@ -38,6 +38,11 @@ public class DirectionalLinkProperties extends AbstractCreatableProperties {
         return this;
     }
 
+    public DirectionalLinkProperties setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
     public boolean isValid() {
         return description != null
                 && passText != null

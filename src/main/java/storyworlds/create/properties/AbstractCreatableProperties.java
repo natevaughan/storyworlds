@@ -11,8 +11,4 @@ public abstract class AbstractCreatableProperties implements Validateable {
         return description;
     }
 
-    public AbstractCreatableProperties setDescription(String description) {
-        this.description = description;
-        return this;
-    }
 }
