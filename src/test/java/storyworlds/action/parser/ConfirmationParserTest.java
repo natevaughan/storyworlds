@@ -5,9 +5,6 @@ import storyworlds.model.enumeration.Confirmation;
 
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by nvaughan on 10/13/2016.
- */
 public class ConfirmationParserTest {
 
     ConfirmationParser parser = new ConfirmationParser();
