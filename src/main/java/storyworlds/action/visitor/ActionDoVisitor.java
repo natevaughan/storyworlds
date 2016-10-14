@@ -44,6 +44,10 @@ public class ActionDoVisitor implements ActionVisitor
         create.getMessage().addLine(sb.toString());
     }
 
+    public void visit(Delete delete) {
+
+    }
+
     public void visit(Error error) {
     }
 

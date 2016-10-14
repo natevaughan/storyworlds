@@ -154,6 +154,12 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
         }
     }
 
+    public void visit(Delete delete) {
+        sendMessage("Are you sure you want to delete " + delete.getCreateable() + " " + delete.getDirection() + "?");
+        String response = getCommand();
+
+    }
+
     public void visit(Error error) {
 
     }

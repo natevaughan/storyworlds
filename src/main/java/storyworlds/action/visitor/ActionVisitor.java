@@ -5,6 +5,7 @@ import storyworlds.action.Error;
 
 public interface ActionVisitor {
     public void visit(Create create);
+    public void visit(Delete delete);
     public void visit(Error error);
     public void visit(Edit edit);
     public void visit(Help help);

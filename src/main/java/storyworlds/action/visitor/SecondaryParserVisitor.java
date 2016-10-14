@@ -22,6 +22,10 @@ public class SecondaryParserVisitor implements ActionVisitor {
         getCreateArgs(create);
     }
 
+    public void visit(Delete delete) {
+        getCreateArgs(delete);
+    }
+
     public void visit(Error error) {
         setUnrecognizedModifier(error);
     }
@@ -50,7 +54,7 @@ public class SecondaryParserVisitor implements ActionVisitor {
     }
 
     public void visit(Take take) {
-        take.setItemName(secondary);
+        take.setItemName(secondary.trim());
     }
 
     public void visit(Quit quit) {

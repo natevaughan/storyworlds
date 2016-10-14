@@ -1,4 +1,4 @@
-package storyworlds.gameplay;
+package storyworlds.action.parser;
 
 import org.junit.Test;
 import storyworlds.action.Action;
