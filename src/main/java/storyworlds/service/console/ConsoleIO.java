@@ -2,6 +2,7 @@ package storyworlds.service.console;
 
 import storyworlds.action.*;
 import storyworlds.action.Error;
+import storyworlds.action.parser.ConfirmationParser;
 import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.constants.GameTextConstants;
 import storyworlds.create.properties.DirectionalLinkProperties;
@@ -11,6 +12,7 @@ import storyworlds.exception.UncreateableException;
 import storyworlds.initial.map.MapFactory;
 import storyworlds.model.Location;
 import storyworlds.model.Player;
+import storyworlds.model.enumeration.Confirmation;
 import storyworlds.model.implementation.User;
 import storyworlds.service.ItemService;
 import storyworlds.service.LinkService;
@@ -156,7 +158,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
 
     public void visit(Delete delete) {
         sendMessage("Are you sure you want to delete " + delete.getCreateable() + " " + delete.getDirection() + "?");
-        String response = getCommand();
+        Confirmation confirmation = ConfirmationParser.parse(getCommand());
 
     }
 

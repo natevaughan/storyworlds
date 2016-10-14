@@ -29,6 +29,7 @@ public class ActionFactory {
 
     public static Action parse(String input) {
 
+        input = input.trim();
         Action actionable = Action.ERROR;
 
         for (Action action : Action.values()) {

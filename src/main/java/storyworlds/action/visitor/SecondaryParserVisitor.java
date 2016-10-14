@@ -16,8 +16,6 @@ public class SecondaryParserVisitor implements ActionVisitor {
 
     private String secondary = null;
 
-    private final DirectionParser dirp = new DirectionParser();
-
     public void visit(Create create) {
         getCreateArgs(create);
     }
@@ -43,10 +41,10 @@ public class SecondaryParserVisitor implements ActionVisitor {
     }
 
     public void visit(Move move) {
-        if (Direction.ERROR.equals(dirp.parse(secondary))) {
+        if (Direction.ERROR.equals(DirectionParser.parse(secondary))) {
             setUnrecognizedModifier(move);
         }
-        move.setDirection(dirp.parse(secondary));
+        move.setDirection(DirectionParser.parse(secondary));
     }
 
     public void visit(Map map) {
@@ -89,7 +87,7 @@ public class SecondaryParserVisitor implements ActionVisitor {
                 }
             }
             if (createArgs.length > 1) {
-                actionable.setDirection(dirp.parse(createArgs[1]));
+                actionable.setDirection(DirectionParser.parse(createArgs[1]));
                 if (Direction.ERROR.equals(actionable.getDirection())) {
                     setUnrecognizedModifier(actionable, createArgs[1]);
                 }
