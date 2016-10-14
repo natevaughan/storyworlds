@@ -2,6 +2,7 @@ package storyworlds.service;
 
 
 import storyworlds.action.Create;
+import storyworlds.action.Delete;
 import storyworlds.action.Edit;
 import storyworlds.create.properties.LocationProperties;
 import storyworlds.create.properties.Validateable;
@@ -45,6 +46,10 @@ public class LocationService {
             Link inbound = l.clone(location);
             inbound.bind();
         }
+    }
+
+    public void delete(Delete delete) {
+        // XXX: todo
     }
 }
 
