@@ -11,4 +11,8 @@ public abstract class AbstractCreatableProperties implements Validateable {
         return description;
     }
 
+    public boolean isValid() {
+        return description != null
+                && !description.isEmpty();
+    }
 }

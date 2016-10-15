@@ -5,10 +5,6 @@ package storyworlds.create.properties;
  */
 public class LocationProperties extends AbstractCreatableProperties {
 
-    public boolean isValid() {
-        return this.description != null;
-    }
-
     // credit scarey
     /**
      * Validate fields to ensure expected fields are present. This ensures a RuntimeException

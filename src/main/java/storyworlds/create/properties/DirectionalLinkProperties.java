@@ -44,8 +44,9 @@ public class DirectionalLinkProperties extends AbstractCreatableProperties {
     }
 
     public boolean isValid() {
-        return description != null
+        return super.isValid()
                 && passText != null
+                && !passText.isEmpty()
                 && fromLocation != null
                 && toLocation != null;
     }

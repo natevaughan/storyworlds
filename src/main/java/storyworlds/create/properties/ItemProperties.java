@@ -32,6 +32,10 @@ public class ItemProperties extends AbstractCreatableProperties {
     }
 
     public boolean isValid() {
-        return name != null && description != null && useText != null;
+        return super.isValid()
+                && name != null
+                && !name.isEmpty()
+                && useText != null
+                && !useText.isEmpty();
     }
 }
