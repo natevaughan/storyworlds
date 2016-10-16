@@ -1,5 +1,7 @@
 package storyworlds.model;
 
+import storyworlds.model.enumeration.Direction;
+
 public interface Link {
 
     public String getDescription();
@@ -15,6 +17,10 @@ public interface Link {
     public Location getToLocation();
 
     public void bind();
+
+    public boolean isActive();
+
+    public void setActive(boolean active);
 
     public Link clone(Location newToLocation);
 

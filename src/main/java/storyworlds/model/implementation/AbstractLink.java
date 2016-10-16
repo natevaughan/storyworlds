@@ -1,13 +1,15 @@
 package storyworlds.model.implementation;
 
-import storyworlds.model.Direction;
 import storyworlds.model.Link;
 import storyworlds.model.Location;
+import storyworlds.model.enumeration.Direction;
 
 /**
  * Created by nvaughan on 9/24/2016.
  */
 public abstract class AbstractLink implements Link {
+
+    protected boolean active;
     protected final String description;
     protected final Location toLocation;
     protected final Location fromLocation;
@@ -34,6 +36,14 @@ public abstract class AbstractLink implements Link {
 
     public Direction getFromDirection() {
         return fromDirection;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public void bind() {

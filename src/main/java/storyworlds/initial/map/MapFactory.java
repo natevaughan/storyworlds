@@ -1,10 +1,10 @@
 package storyworlds.initial.map;
 
 import storyworlds.constants.GameTextConstants;
-import storyworlds.model.Direction;
 import storyworlds.model.Item;
 import storyworlds.model.Link;
 import storyworlds.model.Location;
+import storyworlds.model.enumeration.Direction;
 import storyworlds.model.implementation.BlockableLink;
 import storyworlds.model.implementation.DirectionalLink;
 import storyworlds.model.implementation.ImmutableLocation;
@@ -12,6 +12,7 @@ import storyworlds.model.implementation.UsableItem;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 public class MapFactory implements GameTextConstants {
     public static Location getStartMap() {
@@ -39,7 +40,7 @@ public class MapFactory implements GameTextConstants {
 
 
     public static Location getBlankLocation() {
-        Location location = new ImmutableLocation(BLANK_LOCATION_TEXT);
+        Location location = new ImmutableLocation(BLANK_LOCATION_TEXT, null, new HashSet<>());
         return location;
     }
 

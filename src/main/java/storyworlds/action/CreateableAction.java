@@ -1,7 +1,7 @@
 package storyworlds.action;
 
 import storyworlds.create.Createable;
-import storyworlds.model.Direction;
+import storyworlds.model.enumeration.Direction;
 
 
 public interface CreateableAction extends Actionable {

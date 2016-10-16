@@ -1,8 +1,8 @@
 package storyworlds.initial.map;
 
 import org.junit.Test;
-import storyworlds.model.Direction;
 import storyworlds.model.Location;
+import storyworlds.model.enumeration.Direction;
 
 import static org.junit.Assert.assertNotNull;
 

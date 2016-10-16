@@ -1,6 +1,4 @@
-package storyworlds.action.parser;
-
-import storyworlds.model.enumeration.Confirmation;
+package storyworlds.service.console;
 
 public class ConfirmationParser {
     public static Confirmation parse(String input) {

@@ -1,44 +1,34 @@
 
 package storyworlds.model.implementation;
 
-import storyworlds.model.Direction;
+import org.springframework.data.annotation.PersistenceConstructor;
 import storyworlds.model.Item;
 import storyworlds.model.Link;
 import storyworlds.model.Location;
+import storyworlds.model.enumeration.Direction;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ImmutableLocation implements Location { 
 
+    private boolean active;
     private final String description;
     private final Map<Direction, Link> outboundLinks;
-    private final Collection<Link> inboundLinks;
+    private final Map<Integer, Link> inboundLinks;
     private final Map<String, Item> items;
     private Location previousLocation;
 
-    public ImmutableLocation(String description) {
-        this(description, null);
-    }
-
-    public ImmutableLocation(String description, Location previousLocation) {
-        this(description, previousLocation, new HashSet<Item>());
-    }
-
+    @PersistenceConstructor
     public ImmutableLocation(String description, Location previousLocation, Collection<Item> items) {
-        this(description, previousLocation, items, new HashSet<Link>(), new HashSet<Link>());
-    }
-
-    public ImmutableLocation(String description, Location previousLocation, Collection<Item> items, Collection<Link> outboundLinks, Collection<Link> inboundLinks) {
         this.previousLocation = previousLocation;
         Map<String, Item> itemsMap = new HashMap<String, Item>();
         for (Item item : items) {
             itemsMap.put(item.getName().toUpperCase(), item);
         }
         this.description = description;
-        this.outboundLinks = new HashMap<>();
-        outboundLinks.forEach(Link::bind);
-        this.inboundLinks = new HashSet<Link>(inboundLinks);
-        inboundLinks.forEach(Link::bind);
+        this.outboundLinks = new ConcurrentHashMap<>();
+        this.inboundLinks = new ConcurrentHashMap<>();
         this.items = Collections.unmodifiableMap(new LinkedHashMap<>(itemsMap));
     }
 
@@ -68,11 +58,11 @@ public class ImmutableLocation implements Location {
     }
 
     public Collection<Link> getInboundLinks() {
-        return inboundLinks;
+        return inboundLinks.values();
     }
 
     public void addInboundLink(Link link) {
-        inboundLinks.add(link);
+        inboundLinks.put(link.hashCode(), link);
     }
 
     public void addOutboundLink(Link link) {
@@ -81,5 +71,13 @@ public class ImmutableLocation implements Location {
 
     public Location getPreviousLocation() {
         return previousLocation;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

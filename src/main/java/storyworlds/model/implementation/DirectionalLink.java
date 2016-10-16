@@ -1,8 +1,8 @@
 package storyworlds.model.implementation;
 
-import storyworlds.model.Direction;
 import storyworlds.model.Location;
 import storyworlds.model.Player;
+import storyworlds.model.enumeration.Direction;
 
 public class DirectionalLink extends AbstractLink {
 

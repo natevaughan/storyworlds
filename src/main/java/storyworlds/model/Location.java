@@ -1,5 +1,7 @@
 package storyworlds.model;
 
+import storyworlds.model.enumeration.Direction;
+
 import java.util.Collection;
 import java.util.Map;
 
@@ -24,5 +26,9 @@ public interface Location {
     public void addInboundLink(Link link);
 
     public Location getPreviousLocation();
+
+    public boolean isActive();
+
+    public void setActive(boolean active);
 }
 

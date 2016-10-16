@@ -1,8 +1,9 @@
 package storyworlds.service.console;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import storyworlds.action.*;
 import storyworlds.action.Error;
-import storyworlds.action.parser.ConfirmationParser;
 import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.constants.GameTextConstants;
 import storyworlds.create.Createable;
@@ -13,8 +14,9 @@ import storyworlds.exception.UncreateableException;
 import storyworlds.initial.map.MapFactory;
 import storyworlds.model.Location;
 import storyworlds.model.Player;
-import storyworlds.model.enumeration.Confirmation;
 import storyworlds.model.implementation.User;
+import storyworlds.model.implementation.persistence.TestEnt;
+import storyworlds.model.implementation.persistence.TestEntRepository;
 import storyworlds.service.ItemService;
 import storyworlds.service.LinkService;
 import storyworlds.service.LocationService;
@@ -25,7 +27,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+//import storyworlds.repository.StoryworldRepository;
+
+@Service
 public class ConsoleIO implements ActionVisitor, GameTextConstants {
+
+//    @Autowired
+//    StoryworldRepository storyworldRepository;
+
+    @Autowired
+    TestEntRepository testEntRepository;
 
     private StringBuilder sb = new StringBuilder();
     MessageService messageService = new MessageService();
@@ -45,7 +56,14 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
         sendMessage(response.getMessage().getText());
         while (!Quit.class.equals(response.getClass())) {
             sendMessage("What is your next move?");
-            response = messageService.process(new Message(player, getCommand()));
+            String command = getCommand();
+            TestEnt testEnt = new TestEnt();
+            testEnt.setText(command);
+            testEntRepository.save(testEnt);
+            for (TestEnt testEntt : testEntRepository.findAll()) {
+                sendMessage(testEntt.toString());
+            }
+            response = messageService.process(new Message(player, command));
             sendMessage(response.getMessage().getText());
             response.accept(this);
         }

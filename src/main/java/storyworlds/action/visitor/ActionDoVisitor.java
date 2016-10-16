@@ -3,9 +3,9 @@ package storyworlds.action.visitor;
 import storyworlds.action.*;
 import storyworlds.action.Error;
 import storyworlds.create.Createable;
-import storyworlds.model.Direction;
 import storyworlds.model.Item;
 import storyworlds.model.Link;
+import storyworlds.model.enumeration.Direction;
 import storyworlds.service.message.Message;
 
 import java.util.Collection;

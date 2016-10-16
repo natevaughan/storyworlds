@@ -1,9 +1,9 @@
 package storyworlds.model.implementation;
 
-import storyworlds.model.Direction;
 import storyworlds.model.Item;
 import storyworlds.model.Location;
 import storyworlds.model.Player;
+import storyworlds.model.enumeration.Direction;
 
 /**
  * @author nvaughan since 8/26/16

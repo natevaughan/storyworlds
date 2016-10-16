@@ -1,7 +1,8 @@
 package storyworlds.action.parser;
 
 import org.junit.Test;
-import storyworlds.model.enumeration.Confirmation;
+import storyworlds.service.console.Confirmation;
+import storyworlds.service.console.ConfirmationParser;
 
 import static org.junit.Assert.assertTrue;
 

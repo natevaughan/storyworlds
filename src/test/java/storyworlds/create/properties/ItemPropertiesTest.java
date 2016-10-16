@@ -5,7 +5,6 @@ import org.junit.Test;
 import storyworlds.action.Create;
 import storyworlds.exception.UncreateableException;
 import storyworlds.gameplay.AbstractMapGameplayTest;
-import storyworlds.model.Player;
 import storyworlds.service.ItemService;
 import storyworlds.service.message.Message;
 

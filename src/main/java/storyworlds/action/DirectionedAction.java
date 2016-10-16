@@ -1,6 +1,6 @@
 package storyworlds.action;
 
-import storyworlds.model.Direction;
+import storyworlds.model.enumeration.Direction;
 
 public abstract class DirectionedAction extends AbstractAction {
 

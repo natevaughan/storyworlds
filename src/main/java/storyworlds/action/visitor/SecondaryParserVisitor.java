@@ -5,7 +5,7 @@ import storyworlds.action.Error;
 import storyworlds.action.parser.DirectionParser;
 import storyworlds.create.CreatableFactory;
 import storyworlds.create.Createable;
-import storyworlds.model.Direction;
+import storyworlds.model.enumeration.Direction;
 
 /**
  * Responsibilities:

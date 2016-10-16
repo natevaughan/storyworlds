@@ -1,4 +1,4 @@
-package storyworlds.model.enumeration;
+package storyworlds.service.console;
 
 /**
  * Created by nvaughan on 10/13/2016.

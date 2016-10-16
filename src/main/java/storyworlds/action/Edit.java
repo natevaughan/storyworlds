@@ -2,7 +2,7 @@ package storyworlds.action;
 
 import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.create.Createable;
-import storyworlds.model.Direction;
+import storyworlds.model.enumeration.Direction;
 
 public class Edit extends AbstractCreateableAction {
 

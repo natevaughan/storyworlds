@@ -1,5 +1,6 @@
 package storyworlds.model.implementation;
 
+import org.springframework.data.annotation.PersistenceConstructor;
 import storyworlds.model.Item;
 
 /**
@@ -11,6 +12,7 @@ public class UsableItem implements Item {
     private final String description;
     private final String useMessage;
 
+    @PersistenceConstructor
     public UsableItem(String name, String description, String useMessage) {
         this.name = name;
         this.description = description;

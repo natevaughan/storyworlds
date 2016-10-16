@@ -1,4 +1,4 @@
-package storyworlds.model;
+package storyworlds.model.enumeration;
 
 public enum Direction {
     NORTH("To the "),
