@@ -24,4 +24,5 @@ public interface Storyworld {
 //    public boolean isPubliclyModifiable();
 //    public void setPubliclyModifiable(boolean isPubliclyModifiable);
 //    public Collection<IdentifiedUser> getMaintainers();
+
 }

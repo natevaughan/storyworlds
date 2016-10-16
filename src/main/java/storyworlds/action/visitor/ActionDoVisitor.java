@@ -3,6 +3,7 @@ package storyworlds.action.visitor;
 import storyworlds.action.*;
 import storyworlds.action.Error;
 import storyworlds.create.Createable;
+import storyworlds.exception.BadLinkException;
 import storyworlds.model.Item;
 import storyworlds.model.Link;
 import storyworlds.model.enumeration.Direction;
@@ -94,7 +95,7 @@ public class ActionDoVisitor implements ActionVisitor
         map.getMessage().addLine("Map feature not yet supported");
     }
 
-    public void visit(Move move) {
+    public void visit(Move move) throws BadLinkException {
 
         if (Direction.ERROR.equals(move.getDirection())) {
             move.getMessage().addLine("Invalid direction");
@@ -106,6 +107,10 @@ public class ActionDoVisitor implements ActionVisitor
         if (link == null) {
             move.getMessage().addLine("Nothing to the " + move.getDirection());
             return;
+        }
+
+        if (link.getToLocation() == null) {
+            throw new BadLinkException("Bad link: no destination location.");
         }
 
         move.getMessage().addLine(move.getMessage().getPlayer().getLocation().getOutboundLink(move.getDirection()).getPassText(move.getMessage().getPlayer()));

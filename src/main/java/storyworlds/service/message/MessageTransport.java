@@ -1,6 +1,7 @@
 package storyworlds.service.message;
 
 import storyworlds.action.Actionable;
+import storyworlds.exception.BadLinkException;
 
 /**
  * Created by nvaughan on 9/28/2016.
@@ -18,7 +19,7 @@ public class MessageTransport {
         secondary = null;
     }
 
-    public void accept(MessageProcessor processor) {
+    public void accept(MessageProcessor processor) throws BadLinkException {
         processor.process(this);
     }
 

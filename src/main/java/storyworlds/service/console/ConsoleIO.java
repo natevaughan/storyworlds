@@ -10,15 +10,15 @@ import storyworlds.create.Createable;
 import storyworlds.create.properties.DirectionalLinkProperties;
 import storyworlds.create.properties.ItemProperties;
 import storyworlds.create.properties.LocationProperties;
+import storyworlds.exception.BadLinkException;
 import storyworlds.exception.UncreateableException;
 import storyworlds.model.Location;
-import storyworlds.model.Player;
 import storyworlds.model.Storyworld;
-import storyworlds.model.implementation.IdentifiedUser;
-import storyworlds.model.implementation.ImmutableLocation;
-import storyworlds.model.implementation.WikiStoryworld;
+import storyworlds.model.implementation.*;
 import storyworlds.model.implementation.persistence.IdentifiedUserRepository;
+import storyworlds.model.implementation.persistence.LocationRepository;
 import storyworlds.model.implementation.persistence.StoryworldRepository;
+import storyworlds.model.implementation.persistence.TestBidirectionalEntityRepository;
 import storyworlds.service.ItemService;
 import storyworlds.service.LinkService;
 import storyworlds.service.LocationService;
@@ -26,17 +26,11 @@ import storyworlds.service.message.Message;
 import storyworlds.service.message.MessageService;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
-//import storyworlds.repository.StoryworldRepository;
-
 @Service
 public class ConsoleIO implements ActionVisitor, GameTextConstants {
-
-//    @Autowired
-//    StoryworldRepository storyworldRepository;
 
     @Autowired
     IdentifiedUserRepository identifiedUserRepository;
@@ -44,42 +38,78 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
     @Autowired
     StoryworldRepository storyworldRepository;
 
+
+    @Autowired
+    LocationRepository locationRepository;
+
+    @Autowired
+    TestBidirectionalEntityRepository bidirectionalEntityRepository;
+
+    @Autowired
+    LocationService locationService;
+
+    @Autowired
+    LinkService linkService;
+
+    @Autowired
+    ItemService itemService;
+
     private StringBuilder sb = new StringBuilder();
     MessageService messageService = new MessageService();
-    LocationService locationService = new LocationService();
-    LinkService linkService = new LinkService();
-    ItemService itemService = new ItemService();
     private Scanner scanner = new Scanner(System.in);
-    private Player player;
+    private IdentifiedUser player;
 
     public void run() {
+//        storyworldRepository.deleteAll();
+        identifiedUserRepository.deleteAll();
+//        bidirectionalEntityRepository.deleteAll();
+//        TestBidirectionalEntity entity = new TestBidirectionalEntity();
+//        entity.setName("parent2");
+//        TestBidirectionalChildEntitiy childEntitiy = new TestBidirectionalChildEntitiy();
+//        childEntitiy.setName("child2");
+//        entity.setChildEntitiy(childEntitiy);
+//        childEntitiy.setBidirectionalEntitiy(entity);
+//        bidirectionalEntityRepository.save(entity);
+//        for (TestBidirectionalEntity bidirectionalEntity : bidirectionalEntityRepository.findAll()) {
+//            sendMessage(bidirectionalEntity.toString());
+//        }
         sendMessage(WELCOME_MESSAGE);
         String name = getCommand();
         sendMessage("Please enter your email:");
         String email = getCommand();
         sendMessage("Please enter your password:");
         String password = getCommand();
-        IdentifiedUser player = new IdentifiedUser(name, email, password);
-        identifiedUserRepository.save(player);
-        for (IdentifiedUser user : identifiedUserRepository.findAll()) {
-            sendMessage(user.toString());
-        }
+        player = new IdentifiedUser(name, email, password);
+//        identifiedUserRepository.save(player);
 //        Location start = MapFactory.getStartMap();
-        Location start = new ImmutableLocation("no description", null, new HashMap<>());
-        Storyworld storyworld = new WikiStoryworld();
-        storyworld.setEntry(start);
-        storyworldRepository.save(storyworld);
-        for (Storyworld storyworld1 : storyworldRepository.findAll()) {
-            sendMessage(storyworld1.toString());
+//        Location start = new ImmutableLocation("no description", null, new HashMap<>());
+//        Storyworld storyworld = new WikiStoryworld();
+//        storyworld.setEntry(start);
+//        storyworldRepository.save(storyworld);
+//        for (Storyworld storyworld1 : storyworldRepository.findAll()) {
+//            sendMessage(storyworld1.toString());
+//        }
+        Storyworld storyworld = storyworldRepository.findAll().get(0);
+        player.setCurrentStoryworld(storyworld);
+        player.setLocation(storyworld.getEntry());
+        Actionable response = null;
+        try {
+            response = messageService.process(new Message(player, "status"));
+        } catch (BadLinkException e) {
+            sendMessage(e.getMessage());
         }
-        player.setLocation(start);
-        Actionable response = messageService.process(new Message(player, "status"));
         sendMessage(response.getMessage().getText());
         while (!Quit.class.equals(response.getClass())) {
-            sendMessage("What is your next move?");
-            response = messageService.process(new Message(player, getCommand()));
-            sendMessage(response.getMessage().getText());
-            response.accept(this);
+            try {
+                sendMessage("What is your next move?");
+                response = messageService.process(new Message(player, getCommand()));
+                sendMessage(response.getMessage().getText());
+                response.accept(this);
+            } catch (BadLinkException e) {
+                sendMessage(e.getMessage());
+            }
+            storyworldRepository.save(player.getCurrentStoryworld());
+            identifiedUserRepository.save(player);
         }
     }
 
@@ -145,11 +175,13 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
                 int i = 1;
                 List<Location> locationHistory = new ArrayList<>(create.getMessage().getPlayer().getLocationHistory());
                 for (Location loc: locationHistory) {
-                    String[] text = loc.getDescription().split("\n");
-                    int length = (text[0].length() > 30) ? 30 : text[0].length();
-                    String abbrev = text[0].substring(0, length)  + "...";
-                    sendMessage("previous Location " + i + ": " + abbrev);
-                    i++;
+                    if (loc.isActive()) {
+                        String[] text = loc.getDescription().split("\n");
+                        int length = (text[0].length() > 30) ? 30 : text[0].length();
+                        String abbrev = text[0].substring(0, length) + "...";
+                        sendMessage("previous Location " + i + ": " + abbrev);
+                        i++;
+                    }
                 }
                 sendMessage("Enter the number of the desired location:");
                 try {

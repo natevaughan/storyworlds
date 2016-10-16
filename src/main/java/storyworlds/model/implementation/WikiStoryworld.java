@@ -45,7 +45,7 @@ public class WikiStoryworld implements Storyworld, Serializable {
     public void setEntry(Location entry) {
         this.entry = entry;
     }
-//
+
 //    public String getTitle() {
 //        return title;
 //    }

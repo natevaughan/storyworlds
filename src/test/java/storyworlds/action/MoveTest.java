@@ -13,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 public class MoveTest extends AbstractMapGameplayTest {
 
     @Test
-    public void testMoveUser() {
+    public void testMoveUser() throws Exception {
         messageService.process(new Message(user, "mOve nOrtH"));
         assertFalse("Player should no longer be in start location", user.getLocation().equals(start));
         messageService.process(new Message(user, "mOve SOuTh"));
@@ -21,7 +21,7 @@ public class MoveTest extends AbstractMapGameplayTest {
     }
 
     @Test
-    public void ensureUserCannotMoveBeyondBoundary() {
+    public void ensureUserCannotMoveBeyondBoundary() throws Exception {
         Location boundedLocation = MapFactory.getBlankLocation();
         user.setLocation(boundedLocation);
         messageService.process(new Message(user, "mOve nOrtH"));
@@ -29,7 +29,7 @@ public class MoveTest extends AbstractMapGameplayTest {
     }
 
     @Test
-    public void invalidDirectionTest() {
+    public void invalidDirectionTest() throws Exception {
         super.setup();
         Actionable a = messageService.process(new Message(user, "mOve foo"));
         assertTrue("Actionable should be Move.class", Move.class.equals(a.getClass()));

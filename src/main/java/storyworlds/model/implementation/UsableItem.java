@@ -4,6 +4,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 import storyworlds.model.Item;
 
+import java.util.UUID;
+
 /**
  * Created by nvaughan on 9/10/2016.
  */
@@ -16,6 +18,7 @@ public class UsableItem implements Item {
     private final String useMessage;
 
     public UsableItem(String name, String description, String useMessage) {
+        this.id = UUID.randomUUID().toString();
         this.name = name;
         this.description = description;
         this.useMessage = description;
@@ -23,10 +26,6 @@ public class UsableItem implements Item {
 
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getName() {

@@ -1,6 +1,7 @@
 package storyworlds.action;
 
 import org.junit.Test;
+import storyworlds.exception.BadLinkException;
 import storyworlds.gameplay.AbstractGameplayTest;
 import storyworlds.initial.map.MapFactory;
 import storyworlds.model.Item;
@@ -17,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 public class TakeTest extends AbstractGameplayTest {
 
     @Test
-    public void takeItem() {
+    public void takeItem() throws BadLinkException {
         Item item = new UsableItem("bar", "", "");
         java.util.Map<String, Item> items = new HashMap<>();
         items.put(item.getName(), item);
@@ -28,7 +29,7 @@ public class TakeTest extends AbstractGameplayTest {
     }
 
     @Test
-    public void takeThenMoveTest() {
+    public void takeThenMoveTest() throws BadLinkException {
         Location location = MapFactory.getStartMap();
         user.setLocation(location);
         messageService.process(new Message(user, "take key"));

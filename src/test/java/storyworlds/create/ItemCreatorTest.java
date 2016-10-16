@@ -23,7 +23,7 @@ public class ItemCreatorTest extends AbstractMapGameplayTest {
     private final String ITEM_USE_TEXT = "arbitrary.item.use.text";
 
     @Test
-    public void createItemTest() throws UncreateableException {
+    public void createItemTest() throws Exception {
         Actionable a = messageService.process(new Message(user, "create item"));
         assertTrue(a.isSuccessful());
         if (a instanceof Create) {
@@ -41,7 +41,7 @@ public class ItemCreatorTest extends AbstractMapGameplayTest {
     }
 
     @Test(expected = UncreateableException.class)
-    public void twoWordNameTest() throws UncreateableException {
+    public void twoWordNameTest() throws Exception {
         Actionable a = messageService.process(new Message(user, "create item"));
 
         if (a instanceof Create) {

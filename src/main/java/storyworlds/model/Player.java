@@ -19,4 +19,8 @@ public interface Player {
     public void activate(Item item);
 
     public Collection<Location> getLocationHistory();
+
+    public Storyworld getCurrentStoryworld();
+
+    public void setCurrentStoryworld(Storyworld storyworld);
 }

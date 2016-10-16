@@ -1,8 +1,10 @@
 package storyworlds.model.implementation;
 
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import storyworlds.model.Item;
 import storyworlds.model.Location;
 import storyworlds.model.Player;
+import storyworlds.model.Storyworld;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -11,10 +13,16 @@ import java.util.Set;
 public class User implements Player {
 
     protected final String name;
+    @DBRef(lazy = true)
     protected final Set<Item> items;
+    @DBRef(lazy = true)
     protected Location location;
+    @DBRef(lazy = true)
     protected Item activeItem;
+    @DBRef(lazy = true)
     protected final Set<Location> locationHistory;
+    @DBRef(lazy = true)
+    protected Storyworld currentStoryworld;
     
     public User(String name) {
         this.name = name;
@@ -56,6 +64,14 @@ public class User implements Player {
 
     public Collection<Location> getLocationHistory() {
         return locationHistory;
+    }
+
+    public Storyworld getCurrentStoryworld() {
+        return currentStoryworld;
+    }
+
+    public void setCurrentStoryworld(Storyworld storyworld) {
+        currentStoryworld = storyworld;
     }
 }
 

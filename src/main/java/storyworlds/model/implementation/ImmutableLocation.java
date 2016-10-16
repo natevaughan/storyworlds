@@ -1,6 +1,7 @@
 
 package storyworlds.model.implementation;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import storyworlds.model.Item;
@@ -13,16 +14,18 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ImmutableLocation implements Location { 
 
+    @Id
+    private String id;
     private boolean active;
     private final String description;
-    @DBRef(lazy = true)
     private final Map<Direction, Link> outboundLinks;
-    @DBRef(lazy = true)
     private final Map<Integer, Link> inboundLinks;
     private final Map<String, Item> items;
     private Location previousLocation;
 
     public ImmutableLocation(String description, Location previousLocation, Map<String, Item> items) {
+        id = UUID.randomUUID().toString();
+        this.active = true;
         this.previousLocation = previousLocation;
         this.description = description;
         this.outboundLinks = new ConcurrentHashMap<>();

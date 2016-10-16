@@ -2,6 +2,7 @@ package storyworlds.action.visitor;
 
 import storyworlds.action.*;
 import storyworlds.action.Error;
+import storyworlds.exception.BadLinkException;
 
 public interface ActionVisitor {
     public void visit(Create create);
@@ -9,7 +10,7 @@ public interface ActionVisitor {
     public void visit(Error error);
     public void visit(Edit edit);
     public void visit(Help help);
-    public void visit(Move move);
+    public void visit(Move move) throws BadLinkException;
     public void visit(Map map);
     public void visit(Status status);
     public void visit(Take take);

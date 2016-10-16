@@ -4,6 +4,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import storyworlds.action.Actionable;
 import storyworlds.action.Create;
+import storyworlds.exception.BadLinkException;
 import storyworlds.gameplay.AbstractMapGameplayTest;
 import storyworlds.service.message.Message;
 
@@ -15,7 +16,7 @@ import static org.junit.Assert.assertTrue;
 public class LocationCreatorTest extends AbstractMapGameplayTest {
 
     @Test
-    public void createLocation() {
+    public void createLocation() throws BadLinkException {
         setup();
         Actionable a = messageService.process(new Message(user, "create location west"));
         assertTrue("Actionable should be Createables", Create.class.equals(a.getClass()));
@@ -23,7 +24,7 @@ public class LocationCreatorTest extends AbstractMapGameplayTest {
     }
 
     @Test
-    public void overwriteExistingLocation() {
+    public void overwriteExistingLocation() throws BadLinkException {
         setup();
         Actionable a = messageService.process(new Message(user, "create location north"));
         assertFalse("Createables should fail", a.isSuccessful());
@@ -31,7 +32,7 @@ public class LocationCreatorTest extends AbstractMapGameplayTest {
     }
 
     @Test
-    public void createBadLocation() {
+    public void createBadLocation() throws BadLinkException {
         Actionable a = messageService.process(new Message(user, "create location foo"));
         assertTrue("Actionable should be Createables", Create.class.equals(a.getClass()));
         assertFalse("Createables should be successful", a.isSuccessful());

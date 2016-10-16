@@ -1,5 +1,7 @@
 package storyworlds.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import storyworlds.action.Create;
 import storyworlds.create.properties.ItemProperties;
 import storyworlds.create.properties.Validateable;
@@ -9,17 +11,17 @@ import storyworlds.model.Location;
 import storyworlds.model.implementation.ImmutableLocation;
 import storyworlds.model.implementation.UsableItem;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 /**
  * Created by nvaughan on 10/7/2016.
  */
+@Service
 public class ItemService {
 
-    LocationService locationService = new LocationService();
+    @Autowired
+    LocationService locationService;
 
     public Item create(Create create) throws UncreateableException {
         validateAll(create);
