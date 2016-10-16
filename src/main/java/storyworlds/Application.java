@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import storyworlds.service.console.ConsoleIO;
 
 @SpringBootApplication
-@EnableMongoRepositories(basePackages = { "storyworlds.model.implementation.persistence" })
+@EnableMongoRepositories(basePackages = { "storyworlds.model.implementation" })
 public class Application implements CommandLineRunner {
 
     @Autowired

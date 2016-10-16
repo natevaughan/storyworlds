@@ -10,9 +10,7 @@ import storyworlds.model.implementation.DirectionalLink;
 import storyworlds.model.implementation.ImmutableLocation;
 import storyworlds.model.implementation.UsableItem;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.*;
 
 public class MapFactory implements GameTextConstants {
     public static Location getStartMap() {
@@ -31,16 +29,16 @@ public class MapFactory implements GameTextConstants {
         return location;
     }
 
-    private static Collection<Item> createItems() {
-        Collection<Item> items = new ArrayList<Item>();
+    private static Map<String, Item> createItems() {
+        Map<String, Item> items = new HashMap<>();
         Item item = new UsableItem(KEY_NAME, KEY_USE_MESSAGE, KEY_DESCRIPTION);
-        items.add(item);
+        items.put(item.getName(), item);
         return items;
     }
 
 
     public static Location getBlankLocation() {
-        Location location = new ImmutableLocation(BLANK_LOCATION_TEXT, null, new HashSet<>());
+        Location location = new ImmutableLocation(BLANK_LOCATION_TEXT, null, new HashMap<>());
         return location;
     }
 

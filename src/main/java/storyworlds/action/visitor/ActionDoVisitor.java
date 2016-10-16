@@ -158,7 +158,7 @@ public class ActionDoVisitor implements ActionVisitor
         for (Direction direction : links.keySet()) {
             m.addLine(direction.formatted() + " is " + links.get(direction).getDescription());
         }
-        for (Item item : m.getPlayer().getLocation().listItems()) {
+        for (Item item : m.getPlayer().getLocation().getItems().values()) {
             if (!m.getPlayer().listItems().contains(item)) {
                 m.addLine("There is a " + item.getName() + " here");
             }

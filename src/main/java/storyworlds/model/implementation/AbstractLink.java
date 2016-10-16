@@ -1,5 +1,6 @@
 package storyworlds.model.implementation;
 
+import org.springframework.data.annotation.Id;
 import storyworlds.model.Link;
 import storyworlds.model.Location;
 import storyworlds.model.enumeration.Direction;
@@ -9,6 +10,8 @@ import storyworlds.model.enumeration.Direction;
  */
 public abstract class AbstractLink implements Link {
 
+    @Id
+    String id;
     protected boolean active;
     protected final String description;
     protected final Location toLocation;
@@ -20,6 +23,14 @@ public abstract class AbstractLink implements Link {
         this.toLocation = toLocation;
         this.fromLocation = fromLocation;
         this.fromDirection = fromDirection;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getDescription() {

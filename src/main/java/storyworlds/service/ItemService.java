@@ -10,7 +10,9 @@ import storyworlds.model.implementation.ImmutableLocation;
 import storyworlds.model.implementation.UsableItem;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 /**
  * Created by nvaughan on 10/7/2016.
@@ -33,8 +35,8 @@ public class ItemService {
                     ((ItemProperties) properties).getDescription(),
                     ((ItemProperties) properties).getUseText());
             Location previousLocation = create.getMessage().getPlayer().getLocation();
-            Collection<Item> previousItems = new HashSet<>(previousLocation.listItems());
-            previousItems.add(item);
+            Map<String, Item> previousItems = new HashMap<>(previousLocation.getItems());
+            previousItems.put(item.getName(), item);
             Location location = new ImmutableLocation(previousLocation.getDescription(), previousLocation, previousItems);
             locationService.cloneLinks(location, previousLocation);
             create.getMessage().getPlayer().setLocation(location);

@@ -11,12 +11,14 @@ import storyworlds.create.properties.DirectionalLinkProperties;
 import storyworlds.create.properties.ItemProperties;
 import storyworlds.create.properties.LocationProperties;
 import storyworlds.exception.UncreateableException;
-import storyworlds.initial.map.MapFactory;
 import storyworlds.model.Location;
 import storyworlds.model.Player;
-import storyworlds.model.implementation.User;
-import storyworlds.model.implementation.persistence.TestEnt;
-import storyworlds.model.implementation.persistence.TestEntRepository;
+import storyworlds.model.Storyworld;
+import storyworlds.model.implementation.IdentifiedUser;
+import storyworlds.model.implementation.ImmutableLocation;
+import storyworlds.model.implementation.WikiStoryworld;
+import storyworlds.model.implementation.persistence.IdentifiedUserRepository;
+import storyworlds.model.implementation.persistence.StoryworldRepository;
 import storyworlds.service.ItemService;
 import storyworlds.service.LinkService;
 import storyworlds.service.LocationService;
@@ -24,6 +26,7 @@ import storyworlds.service.message.Message;
 import storyworlds.service.message.MessageService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -36,7 +39,10 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
 //    StoryworldRepository storyworldRepository;
 
     @Autowired
-    TestEntRepository testEntRepository;
+    IdentifiedUserRepository identifiedUserRepository;
+
+    @Autowired
+    StoryworldRepository storyworldRepository;
 
     private StringBuilder sb = new StringBuilder();
     MessageService messageService = new MessageService();
@@ -49,21 +55,29 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
     public void run() {
         sendMessage(WELCOME_MESSAGE);
         String name = getCommand();
-        Location start = MapFactory.getStartMap();
-        player = new User(name);
+        sendMessage("Please enter your email:");
+        String email = getCommand();
+        sendMessage("Please enter your password:");
+        String password = getCommand();
+        IdentifiedUser player = new IdentifiedUser(name, email, password);
+        identifiedUserRepository.save(player);
+        for (IdentifiedUser user : identifiedUserRepository.findAll()) {
+            sendMessage(user.toString());
+        }
+//        Location start = MapFactory.getStartMap();
+        Location start = new ImmutableLocation("no description", null, new HashMap<>());
+        Storyworld storyworld = new WikiStoryworld();
+        storyworld.setEntry(start);
+        storyworldRepository.save(storyworld);
+        for (Storyworld storyworld1 : storyworldRepository.findAll()) {
+            sendMessage(storyworld1.toString());
+        }
         player.setLocation(start);
         Actionable response = messageService.process(new Message(player, "status"));
         sendMessage(response.getMessage().getText());
         while (!Quit.class.equals(response.getClass())) {
             sendMessage("What is your next move?");
-            String command = getCommand();
-            TestEnt testEnt = new TestEnt();
-            testEnt.setText(command);
-            testEntRepository.save(testEnt);
-            for (TestEnt testEntt : testEntRepository.findAll()) {
-                sendMessage(testEntt.toString());
-            }
-            response = messageService.process(new Message(player, command));
+            response = messageService.process(new Message(player, getCommand()));
             sendMessage(response.getMessage().getText());
             response.accept(this);
         }

@@ -11,7 +11,7 @@ import storyworlds.model.Link;
 import storyworlds.model.Location;
 import storyworlds.model.implementation.ImmutableLocation;
 
-import java.util.HashSet;
+import java.util.HashMap;
 
 public class LocationService {
 
@@ -20,7 +20,7 @@ public class LocationService {
         Validateable properties = create.getProperties();
 
         if (properties.isValid() && properties instanceof LocationProperties) {
-            Location location = new ImmutableLocation(((LocationProperties) properties).getDescription(), null, new HashSet<>());
+            Location location = new ImmutableLocation(((LocationProperties) properties).getDescription(), null, new HashMap<>());
             return location;
         }
         throw new UncreateableException("Failed to create location.");
@@ -31,7 +31,7 @@ public class LocationService {
 
         if (properties.isValid() && properties instanceof LocationProperties) {
             Location formerLocation = edit.getMessage().getPlayer().getLocation();
-            Location location = new ImmutableLocation(((LocationProperties) properties).getDescription(), formerLocation, formerLocation.listItems());
+            Location location = new ImmutableLocation(((LocationProperties) properties).getDescription(), formerLocation, formerLocation.getItems());
             cloneLinks(location, formerLocation);
             edit.getMessage().getPlayer().setLocation(location);
             return location;

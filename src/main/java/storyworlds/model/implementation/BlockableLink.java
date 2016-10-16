@@ -1,5 +1,6 @@
 package storyworlds.model.implementation;
 
+import org.springframework.data.annotation.Id;
 import storyworlds.model.Item;
 import storyworlds.model.Location;
 import storyworlds.model.Player;
@@ -9,7 +10,7 @@ import storyworlds.model.enumeration.Direction;
  * @author nvaughan since 8/26/16
  */
 public class BlockableLink  extends AbstractLink {
-    
+
     private final Item                    requiredItem;
     private final String                  passText;
     private final String                  failText;

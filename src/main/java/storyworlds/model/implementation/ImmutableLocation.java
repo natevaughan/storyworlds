@@ -2,6 +2,7 @@
 package storyworlds.model.implementation;
 
 import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import storyworlds.model.Item;
 import storyworlds.model.Link;
 import storyworlds.model.Location;
@@ -14,22 +15,19 @@ public class ImmutableLocation implements Location {
 
     private boolean active;
     private final String description;
+    @DBRef(lazy = true)
     private final Map<Direction, Link> outboundLinks;
+    @DBRef(lazy = true)
     private final Map<Integer, Link> inboundLinks;
     private final Map<String, Item> items;
     private Location previousLocation;
 
-    @PersistenceConstructor
-    public ImmutableLocation(String description, Location previousLocation, Collection<Item> items) {
+    public ImmutableLocation(String description, Location previousLocation, Map<String, Item> items) {
         this.previousLocation = previousLocation;
-        Map<String, Item> itemsMap = new HashMap<String, Item>();
-        for (Item item : items) {
-            itemsMap.put(item.getName().toUpperCase(), item);
-        }
         this.description = description;
         this.outboundLinks = new ConcurrentHashMap<>();
         this.inboundLinks = new ConcurrentHashMap<>();
-        this.items = Collections.unmodifiableMap(new LinkedHashMap<>(itemsMap));
+        this.items = Collections.unmodifiableMap(new LinkedHashMap<>(items));
     }
 
 
@@ -37,8 +35,8 @@ public class ImmutableLocation implements Location {
         return description;
     }
 
-    public Collection<Item> listItems() {
-        return items.values();
+    public Map<String, Item> getItems() {
+        return items;
     }
 
     public Item getItem(String name) {
@@ -54,6 +52,9 @@ public class ImmutableLocation implements Location {
     }
 
     public Link getOutboundLink(Direction direction) {
+        if (direction == null) {
+            return null;
+        }
         return outboundLinks.get(direction);
     }
 

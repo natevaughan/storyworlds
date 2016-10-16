@@ -9,7 +9,7 @@ public interface Location {
 
     public String getDescription();
 
-    public Collection<Item> listItems();
+    public Map<String, Item> getItems();
 
     public Item getItem(String name);
 
