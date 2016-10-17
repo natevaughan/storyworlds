@@ -13,15 +13,15 @@ import java.util.Set;
 public class User implements Player {
 
     protected final String name;
-    @DBRef(lazy = true)
+    @DBRef
     protected final Set<Item> items;
-    @DBRef(lazy = true)
+    @DBRef
     protected Location location;
-    @DBRef(lazy = true)
+    @DBRef
     protected Item activeItem;
-    @DBRef(lazy = true)
+    @DBRef
     protected final Set<Location> locationHistory;
-    @DBRef(lazy = true)
+    @DBRef
     protected Storyworld currentStoryworld;
     
     public User(String name) {

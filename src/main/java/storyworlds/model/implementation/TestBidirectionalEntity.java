@@ -1,6 +1,7 @@
 package storyworlds.model.implementation;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.util.UUID;
 
@@ -12,7 +13,8 @@ public class TestBidirectionalEntity {
     @Id
     private String id;
     private String name;
-    private TestBidirectionalChildEntitiy childEntitiy;
+    @DBRef
+    private TestBidirectionalChildEntity childEntitiy;
 
     public TestBidirectionalEntity() {
         this.id = UUID.randomUUID().toString();
@@ -34,11 +36,11 @@ public class TestBidirectionalEntity {
         this.name = name;
     }
 
-    public TestBidirectionalChildEntitiy getChildEntitiy() {
+    public TestBidirectionalChildEntity getChildEntitiy() {
         return childEntitiy;
     }
 
-    public void setChildEntitiy(TestBidirectionalChildEntitiy childEntitiy) {
+    public void setChildEntitiy(TestBidirectionalChildEntity childEntitiy) {
         this.childEntitiy = childEntitiy;
     }
 

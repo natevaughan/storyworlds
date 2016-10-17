@@ -26,8 +26,8 @@ public class LinkService {
                     ((DirectionalLinkProperties) properties).getPassText());
             create.getMessage().getPlayer().getLocation().addOutboundLink(link);
             link.bind();
-            locationRepository.save(link.getFromLocation());
-            locationRepository.save(link.getToLocation());
+//            locationRepository.save(link.getFromLocation());
+//            locationRepository.save(link.getToLocation());
             create.setSuccessful(true);
             return link;
         }

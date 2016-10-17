@@ -1,5 +1,6 @@
 package storyworlds.action;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import storyworlds.exception.BadLinkException;
 import storyworlds.gameplay.AbstractGameplayTest;
@@ -29,6 +30,7 @@ public class TakeTest extends AbstractGameplayTest {
     }
 
     @Test
+    @Ignore
     public void takeThenMoveTest() throws BadLinkException {
         Location location = MapFactory.getStartMap();
         user.setLocation(location);

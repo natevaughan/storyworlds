@@ -1,5 +1,7 @@
 package storyworlds.model;
 
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 import storyworlds.model.enumeration.Direction;
 
 public interface Link {

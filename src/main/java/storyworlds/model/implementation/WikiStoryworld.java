@@ -1,21 +1,22 @@
 package storyworlds.model.implementation;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 import storyworlds.model.Location;
 import storyworlds.model.Storyworld;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Created by nvaughan on 10/15/2016.
  */
+@Document
 public class WikiStoryworld implements Storyworld, Serializable {
 
     @Id
     private String id;
+    @DBRef
     private Location entry;
 //    private String title;
 //    private String description;

@@ -10,6 +10,7 @@ import storyworlds.model.Item;
 import storyworlds.model.Location;
 import storyworlds.model.implementation.ImmutableLocation;
 import storyworlds.model.implementation.UsableItem;
+import storyworlds.model.implementation.persistence.LocationRepository;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +23,9 @@ public class ItemService {
 
     @Autowired
     LocationService locationService;
+
+    @Autowired
+    LocationRepository locationRepository;
 
     public Item create(Create create) throws UncreateableException {
         validateAll(create);
@@ -36,12 +40,8 @@ public class ItemService {
             Item item = new UsableItem(((ItemProperties) properties).getName(),
                     ((ItemProperties) properties).getDescription(),
                     ((ItemProperties) properties).getUseText());
-            Location previousLocation = create.getMessage().getPlayer().getLocation();
-            Map<String, Item> previousItems = new HashMap<>(previousLocation.getItems());
-            previousItems.put(item.getName(), item);
-            Location location = new ImmutableLocation(previousLocation.getDescription(), previousLocation, previousItems);
-            locationService.cloneLinks(location, previousLocation);
-            create.getMessage().getPlayer().setLocation(location);
+            create.getMessage().getPlayer().getLocation().getItems().put(item.getName(), item);
+            locationRepository.save(create.getMessage().getPlayer().getLocation());
             return item;
         }
         throw new UncreateableException("Uncreatable Item.");
