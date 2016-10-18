@@ -10,7 +10,8 @@ import storyworlds.model.implementation.DirectionalLink;
 import storyworlds.model.implementation.ImmutableLocation;
 import storyworlds.model.implementation.UsableItem;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MapFactory implements GameTextConstants {
     public static Location getStartMap() {

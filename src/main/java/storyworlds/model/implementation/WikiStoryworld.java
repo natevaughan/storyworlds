@@ -11,7 +11,7 @@ import java.io.Serializable;
 /**
  * Created by nvaughan on 10/15/2016.
  */
-@Document
+@Document(collection = "storyworld")
 public class WikiStoryworld implements Storyworld, Serializable {
 
     @Id

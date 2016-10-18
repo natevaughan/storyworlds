@@ -1,6 +1,7 @@
 package storyworlds.model.implementation;
 
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 import storyworlds.model.Item;
 import storyworlds.model.Location;
 import storyworlds.model.Player;
@@ -10,6 +11,7 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+@Document(collection = "player")
 public class User implements Player {
 
     protected final String name;

@@ -2,12 +2,10 @@ package storyworlds.model.implementation;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import storyworlds.model.implementation.UsableItem;
-import storyworlds.model.implementation.User;
 
 import java.io.Serializable;
 
-@Document
+@Document(collection = "player")
 public class IdentifiedUser extends User implements Serializable {
 
     @Id

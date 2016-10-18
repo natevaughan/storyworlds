@@ -1,9 +1,5 @@
 package storyworlds.model;
 
-import storyworlds.model.implementation.IdentifiedUser;
-
-import java.util.Collection;
-
 /**
  * Created by nvaughan on 10/15/2016.
  */

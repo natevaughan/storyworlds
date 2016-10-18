@@ -7,13 +7,8 @@ import storyworlds.create.properties.ItemProperties;
 import storyworlds.create.properties.Validateable;
 import storyworlds.exception.UncreateableException;
 import storyworlds.model.Item;
-import storyworlds.model.Location;
-import storyworlds.model.implementation.ImmutableLocation;
 import storyworlds.model.implementation.UsableItem;
 import storyworlds.model.implementation.persistence.LocationRepository;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by nvaughan on 10/7/2016.

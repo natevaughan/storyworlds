@@ -1,6 +1,5 @@
 package storyworlds.model.implementation;
 
-import org.springframework.data.annotation.Id;
 import storyworlds.model.Item;
 import storyworlds.model.Location;
 import storyworlds.model.Player;

@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import storyworlds.action.*;
 import storyworlds.action.Error;
-import storyworlds.action.Map;
 import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.constants.GameTextConstants;
 import storyworlds.create.Createable;
@@ -14,8 +13,11 @@ import storyworlds.create.properties.LocationProperties;
 import storyworlds.exception.BadLinkException;
 import storyworlds.exception.UncreateableException;
 import storyworlds.model.Location;
+import storyworlds.model.Player;
 import storyworlds.model.Storyworld;
-import storyworlds.model.implementation.*;
+import storyworlds.model.implementation.IdentifiedUser;
+import storyworlds.model.implementation.ImmutableLocation;
+import storyworlds.model.implementation.WikiStoryworld;
 import storyworlds.model.implementation.persistence.*;
 import storyworlds.service.ItemService;
 import storyworlds.service.LinkService;
@@ -23,13 +25,16 @@ import storyworlds.service.LocationService;
 import storyworlds.service.message.Message;
 import storyworlds.service.message.MessageService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Scanner;
 
 @Service
 public class ConsoleIO implements ActionVisitor, GameTextConstants {
 
     @Autowired
-    IdentifiedUserRepository identifiedUserRepository;
+    PlayerRepository playerRepository;
 
     @Autowired
     StoryworldRepository storyworldRepository;
@@ -37,12 +42,6 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
 
     @Autowired
     LocationRepository locationRepository;
-
-    @Autowired
-    TestBidirectionalEntityRepository bidirectionalEntityRepository;
-
-    @Autowired
-    TestBidirectionalChildEntityRepository childRepo;
 
     @Autowired
     LocationService locationService;
@@ -56,30 +55,11 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
     private StringBuilder sb = new StringBuilder();
     MessageService messageService = new MessageService();
     private Scanner scanner = new Scanner(System.in);
-    private IdentifiedUser player;
+    private Player player;
 
     public void run() {
-//        bidirectionalEntityRepository.deleteAll();
-//        TestBidirectionalEntity entity = new TestBidirectionalEntity();
-//        entity.setName("parent32");
-//        TestBidirectionalChildEntity childEntitiy = new TestBidirectionalChildEntity();
-//        childEntitiy.setName("child32");
-//        childRepo.save(childEntitiy);
-//        entity.setChildEntitiy(childEntitiy);
-//        childEntitiy.setBidirectionalEntitiy(entity);
-//        bidirectionalEntityRepository.save(entity);
-//        for (TestBidirectionalEntity bidirectionalEntity : bidirectionalEntityRepository.findAll()) {
-//            sendMessage(bidirectionalEntity.getChildEntitiy().toString());
-//        }
-
-        Collection<TestBidirectionalEntity> en = bidirectionalEntityRepository.findAll();
-        for (TestBidirectionalEntity bidirectionalEntity : en) {
-            sendMessage(bidirectionalEntity.getChildEntitiy().toString());
-        }
-
-
 //        storyworldRepository.deleteAll();
-//        identifiedUserRepository.deleteAll();
+//        playerRepository.deleteAll();
 //        locationRepository.deleteAll();
 //        sendMessage(WELCOME_MESSAGE);
 //        String name = getCommand();
@@ -88,7 +68,6 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
 //        sendMessage("Please enter your password:");
 //        String password = getCommand();
 //        player = new IdentifiedUser(name, email, password);
-//        identifiedUserRepository.save(player);
 //        Location start = new ImmutableLocation("no description", null, new HashMap<>());
 //        locationRepository.save(start);
 //        Storyworld storyworld = new WikiStoryworld();
@@ -97,13 +76,11 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
 //        player.setCurrentStoryworld(storyworld);
 //        player.setLocation(storyworld.getEntry());
 //        player.setCurrentStoryworld(storyworld);
-//        identifiedUserRepository.save(player);
+//        playerRepository.save(player);
 
-
-
-//        player = identifiedUserRepository.findAll().get(0);
-//        Storyworld storyworld = storyworldRepository.findAll().get(0);
-//        sendMessage(storyworld.getEntry().toString());
+        player = playerRepository.findAll().get(0);
+        Storyworld storyworld = storyworldRepository.findAll().get(0);
+        sendMessage(storyworld.getEntry().toString());
 
         Actionable response = null;
         try {
@@ -121,7 +98,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
             } catch (BadLinkException e) {
                 sendMessage(e.getMessage());
             }
-            identifiedUserRepository.save(player);
+            playerRepository.save(player);
         }
     }
 

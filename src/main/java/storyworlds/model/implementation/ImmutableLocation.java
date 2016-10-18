@@ -2,7 +2,6 @@
 package storyworlds.model.implementation;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import storyworlds.model.Item;
@@ -11,10 +10,11 @@ import storyworlds.model.Location;
 import storyworlds.model.enumeration.Direction;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Document
+@Document(collection = "location")
 public class ImmutableLocation implements Location, Serializable {
 
     @Id
@@ -23,6 +23,7 @@ public class ImmutableLocation implements Location, Serializable {
     private final String description;
     private final Map<Direction, Link> outboundLinks;
     private final Map<Integer, Link> inboundLinks;
+    @DBRef
     private final Map<String, Item> items;
     @DBRef
     private Location previousLocation;
@@ -36,11 +37,11 @@ public class ImmutableLocation implements Location, Serializable {
         this.items = new ConcurrentHashMap<>(items);
     }
 
-    public String getId() {
+    public synchronized String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public synchronized void setId(String id) {
         this.id = id;
     }
 
@@ -87,11 +88,11 @@ public class ImmutableLocation implements Location, Serializable {
         return previousLocation;
     }
 
-    public boolean isActive() {
+    public synchronized boolean isActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    public synchronized void setActive(boolean active) {
         this.active = active;
     }
 }

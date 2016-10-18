@@ -1,12 +1,9 @@
 package storyworlds.model.implementation;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import storyworlds.model.Link;
 import storyworlds.model.Location;
 import storyworlds.model.enumeration.Direction;
-
-import java.util.UUID;
 
 /**
  * Created by nvaughan on 9/24/2016.
