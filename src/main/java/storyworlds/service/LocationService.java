@@ -13,6 +13,7 @@ import storyworlds.model.Link;
 import storyworlds.model.Location;
 import storyworlds.model.implementation.ImmutableLocation;
 import storyworlds.model.implementation.persistence.LocationRepository;
+import storyworlds.model.implementation.persistence.Player2Repo;
 import storyworlds.model.implementation.persistence.StoryworldRepository;
 
 import java.util.HashMap;
@@ -22,6 +23,9 @@ public class LocationService {
 
     @Autowired
     LocationRepository locationRepository;
+
+    @Autowired
+    Player2Repo playerRepository;
 
     @Autowired
     StoryworldRepository storyworldRepository;
@@ -48,11 +52,6 @@ public class LocationService {
             Location location = new ImmutableLocation(((LocationProperties) properties).getDescription(), formerLocation, formerLocation.getItems());
             cloneLinks(location, formerLocation);
             locationRepository.save(location);
-            edit.getMessage().getPlayer().setLocation(location);
-            if (edit.getMessage().getPlayer().getCurrentStoryworld().getEntry().equals(formerLocation)) {
-                edit.getMessage().getPlayer().getCurrentStoryworld().setEntry(location);
-                storyworldRepository.save(edit.getMessage().getPlayer().getCurrentStoryworld());
-            }
             return location;
         }
         throw new UncreateableException("Failed to create location.");

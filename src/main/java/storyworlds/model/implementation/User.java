@@ -9,27 +9,30 @@ import storyworlds.model.Storyworld;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
+@Deprecated
 @Document(collection = "player")
 public class User implements Player {
 
-    protected final String name;
+    private final String name;
     @DBRef
-    protected final Set<Item> items;
+    private final Map<Integer, Item> items;
     @DBRef
-    protected Location location;
+    private Location location;
     @DBRef
-    protected Item activeItem;
+    private Item activeItem;
     @DBRef
-    protected final Set<Location> locationHistory;
+    private final Map<Integer, Location> locationHistory;
     @DBRef
-    protected Storyworld currentStoryworld;
+    private Storyworld currentStoryworld;
     
     public User(String name) {
         this.name = name;
-        this.items = new LinkedHashSet<Item>();
-        this.locationHistory = new LinkedHashSet<>();
+        this.items = new ConcurrentHashMap<>();
+        this.locationHistory = new ConcurrentHashMap<>();
     }
 
     public String getName() {
@@ -37,11 +40,11 @@ public class User implements Player {
     }
 
     public Collection<Item> listItems() {
-        return items;
+        return items.values();
     }
 
     public void addItem(Item item) {
-        items.add(item);
+        items.put(item.hashCode(), item);
     }
     
     public Location getLocation() {
@@ -50,7 +53,7 @@ public class User implements Player {
 
     public void setLocation(Location location) {
         this.location = location;
-        locationHistory.add(location);
+        locationHistory.put(location.hashCode(), location);
     }
 
     public Item getActiveItem() {
@@ -58,21 +61,21 @@ public class User implements Player {
     }
 
     public void activate(Item item) {
-        if (!this.items.contains(item)) {
+        if (this.items.get(item.hashCode()) == null) {
             return;
         }
         this.activeItem = item;
     }
 
     public Collection<Location> getLocationHistory() {
-        return locationHistory;
+        return locationHistory.values();
     }
 
-    public Storyworld getCurrentStoryworld() {
+    public synchronized Storyworld getCurrentStoryworld() {
         return currentStoryworld;
     }
 
-    public void setCurrentStoryworld(Storyworld storyworld) {
+    public synchronized void setCurrentStoryworld(Storyworld storyworld) {
         currentStoryworld = storyworld;
     }
 }

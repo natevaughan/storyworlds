@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Document(collection = "location")
 public class ImmutableLocation implements Location, Serializable {
@@ -73,7 +74,7 @@ public class ImmutableLocation implements Location, Serializable {
     }
 
     public Collection<Link> getInboundLinks() {
-        return inboundLinks.values();
+        return inboundLinks.values().stream().filter(Link::isActive).collect(Collectors.toSet());
     }
 
     public void addInboundLink(Link link) {

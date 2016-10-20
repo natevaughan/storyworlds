@@ -16,12 +16,6 @@ import storyworlds.model.implementation.persistence.LocationRepository;
 @Service
 public class ItemService {
 
-    @Autowired
-    LocationService locationService;
-
-    @Autowired
-    LocationRepository locationRepository;
-
     public Item create(Create create) throws UncreateableException {
         validateAll(create);
         Validateable properties = create.getProperties();
@@ -35,8 +29,6 @@ public class ItemService {
             Item item = new UsableItem(((ItemProperties) properties).getName(),
                     ((ItemProperties) properties).getDescription(),
                     ((ItemProperties) properties).getUseText());
-            create.getMessage().getPlayer().getLocation().getItems().put(item.getName(), item);
-            locationRepository.save(create.getMessage().getPlayer().getLocation());
             return item;
         }
         throw new UncreateableException("Uncreatable Item.");

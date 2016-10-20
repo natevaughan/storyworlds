@@ -1,7 +1,10 @@
 package storyworlds.model;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.Collection;
 
+@Document
 public interface Player {
 
     public String getName();

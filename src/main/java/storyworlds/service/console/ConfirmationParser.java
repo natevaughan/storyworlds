@@ -1,13 +1,16 @@
 package storyworlds.service.console;
 
 public class ConfirmationParser {
-    public static Confirmation parse(String input) {
+    private enum Confirmation {
+        YES, Y, SURE, OK
+    }
+    public static boolean parse(String input) {
         input = input.trim();
         for (Confirmation confirmation : Confirmation.values()) {
-            if (confirmation.toString().equalsIgnoreCase(input) || confirmation.toString().substring(0,1).equalsIgnoreCase(input)) {
-                return confirmation;
+            if (confirmation.toString().equalsIgnoreCase(input)) {
+                return true;
             }
         }
-        return Confirmation.ERROR;
+        return false;
     }
 }

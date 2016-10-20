@@ -1,9 +1,9 @@
 package storyworlds.action.parser;
 
 import org.junit.Test;
-import storyworlds.service.console.Confirmation;
 import storyworlds.service.console.ConfirmationParser;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class ConfirmationParserTest {
@@ -12,25 +12,11 @@ public class ConfirmationParserTest {
 
     @Test
     public void testParseYes() {
-        assertTrue(Confirmation.YES.equals(parser.parse("yes")));
-        assertTrue(Confirmation.YES.equals(parser.parse("YeS")));
-        assertTrue(Confirmation.YES.equals(parser.parse("y")));
-        assertTrue(Confirmation.YES.equals(parser.parse("y ")));
-    }
-
-    @Test
-    public void testParseNo() {
-        assertTrue(Confirmation.NO.equals(parser.parse(" n ")));
-        assertTrue(Confirmation.NO.equals(parser.parse("N")));
-        assertTrue(Confirmation.NO.equals(parser.parse("No")));
-        assertTrue(Confirmation.NO.equals(parser.parse("nO")));
-    }
-
-    @Test
-    public void testParseError() {
-        assertTrue(Confirmation.ERROR.equals(parser.parse(" ")));
-        assertTrue(Confirmation.ERROR.equals(parser.parse("")));
-        assertTrue(Confirmation.ERROR.equals(parser.parse("foo")));
-        assertTrue(Confirmation.ERROR.equals(parser.parse("y es")));
+        assertTrue(parser.parse("yes"));
+        assertTrue(parser.parse("YeS"));
+        assertTrue(parser.parse("y"));
+        assertTrue(parser.parse("y "));
+        assertFalse(parser.parse(" n "));
+        assertFalse(parser.parse("foo"));
     }
 }

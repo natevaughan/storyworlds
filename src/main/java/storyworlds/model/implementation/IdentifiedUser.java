@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 
-@Document(collection = "player")
+@Deprecated
 public class IdentifiedUser extends User implements Serializable {
 
     @Id
@@ -37,6 +37,6 @@ public class IdentifiedUser extends User implements Serializable {
 
     @Override
     public String toString() {
-        return name + ", " + email + ", " + password;
+        return getName() + ", " + email + ", " + password;
     }
 }

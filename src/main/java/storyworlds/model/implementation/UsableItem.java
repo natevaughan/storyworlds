@@ -1,6 +1,7 @@
 package storyworlds.model.implementation;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import storyworlds.model.Item;
 
 import java.util.UUID;
@@ -8,6 +9,7 @@ import java.util.UUID;
 /**
  * Created by nvaughan on 9/10/2016.
  */
+@Document(collection = "item")
 public class UsableItem implements Item {
 
     @Id
