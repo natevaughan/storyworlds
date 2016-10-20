@@ -8,13 +8,16 @@ import storyworlds.create.properties.Validateable;
 import storyworlds.exception.UncreateableException;
 import storyworlds.model.Item;
 import storyworlds.model.implementation.UsableItem;
-import storyworlds.model.implementation.persistence.LocationRepository;
+import storyworlds.model.implementation.persistence.ItemRepository;
 
 /**
  * Created by nvaughan on 10/7/2016.
  */
 @Service
 public class ItemService {
+
+    @Autowired
+    ItemRepository itemRepository;
 
     public Item create(Create create) throws UncreateableException {
         validateAll(create);
@@ -29,6 +32,7 @@ public class ItemService {
             Item item = new UsableItem(((ItemProperties) properties).getName(),
                     ((ItemProperties) properties).getDescription(),
                     ((ItemProperties) properties).getUseText());
+            itemRepository.save(item);
             return item;
         }
         throw new UncreateableException("Uncreatable Item.");

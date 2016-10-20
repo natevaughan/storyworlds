@@ -2,8 +2,18 @@ package storyworlds.service.console;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import storyworlds.action.*;
+import storyworlds.action.Actionable;
+import storyworlds.action.Create;
+import storyworlds.action.Delete;
+import storyworlds.action.Edit;
 import storyworlds.action.Error;
+import storyworlds.action.Help;
+import storyworlds.action.Map;
+import storyworlds.action.Move;
+import storyworlds.action.Quit;
+import storyworlds.action.Status;
+import storyworlds.action.Take;
+import storyworlds.action.Use;
 import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.constants.GameTextConstants;
 import storyworlds.create.Createable;
@@ -13,13 +23,15 @@ import storyworlds.create.properties.LocationProperties;
 import storyworlds.exception.BadLinkException;
 import storyworlds.exception.UncreateableException;
 import storyworlds.model.Item;
+import storyworlds.model.Link;
 import storyworlds.model.Location;
-import storyworlds.model.Player;
 import storyworlds.model.Storyworld;
 import storyworlds.model.implementation.ImmutableLocation;
 import storyworlds.model.implementation.Player2;
 import storyworlds.model.implementation.WikiStoryworld;
-import storyworlds.model.implementation.persistence.*;
+import storyworlds.model.implementation.persistence.LocationRepository;
+import storyworlds.model.implementation.persistence.Player2Repo;
+import storyworlds.model.implementation.persistence.StoryworldRepository;
 import storyworlds.service.ItemService;
 import storyworlds.service.LinkService;
 import storyworlds.service.LocationService;
@@ -57,27 +69,18 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
     private Scanner scanner = new Scanner(System.in);
     private Player2 player;
 
-    private void createNewPlayer() {
-        sendMessage(WELCOME_MESSAGE);
-        String name = getCommand();
-        sendMessage("Please enter your email:");
-        String email = getCommand();
-        sendMessage("Please enter your password:");
-        String password = getCommand();
-
-        player = new Player2(name, email, password);
-    }
-
     public void run() {
         sendMessage("reset?");
         if (ConfirmationParser.parse(getCommand())) {
             reset();
         }
+        sendMessage("login");
+        login();
 
-        Storyworld storyworld = storyworldRepository.findAll().get(0);
-        player = player2Repo.findAll().get(0);
+//        Storyworld storyworld = storyworldRepository.findAll().get(0);
+//        player = player2Repo.findAll().get(0);
 
-        sendMessage(storyworld.getEntry().toString());
+//        sendMessage(storyworld.getEntry().toString());
 
         Actionable response = null;
         try {
@@ -96,6 +99,15 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
                 sendMessage(e.getMessage());
             }
         }
+    }
+
+    private void login() {
+        sendMessage("Enter your email address:");
+        String email = getCommand();
+        sendMessage("Enter your password");
+        String pass = getCommand();
+        player = player2Repo.findByEmailAndPassword(email, pass);
+        sendMessage(player.toString());
     }
 
     private void reset() {
@@ -133,6 +145,17 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
 
     public String getCommand() {
         return scanner.nextLine();
+    }
+
+    private void createNewPlayer() {
+        sendMessage(WELCOME_MESSAGE);
+        String name = getCommand();
+        sendMessage("Please enter your email:");
+        String email = getCommand();
+        sendMessage("Please enter your password:");
+        String password = getCommand();
+
+        player = new Player2(name, email, password);
     }
 
     public void visit(Create create) {
@@ -197,7 +220,9 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
                 }
                 create.setProperties(linkProperties);
                 try {
-                    linkService.create(create);
+                    Link link = linkService.create(create);
+                    locationRepository.save(link.getFromLocation());
+                    locationRepository.save(link.getToLocation());
                 } catch (UncreateableException e) {
                     sendMessage(e.getMessage());
                 }

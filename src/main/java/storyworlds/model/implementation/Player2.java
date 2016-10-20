@@ -9,8 +9,8 @@ import storyworlds.model.Player;
 import storyworlds.model.Storyworld;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * Created by nvaughan on 10/19/2016.
@@ -23,17 +23,30 @@ public class Player2 implements Player {
     private final String email;
     private final String password;
     @DBRef
+    private Storyworld currentStoryworld;
+    @DBRef
     private Location location;
     @DBRef
     private Set<Location> previousLocations;
+    @DBRef
     private Set<Item> items;
+    @DBRef
+    private Item activeItem;
 
     public Player2(String name, String email, String password) {
-        this.items = new HashSet<Item>();
-        this.previousLocations = new HashSet<Location>();
+        this.items = new ConcurrentSkipListSet<>();
+        this.previousLocations = new ConcurrentSkipListSet<>();
         this.name = name;
         this.email = email;
         this.password = password;
+    }
+
+    public Storyworld getCurrentStoryworld() {
+        return currentStoryworld;
+    }
+
+    public void setCurrentStoryworld(Storyworld storyworld) {
+        this.currentStoryworld = storyworld;
     }
 
     public String getId() {
@@ -60,27 +73,19 @@ public class Player2 implements Player {
 
     @Override
     public Item getActiveItem() {
-        return null;
+        return activeItem;
     }
 
     @Override
     public void activate(Item item) {
-
+        if (items.contains(item)) {
+            this.activeItem = item;
+        }
     }
 
     @Override
     public Collection<Location> getLocationHistory() {
         return previousLocations;
-    }
-
-    @Override
-    public Storyworld getCurrentStoryworld() {
-        return null;
-    }
-
-    @Override
-    public void setCurrentStoryworld(Storyworld storyworld) {
-
     }
 
     public void setName(String name) {

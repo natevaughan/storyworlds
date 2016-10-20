@@ -14,9 +14,6 @@ import storyworlds.model.implementation.persistence.LocationRepository;
 @Service
 public class LinkService {
 
-    @Autowired
-    LocationRepository locationRepository;
-
     public Link create(Create create) throws UncreateableException {
         Validateable properties = create.getProperties();
         if (properties.isValid() && properties instanceof DirectionalLinkProperties) {
@@ -26,8 +23,6 @@ public class LinkService {
                     ((DirectionalLinkProperties) properties).getPassText());
             create.getMessage().getPlayer().getLocation().addOutboundLink(link);
             link.bind();
-//            locationRepository.save(link.getFromLocation());
-//            locationRepository.save(link.getToLocation());
             create.setSuccessful(true);
             return link;
         }
