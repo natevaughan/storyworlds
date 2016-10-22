@@ -12,7 +12,7 @@ import java.io.Serializable;
  * Created by nvaughan on 10/15/2016.
  */
 @Document(collection = "storyworld")
-public class WikiStoryworld implements Storyworld, Serializable {
+public class WikiStoryworld implements Storyworld {
 
     @Id
     private String id;
@@ -39,15 +39,15 @@ public class WikiStoryworld implements Storyworld, Serializable {
         this.id = id;
     }
 
-    public Location getEntry() {
-        return entry;
+    public synchronized Location getEntry() {
+        return entry.getForwardingLocation();
     }
 
     public void setEntry(Location entry) {
         this.entry = entry;
     }
 
-//    public String getTitle() {
+    //    public String getTitle() {
 //        return title;
 //    }
 //
@@ -94,9 +94,4 @@ public class WikiStoryworld implements Storyworld, Serializable {
 //    public void setPubliclyModifiable(boolean publiclyModifiable) {
 //        isPubliclyModifiable = publiclyModifiable;
 //    }
-
-    @Override
-    public String toString() {
-        return "id: " + id + "\nentry: " + entry.getDescription();
-    }
 }

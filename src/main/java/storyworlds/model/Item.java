@@ -8,6 +8,6 @@ public interface Item {
 
     public String getDescription();
 
-    public String getUseMessage();
+    public String getUseText();
 
 }

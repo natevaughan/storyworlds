@@ -18,7 +18,7 @@ public class LocationCreatorTest extends AbstractMapGameplayTest {
     @Test
     public void createLocation() throws BadLinkException {
         setup();
-        Actionable a = messageService.process(new Message(user, "create location west"));
+        Actionable a = messageService.process(new Message(user, "build location west"));
         assertTrue("Actionable should be Createables", Create.class.equals(a.getClass()));
         assertTrue("Createables should be successful", a.isSuccessful());
     }
@@ -26,14 +26,14 @@ public class LocationCreatorTest extends AbstractMapGameplayTest {
     @Test
     public void overwriteExistingLocation() throws BadLinkException {
         setup();
-        Actionable a = messageService.process(new Message(user, "create location north"));
+        Actionable a = messageService.process(new Message(user, "build location north"));
         assertFalse("Createables should fail", a.isSuccessful());
 
     }
 
     @Test
     public void createBadLocation() throws BadLinkException {
-        Actionable a = messageService.process(new Message(user, "create location foo"));
+        Actionable a = messageService.process(new Message(user, "build location foo"));
         assertTrue("Actionable should be Createables", Create.class.equals(a.getClass()));
         assertFalse("Createables should be successful", a.isSuccessful());
     }

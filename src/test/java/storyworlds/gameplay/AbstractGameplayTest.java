@@ -3,7 +3,7 @@ package storyworlds.gameplay;
 import org.junit.Before;
 import storyworlds.AbstractSpringTest;
 import storyworlds.model.Player;
-import storyworlds.model.implementation.User;
+import storyworlds.model.implementation.Player2;
 import storyworlds.service.message.MessageService;
 
 /**
@@ -16,7 +16,7 @@ public abstract class AbstractGameplayTest extends AbstractSpringTest {
 
     @Before
     public void setup() {
-        user = new User("foo");
+        user = new Player2("foo", "a", "b");
         messageService = new MessageService();
     }
 }

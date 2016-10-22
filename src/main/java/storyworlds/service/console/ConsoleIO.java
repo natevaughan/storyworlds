@@ -17,17 +17,17 @@ import storyworlds.action.Use;
 import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.constants.GameTextConstants;
 import storyworlds.create.Createable;
-import storyworlds.create.properties.DirectionalLinkProperties;
-import storyworlds.create.properties.ItemProperties;
-import storyworlds.create.properties.LocationProperties;
 import storyworlds.exception.BadLinkException;
 import storyworlds.exception.UncreateableException;
 import storyworlds.model.Item;
 import storyworlds.model.Link;
 import storyworlds.model.Location;
 import storyworlds.model.Storyworld;
+import storyworlds.model.enumeration.Direction;
+import storyworlds.model.implementation.DirectionalLink;
 import storyworlds.model.implementation.ImmutableLocation;
 import storyworlds.model.implementation.Player2;
+import storyworlds.model.implementation.UsableItem;
 import storyworlds.model.implementation.WikiStoryworld;
 import storyworlds.model.implementation.persistence.LocationRepository;
 import storyworlds.model.implementation.persistence.Player2Repo;
@@ -39,7 +39,7 @@ import storyworlds.service.message.Message;
 import storyworlds.service.message.MessageService;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 
@@ -77,11 +77,6 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
         sendMessage("login");
         login();
 
-//        Storyworld storyworld = storyworldRepository.findAll().get(0);
-//        player = player2Repo.findAll().get(0);
-
-//        sendMessage(storyworld.getEntry().toString());
-
         Actionable response = null;
         try {
             response = messageService.process(new Message(player, "status"));
@@ -107,7 +102,6 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
         sendMessage("Enter your password");
         String pass = getCommand();
         player = player2Repo.findByEmailAndPassword(email, pass);
-        sendMessage(player.toString());
     }
 
     private void reset() {
@@ -115,17 +109,15 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
         locationRepository.deleteAll();
         player2Repo.deleteAll();
         createNewPlayer();
-        Location start = new ImmutableLocation("no description", null, new HashMap<>());
-        locationRepository.save(start);
         Storyworld storyworld = new WikiStoryworld();
+        storyworldRepository.save(storyworld);
+        Location start = new ImmutableLocation("no description", storyworld, new HashSet<>(), null);
+        locationRepository.save(start);
         storyworld.setEntry(start);
         storyworldRepository.save(storyworld);
         player.setCurrentStoryworld(storyworld);
         player.setLocation(storyworld.getEntry());
-        player.setCurrentStoryworld(storyworld);
-        player.setLocation(storyworld.getEntry());
         player2Repo.save(player);
-
     }
 
     public void addLine(String text) {
@@ -163,38 +155,36 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
             return;
         }
 
-        create.getMessage().resetText();
         switch (create.getCreateable()) {
             case LOCATION:
-                LocationProperties locationProps = new LocationProperties();
-                DirectionalLinkProperties directionalLinkProperties = new DirectionalLinkProperties();
+                ImmutableLocation.Builder locationBuilder = ImmutableLocation.Builder.newInstance();
+                DirectionalLink.Builder linkBuilder = DirectionalLink.Builder.newInstance();
                 sendMessage("What would you like the text describing the link to the location to say? \n" +
                         "It should complete this sentence: " + create.getDirection().formatted() + " there is...");
-                directionalLinkProperties.setDescription(getCommand());
+                linkBuilder.setDescription(getCommand());
                 sendMessage("What would you like the text of the link to be while the user moves to the new location?");
-                directionalLinkProperties.setPassText(getCommand());
+                linkBuilder.setPassText(getCommand());
                 sendMessage("What would you like the text of the location to be once the user arrives?");
-                locationProps.setDescription(getCommand());
-                create.setProperties(locationProps);
+                locationBuilder.setDescription(getCommand())
+                    .setStoryworld(player.getCurrentStoryworld());
                 try {
-                    Location location = locationService.build(create);
-                    directionalLinkProperties.setToLocation(location)
-                            .setFromLocation(player.getLocation());
-                    create.setProperties(directionalLinkProperties);
-                    linkService.create(create);
-                    locationRepository.save(player.getLocation());
+                    Location location = locationService.create(locationBuilder);
+                    linkBuilder.setToLocation(location);
+                    Link link = linkService.create(linkBuilder);
+                    player.getLocation().addOutboundLink(create.getDirection(), link);
+                    locationService.update(player.getLocation());
+
                 } catch (UncreateableException e) {
                     sendMessage(e.getMessage());
                 }
                 break;
             case LINK:
-                DirectionalLinkProperties linkProperties = new DirectionalLinkProperties();
-                linkProperties.setFromLocation(player.getLocation());
+                DirectionalLink.Builder directionalLinkBuilder = DirectionalLink.Builder.newInstance();
                 sendMessage("What would you like the text describing the link to say? \n" +
                         "It should complete this sentence: " + create.getDirection().formatted() + " there is...");
-                linkProperties.setDescription(getCommand());
+                directionalLinkBuilder.setDescription(getCommand());
                 sendMessage("What would you like the text of the link to be while the user moves to the new location?");
-                linkProperties.setPassText(getCommand());
+                directionalLinkBuilder.setPassText(getCommand());
                 sendMessage("Which location would you like to connect the link to?");
                 int i = 1;
                 List<Location> locationHistory = new ArrayList<>(create.getMessage().getPlayer().getLocationHistory());
@@ -213,38 +203,37 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
                     if (index >= i || index < 1) {
                         sendMessage("Invalid number");
                     } else {
-                        linkProperties.setToLocation(locationHistory.get(index - 1));
+                        directionalLinkBuilder.setToLocation(locationHistory.get(index - 1));
                     }
                 } catch (NumberFormatException nfe) {
                     sendMessage("invalid number");
                 }
-                create.setProperties(linkProperties);
                 try {
-                    Link link = linkService.create(create);
-                    locationRepository.save(link.getFromLocation());
-                    locationRepository.save(link.getToLocation());
+                    Link link = linkService.create(directionalLinkBuilder);
+                    player.getLocation().addOutboundLink(create.getDirection(), link);
+                    locationService.update(player.getLocation());
                 } catch (UncreateableException e) {
                     sendMessage(e.getMessage());
                 }
                 break;
             case ITEM:
-                ItemProperties itemProperties = new ItemProperties();
+                UsableItem.Builder itemBuilder = UsableItem.Builder.newInstance();
                 sendMessage("What would you like the one-word name of the item to be?");
-                itemProperties.setName(getCommand());
+                itemBuilder.setName(getCommand());
                 sendMessage("What would you like the description of the item to be?");
-                itemProperties.setDescription(getCommand());
+                itemBuilder.setDescription(getCommand());
                 sendMessage("What would you like the description of using the item to be?");
-                itemProperties.setUseText(getCommand());
-                create.setProperties(itemProperties);
+                itemBuilder.setUseText(getCommand());
                 try {
-                    Item item = itemService.create(create);
-                    player.getLocation().getItems().put(item.getName(), item);
-                    locationRepository.save(player.getLocation());
+                    Item item = itemService.create(itemBuilder);
+                    player.getLocation().addItem(item);
+                    locationService.update(player.getLocation());
                 } catch (UncreateableException e) {
                     sendMessage(e.getMessage());
                 }
                 break;
             default:
+
                 break;
         }
     }
@@ -269,35 +258,41 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
         edit.getMessage().resetText();
         switch(edit.getCreateable()) {
             case LOCATION:
-                LocationProperties locationProperties = new LocationProperties();
+                ImmutableLocation.Builder locationBuilder = ImmutableLocation.Builder.newInstance();
                 sendMessage("What would you like the text of the location to be once the user arrives?");
-                locationProperties.setDescription(getCommand());
-                edit.setProperties(locationProperties);
+                locationBuilder.setDescription(getCommand());
+                Location formerLocation = edit.getMessage().getPlayer().getLocation();
+                locationBuilder.setPreviousLocation(formerLocation);
+                locationBuilder.setStoryworld(edit.getMessage().getPlayer().getCurrentStoryworld());
                 try {
-                    Location location = locationService.edit(edit);
+
+                    Location location = locationService.create(locationBuilder);
+                    cloneLinks(location, formerLocation);
+                    locationRepository.save(location);
+
+                    // retire formerLocation
+                    formerLocation.setActive(false);
+                    formerLocation.setForwardingLocation(location);
+                    locationService.update(formerLocation);
+
                     player.setLocation(location);
                     player2Repo.save(player);
-                    Location formerLocation = player.getLocation();
-                    if (edit.getMessage().getPlayer().getCurrentStoryworld().getEntry().equals(formerLocation)) {
-                        edit.getMessage().getPlayer().getCurrentStoryworld().setEntry(location);
-                        storyworldRepository.save(edit.getMessage().getPlayer().getCurrentStoryworld());
-                    }
                 } catch (UncreateableException e) {
                     sendMessage(e.getMessage());
                 }
                 break;
             case LINK:
-                DirectionalLinkProperties directionalLinkProperties = new DirectionalLinkProperties();
+                DirectionalLink.Builder linkBuilder = DirectionalLink.Builder.newInstance();
                 sendMessage("What would you like the text describing the link to the location to say? \n" +
                         "It should complete this sentence: " + edit.getDirection().formatted() + " there is...");
-                directionalLinkProperties.setDescription(getCommand());
+                linkBuilder.setDescription(getCommand());
                 sendMessage("What would you like the text of the link to be while the user moves to the new location?");
-                directionalLinkProperties.setPassText(getCommand());
-                directionalLinkProperties.setFromLocation(player.getLocation());
-                directionalLinkProperties.setToLocation(player.getLocation().getOutboundLink(edit.getDirection()).getToLocation());
-                edit.setProperties(directionalLinkProperties);
+                linkBuilder.setPassText(getCommand());
+                linkBuilder.setToLocation(player.getLocation().getOutboundLink(edit.getDirection()).getToLocation());
                 try {
-                    linkService.edit(edit);
+                    Link link = linkService.create(linkBuilder);
+                    edit.getMessage().getPlayer().getLocation().addOutboundLink(edit.getDirection(), link);
+                    locationService.update(edit.getMessage().getPlayer().getLocation());
                 } catch (UncreateableException e) {
                     sendMessage(e.getMessage());
                 }
@@ -334,5 +329,11 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
 
     public void visit(Use use) {
 
+    }
+
+    public void cloneLinks(Location location, Location formerLocation) {
+        for (Direction direction : formerLocation.getOutboundLinks().keySet()) {
+            location.addOutboundLink(direction, formerLocation.getOutboundLink(direction));
+        }
     }
 }

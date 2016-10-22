@@ -14,7 +14,7 @@ public class AbstractMapGameplayTest extends AbstractGameplayTest {
     @Before
     public void setup() {
         super.setup();
-        user.setLocation(MapFactory.getStartMap());
+//        user.setLocation(MapFactory.getStartMap());
         start = user.getLocation();
     }
 }

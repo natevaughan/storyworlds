@@ -30,10 +30,10 @@ public class ActionDoVisitor implements ActionVisitor
             }
             create.setSuccessful(true);
         } else {
-            sb.append("Unable to create ").append(create.getCreateable()).append("\n");
+            sb.append("Unable to build ").append(create.getCreateable()).append("\n");
 
             if (create.getCreateable() == null || Createable.ERROR.equals(create.getCreateable())) {
-                sb.append(enumerateCreatables("create"));
+                sb.append(enumerateCreatables("build"));
             }
             if (create.getDirection() == null || Direction.ERROR.equals(create.getDirection())) {
                 sb.append(enumerateDirections());
@@ -131,12 +131,12 @@ public class ActionDoVisitor implements ActionVisitor
     }
 
     public void visit(Take take) {
-        if (take.getMessage().getPlayer().getLocation().getItem(take.getItemName()) == null) {
+        if (take.getMessage().getPlayer().getLocation().getItem(take.getItemName()) != null) {
             take.getMessage().addLine("Item not found: " + take.getItemName());
             return;
         }
         take.setSuccessful(true);
-        take.getMessage().getPlayer().addItem(take.getMessage().getPlayer().getLocation().takeItem(take.getItemName()));
+        take.getMessage().getPlayer().addItem(take.getMessage().getPlayer().getLocation().getItem(take.getItemName()));
         take.getMessage().addLine("You take the " + take.getItemName());
     }
 
@@ -152,7 +152,7 @@ public class ActionDoVisitor implements ActionVisitor
             if (i.getName().equals(use.getItemName())) {
                 use.getMessage().getPlayer().activate(i);
                 use.setSuccessful(true);
-                use.getMessage().addLine(i.getUseMessage());
+                use.getMessage().addLine(i.getUseText());
             }
         }
     }
@@ -163,7 +163,7 @@ public class ActionDoVisitor implements ActionVisitor
         for (Direction direction : links.keySet()) {
             m.addLine(direction.formatted() + " is " + links.get(direction).getDescription());
         }
-        for (Item item : m.getPlayer().getLocation().getItems().values()) {
+        for (Item item : m.getPlayer().getLocation().getItems()) {
             if (!m.getPlayer().listItems().contains(item)) {
                 m.addLine("There is a " + item.getName() + " here");
             }

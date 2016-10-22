@@ -13,26 +13,28 @@ public interface Location {
 
     public String getDescription();
 
-    public Map<String, Item> getItems();
+    public Collection<Item> getItems();
 
-    public Item getItem(String name);
-
-    public Item takeItem(String name);
+    public void addItem(Item item);
 
     public Map<Direction, Link> getOutboundLinks();
 
     public Link getOutboundLink(Direction direction);
 
-    public void addOutboundLink(Link link);
-
-    public Collection<Link> getInboundLinks();
-
-    public void addInboundLink(Link link);
-
-    public Location getPreviousLocation();
+    public void addOutboundLink(Direction direction, Link link);
 
     public boolean isActive();
 
     public void setActive(boolean active);
+
+    public Storyworld getStoryworld();
+
+    public Location getForwardingLocation();
+
+    public void setForwardingLocation(Location location);
+
+    public Location getPreviousLocation();
+
+    Item getItem(String itemName);
 }
 

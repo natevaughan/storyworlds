@@ -4,38 +4,44 @@ package storyworlds.model.implementation;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import storyworlds.exception.UncreateableException;
 import storyworlds.model.Item;
 import storyworlds.model.Link;
 import storyworlds.model.Location;
+import storyworlds.model.LocationBuilder;
+import storyworlds.model.Storyworld;
 import storyworlds.model.enumeration.Direction;
 
-import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 @Document(collection = "location")
-public class ImmutableLocation implements Location, Serializable {
+public class ImmutableLocation implements Location {
 
     @Id
     private String id;
     private boolean active;
     private final String description;
+    @DBRef(lazy = true)
+    private final Storyworld storyworld;
     private final Map<Direction, Link> outboundLinks;
-    private final Map<Integer, Link> inboundLinks;
     @DBRef
-    private final Map<String, Item> items;
+    private final Collection<Item> items;
     @DBRef
-    private Location previousLocation;
+    private Location forwardingLocation;
+    @DBRef(lazy = true)
+    private final Location previousLocation;
 
-    public ImmutableLocation(String description, Location previousLocation, Map<String, Item> items) {
-        this.active = true;
-        this.previousLocation = previousLocation;
-        this.description = description;
+    public ImmutableLocation(String description, Storyworld storyworld, Collection<Item> items, Location previousLocation) {
         this.outboundLinks = new ConcurrentHashMap<>();
-        this.inboundLinks = new ConcurrentHashMap<>();
-        this.items = new ConcurrentHashMap<>(items);
+        this.items = new HashSet<>(items);
+        this.active = true;
+        this.description = description;
+        this.storyworld = storyworld;
+        this.previousLocation = previousLocation;
     }
 
     public synchronized String getId() {
@@ -50,16 +56,12 @@ public class ImmutableLocation implements Location, Serializable {
         return description;
     }
 
-    public Map<String, Item> getItems() {
+    public Collection<Item> getItems() {
         return items;
     }
 
-    public Item getItem(String name) {
-        return items.get(name.toUpperCase());
-    }
-
-    public Item takeItem(String name) {
-        return getItem(name);
+    public void addItem(Item item) {
+        this.items.add(item);
     }
 
     public Map<Direction, Link> getOutboundLinks() {
@@ -73,20 +75,21 @@ public class ImmutableLocation implements Location, Serializable {
         return outboundLinks.get(direction);
     }
 
-    public Collection<Link> getInboundLinks() {
-        return inboundLinks.values().stream().filter(Link::isActive).collect(Collectors.toSet());
+    public void addOutboundLink(Direction direction, Link link) {
+        outboundLinks.put(direction, link);
     }
 
-    public void addInboundLink(Link link) {
-        inboundLinks.put(link.hashCode(), link);
+    // recursively climbs chain to most recent location.
+    // use where possible to ensure players are operating at most recent location
+    public synchronized Location getForwardingLocation() {
+        if (forwardingLocation == null) {
+            return this;
+        }
+        return forwardingLocation.getForwardingLocation();
     }
 
-    public void addOutboundLink(Link link) {
-        outboundLinks.put(link.getFromDirection(), link);
-    }
-
-    public Location getPreviousLocation() {
-        return previousLocation;
+    public synchronized void setForwardingLocation(Location location) {
+        this.forwardingLocation = location;
     }
 
     public synchronized boolean isActive() {
@@ -95,5 +98,73 @@ public class ImmutableLocation implements Location, Serializable {
 
     public synchronized void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Storyworld getStoryworld() {
+        return storyworld;
+    }
+
+    public Location getPreviousLocation() {
+        return previousLocation;
+    }
+
+    public Item getItem(String itemName) {
+        for (Item item : items) {
+            if (item.getName().equalsIgnoreCase(itemName)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public static class Builder implements LocationBuilder {
+
+        private String description;
+        private Storyworld storyworld;
+        private Collection<Item> items = new HashSet<>();
+        private Location previousLocation = null;
+
+        public static Builder newInstance() {
+            return new Builder();
+        }
+
+        public Builder setDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder setStoryworld(Storyworld storyworld) {
+            this.storyworld = storyworld;
+            return this;
+        }
+
+        public Builder add(Item item) {
+            this.items.add(item);
+            return this;
+        }
+
+        public Builder addAll(Collection<Item> items) {
+            this.items.addAll(items);
+            return this;
+        }
+
+        public Builder setPreviousLocation(Location previousLocation) {
+            this.previousLocation = previousLocation;
+            return this;
+        }
+
+        public ImmutableLocation build() throws UncreateableException {
+            validate();
+            return new ImmutableLocation(description, storyworld, items, previousLocation);
+        }
+
+        private void validate() throws UncreateableException {
+            if (description == null) {
+                throw new UncreateableException("null description");
+            }
+            if (storyworld == null) {
+                throw new UncreateableException("null storyworld");
+            }
+        }
     }
 }

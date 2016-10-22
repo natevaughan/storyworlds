@@ -2,9 +2,9 @@ package storyworlds.model.implementation;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import storyworlds.exception.UncreateableException;
 import storyworlds.model.Item;
-
-import java.util.UUID;
+import storyworlds.model.ItemBuilder;
 
 /**
  * Created by nvaughan on 9/10/2016.
@@ -16,13 +16,12 @@ public class UsableItem implements Item {
     String id;
     private final String name;
     private final String description;
-    private final String useMessage;
+    private final String useText;
 
     public UsableItem(String name, String description, String useMessage) {
-        this.id = UUID.randomUUID().toString();
         this.name = name;
         this.description = description;
-        this.useMessage = description;
+        this.useText = useMessage;
     }
 
     public synchronized String getId() {
@@ -41,8 +40,8 @@ public class UsableItem implements Item {
         return description;
     }
 
-    public String getUseMessage() {
-        return useMessage;
+    public String getUseText() {
+        return useText;
     }
 
     @Override
@@ -54,7 +53,7 @@ public class UsableItem implements Item {
 
         if (!name.equals(that.name)) return false;
         if (!description.equals(that.description)) return false;
-        return useMessage.equals(that.useMessage);
+        return useText.equals(that.useText);
 
     }
 
@@ -62,7 +61,50 @@ public class UsableItem implements Item {
     public int hashCode() {
         int result = name.hashCode();
         result = 31 * result + description.hashCode();
-        result = 31 * result + useMessage.hashCode();
+        result = 31 * result + useText.hashCode();
         return result;
+    }
+
+    public static class Builder implements ItemBuilder {
+
+        private String name;
+        private String description;
+        private String useText;
+
+        public static UsableItem.Builder newInstance() {
+            return new Builder();
+        }
+
+        public Builder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder setDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder setUseText(String useText) {
+            this.useText = useText;
+            return this;
+        }
+
+        public Item build() throws UncreateableException {
+            validate();
+            return new UsableItem(name,description, useText);
+        }
+
+        private void validate() throws UncreateableException {
+            validate(this.name == null || this.name.isEmpty(), "null or empty description");
+            validate(this.description == null || this.description.isEmpty(), "null or empty description");
+            validate(this.useText == null || this.useText.isEmpty(), "null or empty use message");
+        }
+
+        private void validate(Boolean condition, String message) throws UncreateableException {
+            if (condition) {
+                throw new UncreateableException(message);
+            }
+        }
     }
 }

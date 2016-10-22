@@ -9,6 +9,8 @@ import storyworlds.model.Player;
 import storyworlds.model.Storyworld;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 
@@ -34,8 +36,8 @@ public class Player2 implements Player {
     private Item activeItem;
 
     public Player2(String name, String email, String password) {
-        this.items = new ConcurrentSkipListSet<>();
-        this.previousLocations = new ConcurrentSkipListSet<>();
+        this.items = new LinkedHashSet<>();
+        this.previousLocations = new LinkedHashSet<>();
         this.name = name;
         this.email = email;
         this.password = password;
@@ -61,29 +63,24 @@ public class Player2 implements Player {
         return name;
     }
 
-    @Override
     public Collection<Item> listItems() {
         return items;
     }
 
-    @Override
     public void addItem(Item item) {
         items.add(item);
     }
 
-    @Override
     public Item getActiveItem() {
         return activeItem;
     }
 
-    @Override
     public void activate(Item item) {
         if (items.contains(item)) {
             this.activeItem = item;
         }
     }
 
-    @Override
     public Collection<Location> getLocationHistory() {
         return previousLocations;
     }
@@ -92,7 +89,7 @@ public class Player2 implements Player {
     }
 
     public Location getLocation() {
-        return location;
+        return location.getForwardingLocation();
     }
 
     public void setLocation(Location location) {

@@ -10,9 +10,11 @@ import storyworlds.model.Location;
 import storyworlds.model.enumeration.Direction;
 import storyworlds.model.implementation.ImmutableLocation;
 import storyworlds.model.implementation.UsableItem;
+import storyworlds.model.implementation.WikiStoryworld;
 import storyworlds.service.message.Message;
 
-import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.Assert.assertTrue;
 
@@ -21,9 +23,9 @@ public class TakeTest extends AbstractGameplayTest {
     @Test
     public void takeItem() throws BadLinkException {
         Item item = new UsableItem("bar", "", "");
-        java.util.Map<String, Item> items = new HashMap<>();
-        items.put(item.getName(), item);
-        Location location = new ImmutableLocation("", null, items);
+        Set<Item> items = new HashSet<>();
+        items.add(item);
+        Location location = new ImmutableLocation("", new WikiStoryworld(), items, null);
         user.setLocation(location);
         Actionable a = messageService.process(new Message(user, "take foo"));
         assertTrue(Take.class.equals(a.getClass()));
