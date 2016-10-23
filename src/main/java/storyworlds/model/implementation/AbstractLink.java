@@ -4,6 +4,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import storyworlds.exception.UncreateableException;
 import storyworlds.model.Link;
 import storyworlds.model.Location;
+import storyworlds.model.Player;
 import storyworlds.model.enumeration.Direction;
 
 /**
@@ -14,10 +15,12 @@ public abstract class AbstractLink implements Link {
     protected final String description;
     @DBRef(lazy = true)
     protected final Location toLocation;
+    private final Player creator;
 
-    public AbstractLink(String description, Location toLocation) {
+    public AbstractLink(String description, Location toLocation, Player creator) {
         this.description = description;
         this.toLocation = toLocation;
+        this.creator = creator;
     }
 
     public String getDescription() {
@@ -28,4 +31,7 @@ public abstract class AbstractLink implements Link {
         return toLocation.getForwardingLocation();
     }
 
+    public Player getCreator() {
+        return creator;
+    }
 }

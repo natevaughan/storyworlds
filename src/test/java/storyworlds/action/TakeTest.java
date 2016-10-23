@@ -22,10 +22,10 @@ public class TakeTest extends AbstractGameplayTest {
 
     @Test
     public void takeItem() throws BadLinkException {
-        Item item = new UsableItem("bar", "", "");
+        Item item = new UsableItem("bar", "", "", user);
         Set<Item> items = new HashSet<>();
         items.add(item);
-        Location location = new ImmutableLocation("", new WikiStoryworld(), items, null);
+        Location location = new ImmutableLocation("", new WikiStoryworld(), items, null, user);
         user.setLocation(location);
         Actionable a = messageService.process(new Message(user, "take foo"));
         assertTrue(Take.class.equals(a.getClass()));
@@ -34,7 +34,7 @@ public class TakeTest extends AbstractGameplayTest {
     @Test
     @Ignore
     public void takeThenMoveTest() throws BadLinkException {
-        Location location = MapFactory.getStartMap();
+        Location location = MapFactory.getStartMap(user);
         user.setLocation(location);
         messageService.process(new Message(user, "take key"));
         messageService.process(new Message(user, "use key"));

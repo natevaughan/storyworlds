@@ -9,12 +9,12 @@ import storyworlds.model.Item;
 import storyworlds.model.Link;
 import storyworlds.model.Location;
 import storyworlds.model.LocationBuilder;
+import storyworlds.model.Player;
 import storyworlds.model.Storyworld;
 import storyworlds.model.enumeration.Direction;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -34,14 +34,17 @@ public class ImmutableLocation implements Location {
     private Location forwardingLocation;
     @DBRef(lazy = true)
     private final Location previousLocation;
+    @DBRef(lazy = true)
+    private final Player creator;
 
-    public ImmutableLocation(String description, Storyworld storyworld, Collection<Item> items, Location previousLocation) {
+    public ImmutableLocation(String description, Storyworld storyworld, Collection<Item> items, Location previousLocation, Player creator) {
         this.outboundLinks = new ConcurrentHashMap<>();
         this.items = new HashSet<>(items);
         this.active = true;
         this.description = description;
         this.storyworld = storyworld;
         this.previousLocation = previousLocation;
+        this.creator = creator;
     }
 
     public synchronized String getId() {
@@ -117,12 +120,17 @@ public class ImmutableLocation implements Location {
         return null;
     }
 
+    public Player getCreator() {
+        return creator;
+    }
+
     public static class Builder implements LocationBuilder {
 
         private String description;
         private Storyworld storyworld;
         private Collection<Item> items = new HashSet<>();
         private Location previousLocation = null;
+        private Player creator = null;
 
         public static Builder newInstance() {
             return new Builder();
@@ -153,9 +161,14 @@ public class ImmutableLocation implements Location {
             return this;
         }
 
+        public Builder setCreator(Player creator) {
+            this.creator = creator;
+            return this;
+        }
+
         public ImmutableLocation build() throws UncreateableException {
             validate();
-            return new ImmutableLocation(description, storyworld, items, previousLocation);
+            return new ImmutableLocation(description, storyworld, items, previousLocation, creator);
         }
 
         private void validate() throws UncreateableException {
@@ -164,6 +177,9 @@ public class ImmutableLocation implements Location {
             }
             if (storyworld == null) {
                 throw new UncreateableException("null storyworld");
+            }
+            if (creator == null) {
+                throw new UncreateableException("null creator");
             }
         }
     }

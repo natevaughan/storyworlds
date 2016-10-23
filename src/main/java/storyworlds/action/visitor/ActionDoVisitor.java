@@ -105,7 +105,7 @@ public class ActionDoVisitor implements ActionVisitor
         Link link = move.getMessage().getPlayer().getLocation().getOutboundLink(move.getDirection());
 
         if (link == null) {
-            move.getMessage().addLine("Nothing to the " + move.getDirection());
+            move.getMessage().addLine("Nothing " + move.getDirection().formatted());
             return;
         }
 
@@ -131,7 +131,7 @@ public class ActionDoVisitor implements ActionVisitor
     }
 
     public void visit(Take take) {
-        if (take.getMessage().getPlayer().getLocation().getItem(take.getItemName()) != null) {
+        if (take.getMessage().getPlayer().getLocation().getItem(take.getItemName()) == null) {
             take.getMessage().addLine("Item not found: " + take.getItemName());
             return;
         }

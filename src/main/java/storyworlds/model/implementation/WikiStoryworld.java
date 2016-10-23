@@ -18,8 +18,8 @@ public class WikiStoryworld implements Storyworld {
     private String id;
     @DBRef
     private Location entry;
-//    private String title;
-//    private String description;
+    private String title;
+    private String description;
 //    private String entryText;
 //    private IdentifiedUser creator;
 //    private Set<IdentifiedUser> maintainers;
@@ -43,25 +43,25 @@ public class WikiStoryworld implements Storyworld {
         return entry.getForwardingLocation();
     }
 
-    public void setEntry(Location entry) {
+    public synchronized void setEntry(Location entry) {
         this.entry = entry;
     }
 
-    //    public String getTitle() {
-//        return title;
-//    }
-//
-//    public void setTitle(String title) {
-//        this.title = title;
-//    }
-//
-//    public String getDescription() {
-//        return description;
-//    }
-//
-//    public void setDescription(String description) {
-//        this.description = description;
-//    }
+    public String getTitle() {
+        return title;
+    }
+
+    public synchronized void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public synchronized void setDescription(String description) {
+        this.description = description;
+    }
 //
 //    public String getEntryText() {
 //        return entryText;

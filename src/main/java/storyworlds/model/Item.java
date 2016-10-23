@@ -10,4 +10,6 @@ public interface Item {
 
     public String getUseText();
 
+    public Player getCreator();
+
 }

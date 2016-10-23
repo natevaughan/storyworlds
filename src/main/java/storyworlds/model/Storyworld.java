@@ -8,10 +8,10 @@ public interface Storyworld {
     public void setId(String id);
     public Location getEntry();
     public void setEntry(Location entry);
-//    public String getTitle();
-//    public void setTitle(String title);
-//    public String getDescription();
-//    public void setDescription(String description);
+    public String getTitle();
+    public void setTitle(String title);
+    public String getDescription();
+    public void setDescription(String description);
 //    public String getEntryText();
 //    public void setEntryText(String entryText);
 //    public IdentifiedUser getCreator();

@@ -11,4 +11,6 @@ public interface Link {
     public String getPassText(Player player);
 
     public Location getToLocation();
+
+    public Player getCreator();
 }	

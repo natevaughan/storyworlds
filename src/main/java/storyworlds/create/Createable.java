@@ -7,5 +7,6 @@ public enum Createable {
     LOCATION,
     LINK,
     ITEM,
+    STORYWORLD,
     ERROR
 }

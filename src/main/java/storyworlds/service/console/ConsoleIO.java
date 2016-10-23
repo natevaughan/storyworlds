@@ -1,7 +1,9 @@
 package storyworlds.service.console;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import storyworlds.action.Actionable;
 import storyworlds.action.Create;
 import storyworlds.action.Delete;
@@ -29,6 +31,7 @@ import storyworlds.model.implementation.ImmutableLocation;
 import storyworlds.model.implementation.Player2;
 import storyworlds.model.implementation.UsableItem;
 import storyworlds.model.implementation.WikiStoryworld;
+import storyworlds.model.implementation.persistence.ItemRepository;
 import storyworlds.model.implementation.persistence.LocationRepository;
 import storyworlds.model.implementation.persistence.Player2Repo;
 import storyworlds.model.implementation.persistence.StoryworldRepository;
@@ -39,6 +42,7 @@ import storyworlds.service.message.Message;
 import storyworlds.service.message.MessageService;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
@@ -53,6 +57,9 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
     LocationRepository locationRepository;
 
     @Autowired
+    ItemRepository itemRepository;
+
+    @Autowired
     LocationService locationService;
 
     @Autowired
@@ -65,7 +72,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
     Player2Repo player2Repo;
 
     private StringBuilder sb = new StringBuilder();
-    MessageService messageService = new MessageService();
+    private MessageService messageService = new MessageService();
     private Scanner scanner = new Scanner(System.in);
     private Player2 player;
 
@@ -74,8 +81,13 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
         if (ConfirmationParser.parse(getCommand())) {
             reset();
         }
-        sendMessage("login");
-        login();
+        sendMessage("login?");
+        if (ConfirmationParser.parse(getCommand())) {
+            login();
+        } else {
+            createNewPlayer();
+            listStoryworlds();
+        }
 
         Actionable response = null;
         try {
@@ -96,6 +108,39 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
         }
     }
 
+    private void listStoryworlds() {
+        List<Storyworld> storyworlds = storyworldRepository.findAll();
+        if (storyworlds == null || storyworlds.isEmpty()) {
+            sendMessage("CREATE NEW STORYWORLD");
+            createNewStoryworld();
+        } else {
+            sendMessage("choose a storyworld:");
+            int i = 1;
+            for (Storyworld storyworld : storyworlds) {
+                sendMessage(i + ": " + storyworld.getTitle());
+                sendMessage(storyworld.getDescription());
+                sendMessage("-----------------");
+            }
+            sendMessage("Enter your choice:");
+            Storyworld choice = null;
+            int tries = 0;
+            while (choice == null) {
+                try {
+                    choice = storyworlds.get(Integer.parseInt(getCommand()) - 1);
+                } catch (Exception e) {
+                    ++tries;
+                    if (tries > 3) {
+                        System.exit(-1);
+                    }
+                    sendMessage("Invalid number. Try again.");
+                }
+            }
+            player.setCurrentStoryworld(choice);
+            player.setLocation(choice.getEntry());
+            player2Repo.save(player);
+        }
+    }
+
     private void login() {
         sendMessage("Enter your email address:");
         String email = getCommand();
@@ -108,16 +153,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
         storyworldRepository.deleteAll();
         locationRepository.deleteAll();
         player2Repo.deleteAll();
-        createNewPlayer();
-        Storyworld storyworld = new WikiStoryworld();
-        storyworldRepository.save(storyworld);
-        Location start = new ImmutableLocation("no description", storyworld, new HashSet<>(), null);
-        locationRepository.save(start);
-        storyworld.setEntry(start);
-        storyworldRepository.save(storyworld);
-        player.setCurrentStoryworld(storyworld);
-        player.setLocation(storyworld.getEntry());
-        player2Repo.save(player);
+        itemRepository.deleteAll();
     }
 
     public void addLine(String text) {
@@ -147,7 +183,24 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
         sendMessage("Please enter your password:");
         String password = getCommand();
 
-        player = new Player2(name, email, password);
+        player = player2Repo.save(new Player2(name, email, password));
+    }
+
+    private void createNewStoryworld() {
+        Storyworld storyworld = new WikiStoryworld();
+        sendMessage("What would you like the title of your storyworld to be?");
+        storyworld.setTitle(getCommand());
+        sendMessage("What would you like the description of your storyworld to be?");
+        storyworld.setDescription(getCommand());
+        sendMessage("What would you like the starting location's text to be?");
+        Location start = new ImmutableLocation(getCommand(), storyworld, new HashSet<>(), null, player);
+        storyworldRepository.save(storyworld);
+        locationRepository.save(start);
+        storyworld.setEntry(start);
+        storyworldRepository.save(storyworld);
+        player.setCurrentStoryworld(storyworld);
+        player.setLocation(storyworld.getEntry());
+        player2Repo.save(player);
     }
 
     public void visit(Create create) {
@@ -158,7 +211,9 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
         switch (create.getCreateable()) {
             case LOCATION:
                 ImmutableLocation.Builder locationBuilder = ImmutableLocation.Builder.newInstance();
+                locationBuilder.setCreator(player);
                 DirectionalLink.Builder linkBuilder = DirectionalLink.Builder.newInstance();
+                linkBuilder.setCreator(player);
                 sendMessage("What would you like the text describing the link to the location to say? \n" +
                         "It should complete this sentence: " + create.getDirection().formatted() + " there is...");
                 linkBuilder.setDescription(getCommand());
@@ -167,19 +222,33 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
                 sendMessage("What would you like the text of the location to be once the user arrives?");
                 locationBuilder.setDescription(getCommand())
                     .setStoryworld(player.getCurrentStoryworld());
+
+
+                Location location = null;
+                Link link = null;
+
                 try {
-                    Location location = locationService.create(locationBuilder);
+                    location = locationService.create(locationBuilder);
                     linkBuilder.setToLocation(location);
-                    Link link = linkService.create(linkBuilder);
+                    link = linkService.create(linkBuilder);
                     player.getLocation().addOutboundLink(create.getDirection(), link);
                     locationService.update(player.getLocation());
-
-                } catch (UncreateableException e) {
+                } catch (UncreateableException | NullPointerException e) {
                     sendMessage(e.getMessage());
+                    if (location != null) {
+                        sendMessage("rolling back location create");
+                        locationRepository.delete(location);
+                    }
+                    if (link != null) {
+                        sendMessage("rolling back link create");
+                        player.getLocation().getOutboundLinks().remove(create.getDirection(), location);
+                        locationService.update(player.getLocation());
+                    }
                 }
                 break;
             case LINK:
                 DirectionalLink.Builder directionalLinkBuilder = DirectionalLink.Builder.newInstance();
+                directionalLinkBuilder.setCreator(player);
                 sendMessage("What would you like the text describing the link to say? \n" +
                         "It should complete this sentence: " + create.getDirection().formatted() + " there is...");
                 directionalLinkBuilder.setDescription(getCommand());
@@ -191,9 +260,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
                 for (Location loc: locationHistory) {
                     if (loc.isActive()) {
                         String[] text = loc.getDescription().split("\n");
-                        int length = (text[0].length() > 30) ? 30 : text[0].length();
-                        String abbrev = text[0].substring(0, length) + "...";
-                        sendMessage("previous Location " + i + ": " + abbrev);
+                        sendMessage("previous Location " + i + ": " + StringUtils.abbreviate(text[0], 30));
                         i++;
                     }
                 }
@@ -209,8 +276,8 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
                     sendMessage("invalid number");
                 }
                 try {
-                    Link link = linkService.create(directionalLinkBuilder);
-                    player.getLocation().addOutboundLink(create.getDirection(), link);
+                    Link createdLink = linkService.create(directionalLinkBuilder);
+                    player.getLocation().addOutboundLink(create.getDirection(), createdLink);
                     locationService.update(player.getLocation());
                 } catch (UncreateableException e) {
                     sendMessage(e.getMessage());
@@ -218,6 +285,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
                 break;
             case ITEM:
                 UsableItem.Builder itemBuilder = UsableItem.Builder.newInstance();
+                itemBuilder.setCreator(player);
                 sendMessage("What would you like the one-word name of the item to be?");
                 itemBuilder.setName(getCommand());
                 sendMessage("What would you like the description of the item to be?");
@@ -231,6 +299,10 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
                 } catch (UncreateableException e) {
                     sendMessage(e.getMessage());
                 }
+                break;
+
+            case STORYWORLD:
+                createNewStoryworld();
                 break;
             default:
 
@@ -259,6 +331,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
         switch(edit.getCreateable()) {
             case LOCATION:
                 ImmutableLocation.Builder locationBuilder = ImmutableLocation.Builder.newInstance();
+                locationBuilder.setCreator(player);
                 sendMessage("What would you like the text of the location to be once the user arrives?");
                 locationBuilder.setDescription(getCommand());
                 Location formerLocation = edit.getMessage().getPlayer().getLocation();
@@ -283,6 +356,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
                 break;
             case LINK:
                 DirectionalLink.Builder linkBuilder = DirectionalLink.Builder.newInstance();
+                linkBuilder.setCreator(player);
                 sendMessage("What would you like the text describing the link to the location to say? \n" +
                         "It should complete this sentence: " + edit.getDirection().formatted() + " there is...");
                 linkBuilder.setDescription(getCommand());

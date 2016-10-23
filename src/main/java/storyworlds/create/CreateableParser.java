@@ -1,6 +1,6 @@
 package storyworlds.create;
 
-public class CreatableFactory {
+public class CreateableParser {
 
     public static Createable parse(String input) {
 

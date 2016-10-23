@@ -10,8 +10,8 @@ public class DirectionalLink extends AbstractLink {
 
     protected final String                  passText;
 
-    public DirectionalLink(String description, Location toLocation, String passText) {
-        super(description, toLocation);
+    public DirectionalLink(String description, Location toLocation, String passText, Player creator) {
+        super(description, toLocation, creator);
         this.passText = passText;
     }
 
@@ -23,18 +23,19 @@ public class DirectionalLink extends AbstractLink {
         return true;
     }
 
-    public DirectionalLink clone(Location newToLocation) {
-        return new DirectionalLink(description, newToLocation, passText);
-    }
-    public DirectionalLink clone(String newDescription, String newPassText) {
-        return new DirectionalLink(newDescription, toLocation, newPassText);
-    }
+//    public DirectionalLink clone(Location newToLocation) {
+//        return new DirectionalLink(description, newToLocation, passText);
+//    }
+//    public DirectionalLink clone(String newDescription, String newPassText) {
+//        return new DirectionalLink(newDescription, toLocation, newPassText);
+//    }
 
     public static class Builder implements LinkBuilder {
 
-        private String passText;
-        private String description;
-        private Location toLocation;
+        private String passText = null;
+        private String description = null;
+        private Location toLocation = null;
+        private Player creator = null;
 
         public static Builder newInstance() {
             return new Builder();
@@ -55,15 +56,21 @@ public class DirectionalLink extends AbstractLink {
             return this;
         }
 
+        public Builder setCreator(Player creator) {
+            this.creator = creator;
+            return this;
+        }
+
         public DirectionalLink build() throws UncreateableException {
             validate();
-            return new DirectionalLink(description, toLocation, passText);
+            return new DirectionalLink(description, toLocation, passText, creator);
         }
 
         private void validate() throws UncreateableException {
             validate(this.description == null || this.description.isEmpty(), "null or empty description");
             validate(this.toLocation == null, "null to location");
             validate(this.passText == null || this.passText.isEmpty(), "null pass text");
+            validate(this.creator == null, "null creator");
         }
 
         private void validate(Boolean condition, String message) throws UncreateableException {

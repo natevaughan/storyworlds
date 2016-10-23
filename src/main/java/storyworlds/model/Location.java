@@ -35,6 +35,8 @@ public interface Location {
 
     public Location getPreviousLocation();
 
-    Item getItem(String itemName);
+    public Item getItem(String itemName);
+
+    public Player getCreator();
 }
 

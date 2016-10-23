@@ -22,7 +22,7 @@ public class MoveTest extends AbstractMapGameplayTest {
 
     @Test
     public void ensureUserCannotMoveBeyondBoundary() throws Exception {
-        Location boundedLocation = MapFactory.getBlankLocation();
+        Location boundedLocation = MapFactory.getBlankLocation(user);
         user.setLocation(boundedLocation);
         messageService.process(new Message(user, "mOve nOrtH"));
         assertTrue("User should not move past a boundary", user.getLocation().equals(boundedLocation));

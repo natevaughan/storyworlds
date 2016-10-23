@@ -16,8 +16,8 @@ public class BlockableLink extends AbstractLink {
     private final String                  passText;
     private final String                  failText;
 
-    public BlockableLink(String description, Location toLocation, String passText, String failText, Item requiredItem) {
-        super(description, toLocation);
+    public BlockableLink(String description, Location toLocation, String passText, String failText, Item requiredItem, Player creator) {
+        super(description, toLocation, creator);
         this.requiredItem = requiredItem;
         this.passText = passText;
         this.failText = failText;
@@ -41,21 +41,22 @@ public class BlockableLink extends AbstractLink {
         }
     }
 
-    public BlockableLink clone(Location newToLocation) {
-        return new BlockableLink(description, newToLocation, passText, failText, requiredItem);
-    }
-
-    public BlockableLink clone(String newDescription, String newPassText) {
-        return new BlockableLink(newDescription, toLocation, newPassText, failText, requiredItem);
-    }
+//    public BlockableLink clone(Location newToLocation) {
+//        return new BlockableLink(description, newToLocation, passText, failText, requiredItem);
+//    }
+//
+//    public BlockableLink clone(String newDescription, String newPassText) {
+//        return new BlockableLink(newDescription, toLocation, newPassText, failText, requiredItem);
+//    }
 
     public class Builder implements LinkBuilder {
 
-        private String description;
-        private Location toLocation;
-        private String passText;
-        private Item requiredItem;
-        private String failText;
+        private String description = null;
+        private Location toLocation = null;
+        private String passText = null;
+        private Item requiredItem = null;
+        private String failText = null;
+        private Player creator = null;
 
         public BlockableLink.Builder newInstance() {
             return new BlockableLink.Builder();
@@ -86,9 +87,14 @@ public class BlockableLink extends AbstractLink {
             return this;
         }
 
+        public Builder setCreator(Player creator) {
+            this.creator = creator;
+            return this;
+        }
+
         public BlockableLink build() throws UncreateableException {
             validate();
-            return new BlockableLink(description, toLocation, passText, failText, requiredItem);
+            return new BlockableLink(description, toLocation, passText, failText, requiredItem, creator);
         }
 
         private void validate() throws UncreateableException {
@@ -97,6 +103,7 @@ public class BlockableLink extends AbstractLink {
             validate(this.passText == null || this.passText.isEmpty(), "null pass text");
             validate(this.failText == null || this.failText.isEmpty(), "null fail text");
             validate(this.requiredItem == null, "null required item");
+            validate(this.creator == null, "null creator");
         }
 
         protected void validate(Boolean condition, String message) throws UncreateableException {

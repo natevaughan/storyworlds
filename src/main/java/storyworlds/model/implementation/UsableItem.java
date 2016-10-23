@@ -1,10 +1,12 @@
 package storyworlds.model.implementation;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import storyworlds.exception.UncreateableException;
 import storyworlds.model.Item;
 import storyworlds.model.ItemBuilder;
+import storyworlds.model.Player;
 
 /**
  * Created by nvaughan on 9/10/2016.
@@ -17,11 +19,14 @@ public class UsableItem implements Item {
     private final String name;
     private final String description;
     private final String useText;
+    @DBRef(lazy = true)
+    private final Player creator;
 
-    public UsableItem(String name, String description, String useMessage) {
+    public UsableItem(String name, String description, String useText, Player creator) {
         this.name = name;
         this.description = description;
-        this.useText = useMessage;
+        this.useText = useText;
+        this.creator = creator;
     }
 
     public synchronized String getId() {
@@ -42,6 +47,10 @@ public class UsableItem implements Item {
 
     public String getUseText() {
         return useText;
+    }
+
+    public Player getCreator() {
+        return creator;
     }
 
     @Override
@@ -70,6 +79,7 @@ public class UsableItem implements Item {
         private String name;
         private String description;
         private String useText;
+        private Player creator;
 
         public static UsableItem.Builder newInstance() {
             return new Builder();
@@ -90,15 +100,21 @@ public class UsableItem implements Item {
             return this;
         }
 
+        public Builder setCreator(Player creator) {
+            this.creator = creator;
+            return this;
+        }
+
         public Item build() throws UncreateableException {
             validate();
-            return new UsableItem(name,description, useText);
+            return new UsableItem(name,description, useText, creator);
         }
 
         private void validate() throws UncreateableException {
             validate(this.name == null || this.name.isEmpty(), "null or empty description");
             validate(this.description == null || this.description.isEmpty(), "null or empty description");
             validate(this.useText == null || this.useText.isEmpty(), "null or empty use message");
+            validate(this.creator == null, "null creator");
         }
 
         private void validate(Boolean condition, String message) throws UncreateableException {
