@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by nvaughan on 10/7/2016.
  */
+@Ignore
 public class ItemCreatorTest extends AbstractMapGameplayTest {
 
     private final String ITEM_NAME = "arbitrary.item.name";

@@ -4,7 +4,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Collection;
 
-@Document
+@Document(collection = "player")
 public interface Player {
 
     public String getName();

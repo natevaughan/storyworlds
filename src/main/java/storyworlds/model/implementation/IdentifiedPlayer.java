@@ -1,5 +1,6 @@
 package storyworlds.model.implementation;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -9,33 +10,37 @@ import storyworlds.model.Player;
 import storyworlds.model.Storyworld;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * Created by nvaughan on 10/19/2016.
  */
-@Document(collection = "player2")
-public class Player2 implements Player {
+@Document(collection = "player")
+public class IdentifiedPlayer implements Player {
     @Id
+    @JsonIgnore
     private String id;
     private final String name;
     private final String email;
     private final String password;
+    @JsonIgnore
     @DBRef
     private Storyworld currentStoryworld;
+    @JsonIgnore
     @DBRef
     private Location location;
+    @JsonIgnore
     @DBRef
     private Set<Location> previousLocations;
+    @JsonIgnore
     @DBRef
     private Set<Item> items;
+    @JsonIgnore
     @DBRef
     private Item activeItem;
 
-    public Player2(String name, String email, String password) {
+    public IdentifiedPlayer(String name, String email, String password) {
         this.items = new LinkedHashSet<>();
         this.previousLocations = new LinkedHashSet<>();
         this.name = name;

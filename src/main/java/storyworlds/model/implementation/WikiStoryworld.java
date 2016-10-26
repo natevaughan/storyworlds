@@ -6,8 +6,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import storyworlds.model.Location;
 import storyworlds.model.Storyworld;
 
-import java.io.Serializable;
-
 /**
  * Created by nvaughan on 10/15/2016.
  */

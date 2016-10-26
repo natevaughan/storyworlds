@@ -11,7 +11,7 @@ import storyworlds.exception.UncreateableException;
 import storyworlds.model.Location;
 import storyworlds.model.LocationBuilder;
 import storyworlds.model.implementation.persistence.LocationRepository;
-import storyworlds.model.implementation.persistence.Player2Repo;
+import storyworlds.model.implementation.persistence.PlayerRepo;
 import storyworlds.model.implementation.persistence.StoryworldRepository;
 
 @Service
@@ -23,7 +23,7 @@ public class LocationService {
     LocationRepository locationRepository;
 
     @Autowired
-    Player2Repo playerRepository;
+    PlayerRepo playerRepository;
 
     @Autowired
     StoryworldRepository storyworldRepository;

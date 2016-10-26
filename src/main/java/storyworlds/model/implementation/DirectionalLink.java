@@ -4,7 +4,6 @@ import storyworlds.exception.UncreateableException;
 import storyworlds.model.LinkBuilder;
 import storyworlds.model.Location;
 import storyworlds.model.Player;
-import storyworlds.model.enumeration.Direction;
 
 public class DirectionalLink extends AbstractLink {
 

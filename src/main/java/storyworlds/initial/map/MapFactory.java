@@ -25,6 +25,12 @@ public class MapFactory implements GameTextConstants {
 
         Link north = new DirectionalLink(DEFAULT_LOCATION_TEXT_NORTH, getBlankLocation(Direction.SOUTH, location, player), DEFAULT_LOCATION_PASS_TEXT_NORTH, player);
         Link south = new DirectionalLink(DEFAULT_LOCATION_TEXT_SOUTH, getBlankLocation(Direction.NORTH, location, player), DEFAULT_LOCATION_PASS_TEXT_SOUTH, player);
+
+        location.addOutboundLink(Direction.UP, up);
+        location.addOutboundLink(Direction.DOWN, lockedLink);
+        location.addOutboundLink(Direction.NORTH, north);
+        location.addOutboundLink(Direction.SOUTH, south);
+
         return location;
     }
 
@@ -43,7 +49,8 @@ public class MapFactory implements GameTextConstants {
 
     public static Location getBlankLocation(Direction fromDirection, Location fromLocation, Player player) {
         Location location = getBlankLocation(player);
-        Link link = new DirectionalLink(RETURN_DESCRIPTION, location, RETURN_PASS_TEXT, player);
+        Link link = new DirectionalLink(RETURN_DESCRIPTION, fromLocation, RETURN_PASS_TEXT, player);
+        location.addOutboundLink(fromDirection, link);
         return location;
     }
 }

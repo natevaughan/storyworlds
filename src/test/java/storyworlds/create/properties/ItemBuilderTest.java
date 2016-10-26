@@ -1,6 +1,7 @@
 package storyworlds.create.properties;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import storyworlds.action.Create;
@@ -13,6 +14,7 @@ import storyworlds.service.message.Message;
 /**
  * Created by nvaughan on 10/13/2016.
  */
+@Ignore
 public class ItemBuilderTest extends AbstractMapGameplayTest {
 
     @Autowired

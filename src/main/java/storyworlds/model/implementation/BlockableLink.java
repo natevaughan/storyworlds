@@ -5,7 +5,6 @@ import storyworlds.model.Item;
 import storyworlds.model.LinkBuilder;
 import storyworlds.model.Location;
 import storyworlds.model.Player;
-import storyworlds.model.enumeration.Direction;
 
 /**
  * @author nvaughan since 8/26/16
@@ -49,7 +48,7 @@ public class BlockableLink extends AbstractLink {
 //        return new BlockableLink(newDescription, toLocation, newPassText, failText, requiredItem);
 //    }
 
-    public class Builder implements LinkBuilder {
+    public static class Builder implements LinkBuilder {
 
         private String description = null;
         private Location toLocation = null;
@@ -58,7 +57,7 @@ public class BlockableLink extends AbstractLink {
         private String failText = null;
         private Player creator = null;
 
-        public BlockableLink.Builder newInstance() {
+        public static BlockableLink.Builder newInstance() {
             return new BlockableLink.Builder();
         }
 

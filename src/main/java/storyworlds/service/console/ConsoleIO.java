@@ -3,7 +3,6 @@ package storyworlds.service.console;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import storyworlds.action.Actionable;
 import storyworlds.action.Create;
 import storyworlds.action.Delete;
@@ -23,17 +22,19 @@ import storyworlds.exception.BadLinkException;
 import storyworlds.exception.UncreateableException;
 import storyworlds.model.Item;
 import storyworlds.model.Link;
+import storyworlds.model.LinkBuilder;
 import storyworlds.model.Location;
 import storyworlds.model.Storyworld;
 import storyworlds.model.enumeration.Direction;
+import storyworlds.model.implementation.BlockableLink;
 import storyworlds.model.implementation.DirectionalLink;
 import storyworlds.model.implementation.ImmutableLocation;
-import storyworlds.model.implementation.Player2;
+import storyworlds.model.implementation.IdentifiedPlayer;
 import storyworlds.model.implementation.UsableItem;
 import storyworlds.model.implementation.WikiStoryworld;
 import storyworlds.model.implementation.persistence.ItemRepository;
 import storyworlds.model.implementation.persistence.LocationRepository;
-import storyworlds.model.implementation.persistence.Player2Repo;
+import storyworlds.model.implementation.persistence.PlayerRepo;
 import storyworlds.model.implementation.persistence.StoryworldRepository;
 import storyworlds.service.ItemService;
 import storyworlds.service.LinkService;
@@ -42,7 +43,6 @@ import storyworlds.service.message.Message;
 import storyworlds.service.message.MessageService;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
@@ -69,12 +69,12 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
     ItemService itemService;
 
     @Autowired
-    Player2Repo player2Repo;
+    PlayerRepo player2Repo;
 
     private StringBuilder sb = new StringBuilder();
     private MessageService messageService = new MessageService();
     private Scanner scanner = new Scanner(System.in);
-    private Player2 player;
+    private IdentifiedPlayer player;
 
     public void run() {
         sendMessage("reset?");
@@ -86,7 +86,17 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
             login();
         } else {
             createNewPlayer();
-            listStoryworlds();
+
+            List<Storyworld> storyworlds = storyworldRepository.findAll();
+            if (storyworlds == null || storyworlds.isEmpty()) {
+                sendMessage("CREATE NEW STORYWORLD");
+                createNewStoryworld();
+            } else {
+                Storyworld choice = storyworlds.get(selectIndex(storyworlds, "Storyworld"));
+                player.setCurrentStoryworld(choice);
+                player.setLocation(choice.getEntry());
+                player2Repo.save(player);
+            }
         }
 
         Actionable response = null;
@@ -108,37 +118,31 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
         }
     }
 
-    private void listStoryworlds() {
-        List<Storyworld> storyworlds = storyworldRepository.findAll();
-        if (storyworlds == null || storyworlds.isEmpty()) {
-            sendMessage("CREATE NEW STORYWORLD");
-            createNewStoryworld();
-        } else {
-            sendMessage("choose a storyworld:");
-            int i = 1;
-            for (Storyworld storyworld : storyworlds) {
-                sendMessage(i + ": " + storyworld.getTitle());
-                sendMessage(storyworld.getDescription());
-                sendMessage("-----------------");
-            }
-            sendMessage("Enter your choice:");
-            Storyworld choice = null;
-            int tries = 0;
-            while (choice == null) {
-                try {
-                    choice = storyworlds.get(Integer.parseInt(getCommand()) - 1);
-                } catch (Exception e) {
-                    ++tries;
-                    if (tries > 3) {
-                        System.exit(-1);
-                    }
-                    sendMessage("Invalid number. Try again.");
-                }
-            }
-            player.setCurrentStoryworld(choice);
-            player.setLocation(choice.getEntry());
-            player2Repo.save(player);
+    private int selectIndex(List objects, String objectName) {
+
+        sendMessage("choose a " + objectName + ":");
+        int i = 1;
+        for (Object obj : objects) {
+            sendMessage(i + ": " + obj.toString());
+            sendMessage("-----------------");
         }
+        sendMessage("Enter your choice:");
+        int tries = 0;
+        int selection = 0;
+        Object choice = null;
+        while (choice == null) {
+            try {
+                selection = Integer.parseInt(getCommand()) - 1;
+                choice = objects.get(selection);
+            } catch (Exception e) {
+                ++tries;
+                if (tries > 3) {
+                    System.exit(-1);
+                }
+                sendMessage("Invalid number. Try again.");
+            }
+        }
+        return selection;
     }
 
     private void login() {
@@ -183,7 +187,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
         sendMessage("Please enter your password:");
         String password = getCommand();
 
-        player = player2Repo.save(new Player2(name, email, password));
+        player = player2Repo.save(new IdentifiedPlayer(name, email, password));
     }
 
     private void createNewStoryworld() {
@@ -210,9 +214,20 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
 
         switch (create.getCreateable()) {
             case LOCATION:
-                ImmutableLocation.Builder locationBuilder = ImmutableLocation.Builder.newInstance();
-                locationBuilder.setCreator(player);
-                DirectionalLink.Builder linkBuilder = DirectionalLink.Builder.newInstance();
+                sendMessage("Would you like the link to the location to require the user to have an item?");
+                boolean blockable = ConfirmationParser.parse(getCommand());
+                LinkBuilder linkBuilder = DirectionalLink.Builder.newInstance();;
+                if (blockable) {
+                    linkBuilder = BlockableLink.Builder.newInstance();
+                }
+                if (linkBuilder instanceof BlockableLink.Builder) {
+                    sendMessage("What would you like the required item to be?");
+                    List<Item> items = new ArrayList<>(player.listItems());
+                    Item choice = items.get(selectIndex(items, "item"));
+                    ((BlockableLink.Builder) linkBuilder).setRequiredItem(choice);
+                    sendMessage("What would you like the text to be if the user does not have the required item (and is blocked from passing through the link)?");
+                    ((BlockableLink.Builder) linkBuilder).setFailText(getCommand());
+                }
                 linkBuilder.setCreator(player);
                 sendMessage("What would you like the text describing the link to the location to say? \n" +
                         "It should complete this sentence: " + create.getDirection().formatted() + " there is...");
@@ -220,9 +235,11 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
                 sendMessage("What would you like the text of the link to be while the user moves to the new location?");
                 linkBuilder.setPassText(getCommand());
                 sendMessage("What would you like the text of the location to be once the user arrives?");
+
+                ImmutableLocation.Builder locationBuilder = ImmutableLocation.Builder.newInstance();
+                locationBuilder.setCreator(player);
                 locationBuilder.setDescription(getCommand())
                     .setStoryworld(player.getCurrentStoryworld());
-
 
                 Location location = null;
                 Link link = null;

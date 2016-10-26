@@ -1,7 +1,5 @@
 package storyworlds.model;
 
-import storyworlds.model.enumeration.Direction;
-
 public interface Link {
 
     public String getDescription();

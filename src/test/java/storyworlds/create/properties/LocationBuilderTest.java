@@ -1,5 +1,6 @@
 package storyworlds.create.properties;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import storyworlds.exception.UncreateableException;
 import storyworlds.gameplay.AbstractMapGameplayTest;
@@ -13,7 +14,7 @@ public class LocationBuilderTest extends AbstractMapGameplayTest {
 
     @Test
     public void testGoodLocationProperties() throws UncreateableException {
-        Location location = ImmutableLocation.Builder.newInstance().setDescription("aa").setStoryworld(new WikiStoryworld()).build();
+        Location location = ImmutableLocation.Builder.newInstance().setDescription("aa").setStoryworld(new WikiStoryworld()).setCreator(user).build();
         assertNotNull(location);
     }
 
