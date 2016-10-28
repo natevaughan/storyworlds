@@ -1,5 +1,6 @@
 package storyworlds.model.implementation;
 
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import storyworlds.exception.UncreateableException;
 import storyworlds.model.Item;
 import storyworlds.model.LinkBuilder;

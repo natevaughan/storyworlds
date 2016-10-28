@@ -1,6 +1,6 @@
 package storyworlds.model;
 
-public interface Item {
+public interface Item extends Comparable<Item> {
 
     public String getId();
 

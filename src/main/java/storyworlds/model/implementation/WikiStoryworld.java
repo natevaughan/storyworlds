@@ -3,8 +3,12 @@ package storyworlds.model.implementation;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import storyworlds.action.Actionable;
+import storyworlds.create.Createable;
 import storyworlds.model.Location;
 import storyworlds.model.Storyworld;
+
+import java.util.Set;
 
 /**
  * Created by nvaughan on 10/15/2016.
@@ -18,6 +22,7 @@ public class WikiStoryworld implements Storyworld {
     private Location entry;
     private String title;
     private String description;
+    private Set<Actionable> changelog;
 //    private String entryText;
 //    private IdentifiedUser creator;
 //    private Set<IdentifiedUser> maintainers;
@@ -60,7 +65,15 @@ public class WikiStoryworld implements Storyworld {
     public synchronized void setDescription(String description) {
         this.description = description;
     }
-//
+
+    public Set<Actionable> getChangelog() {
+        return changelog;
+    }
+
+    public void addToChangelog(Actionable actionable) {
+        this.changelog.add(actionable);
+    };
+
 //    public String getEntryText() {
 //        return entryText;
 //    }

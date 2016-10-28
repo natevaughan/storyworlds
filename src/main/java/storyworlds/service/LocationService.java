@@ -14,6 +14,9 @@ import storyworlds.model.implementation.persistence.LocationRepository;
 import storyworlds.model.implementation.persistence.PlayerRepo;
 import storyworlds.model.implementation.persistence.StoryworldRepository;
 
+import java.util.Collection;
+import java.util.List;
+
 @Service
 public class LocationService {
 
@@ -43,6 +46,14 @@ public class LocationService {
 
     public void update(Location previousLocation) {
         locationRepository.save(previousLocation);
+    }
+
+    public Location get(String id) {
+        return locationRepository.findOne(id);
+    }
+
+    public Collection<Location> list() {
+        return locationRepository.findAll();
     }
 }
 

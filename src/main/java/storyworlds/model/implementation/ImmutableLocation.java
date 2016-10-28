@@ -1,6 +1,7 @@
 
 package storyworlds.model.implementation;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -17,6 +18,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 @Document(collection = "location")
 public class ImmutableLocation implements Location {
@@ -26,20 +28,24 @@ public class ImmutableLocation implements Location {
     private boolean active;
     private final String description;
     @DBRef(lazy = true)
+    @JsonIgnore
     private final Storyworld storyworld;
     private final Map<Direction, Link> outboundLinks;
     @DBRef
     private final Collection<Item> items;
     @DBRef
+    @JsonIgnore
     private Location forwardingLocation;
     @DBRef(lazy = true)
+    @JsonIgnore
     private final Location previousLocation;
     @DBRef(lazy = true)
+    @JsonIgnore
     private final Player creator;
 
     public ImmutableLocation(String description, Storyworld storyworld, Collection<Item> items, Location previousLocation, Player creator) {
         this.outboundLinks = new ConcurrentHashMap<>();
-        this.items = new HashSet<>(items);
+        this.items = new ConcurrentSkipListSet<>(items);
         this.active = true;
         this.description = description;
         this.storyworld = storyworld;

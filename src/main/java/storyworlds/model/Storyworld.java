@@ -1,5 +1,9 @@
 package storyworlds.model;
 
+import storyworlds.action.Actionable;
+
+import java.util.Collection;
+
 /**
  * Created by nvaughan on 10/15/2016.
  */
@@ -12,6 +16,8 @@ public interface Storyworld {
     public void setTitle(String title);
     public String getDescription();
     public void setDescription(String description);
+    public Collection<Actionable> getChangelog();
+    public void addToChangelog(Actionable actionable);
 //    public String getEntryText();
 //    public void setEntryText(String entryText);
 //    public IdentifiedUser getCreator();
