@@ -11,13 +11,15 @@ import storyworlds.model.implementation.UsableItem;
 import storyworlds.service.ItemService;
 import storyworlds.service.message.Message;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
+
 import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
  * Created by nvaughan on 10/7/2016.
  */
-@Ignore
 public class ItemCreatorTest extends AbstractMapGameplayTest {
 
     private final String ITEM_NAME = "arbitrary.item.name";
@@ -43,6 +45,7 @@ public class ItemCreatorTest extends AbstractMapGameplayTest {
     }
 
     @Test(expected = UncreateableException.class)
+    @Ignore
     public void twoWordNameTest() throws Exception {
         Actionable a = messageService.process(new Message(user, "build item"));
 
@@ -56,5 +59,14 @@ public class ItemCreatorTest extends AbstractMapGameplayTest {
         } else {
             assertTrue("Actionable not instance of Create.", false);
         }
+    }
+
+    @Test
+    public void calcBig() {
+
+        SecureRandom random = new SecureRandom();
+
+        System.out.println(new BigInteger(130, random).toString(32));
+
     }
 }

@@ -20,8 +20,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
 @SpringBootApplication
-@EnableMongoRepositories(basePackages = { "storyworlds.model.implementation" })
-@ComponentScan(basePackages = {"storyworlds.service", "storyworlds.web.control"})
+@ComponentScan(basePackages = {"storyworlds.service", "storyworlds.web.control", "storyworlds.config"})
 public class Application implements CommandLineRunner {
 
     private static Logger logr = LoggerFactory.getLogger(Application.class);
