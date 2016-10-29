@@ -188,5 +188,25 @@ public class ImmutableLocation implements Location {
                 throw new UncreateableException("null creator");
             }
         }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public Storyworld getStoryworld() {
+            return storyworld;
+        }
+
+        public Collection<Item> getItems() {
+            return items;
+        }
+
+        public Location getPreviousLocation() {
+            return previousLocation;
+        }
+
+        public Player getCreator() {
+            return creator;
+        }
     }
 }

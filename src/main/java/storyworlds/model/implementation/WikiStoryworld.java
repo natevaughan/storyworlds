@@ -23,17 +23,12 @@ public class WikiStoryworld implements Storyworld {
     private String title;
     private String description;
     private Set<Actionable> changelog;
-//    private String entryText;
-//    private IdentifiedUser creator;
-//    private Set<IdentifiedUser> maintainers;
-//    private boolean isPublic;
-//    private boolean isPubliclyModifiable;
-//
-//    public WikiStoryworld() {
-//        this.creator = creator;
-//        this.maintainers = new HashSet<>();
-//    }
-//
+    private String entryText;
+    private IdentifiedPlayer creator;
+    private Set<IdentifiedPlayer> maintainers;
+    private boolean isPublic;
+    private boolean isPubliclyModifiable;
+
     public String getId() {
         return id;
     }
@@ -74,35 +69,47 @@ public class WikiStoryworld implements Storyworld {
         this.changelog.add(actionable);
     };
 
-//    public String getEntryText() {
-//        return entryText;
-//    }
-//
-//    public void setEntryText(String entryText) {
-//        this.entryText = entryText;
-//    }
-//
-//    public IdentifiedUser getCreator() {
-//        return creator;
-//    }
-//
-//    public Collection<IdentifiedUser> getMaintainers() {
-//        return maintainers;
-//    }
-//
-//    public boolean isPublic() {
-//        return isPublic;
-//    }
-//
-//    public void setPublic(boolean aPublic) {
-//        isPublic = aPublic;
-//    }
-//
-//    public boolean isPubliclyModifiable() {
-//        return isPubliclyModifiable;
-//    }
-//
-//    public void setPubliclyModifiable(boolean publiclyModifiable) {
-//        isPubliclyModifiable = publiclyModifiable;
-//    }
+    public void setChangelog(Set<Actionable> changelog) {
+        this.changelog = changelog;
+    }
+
+    public String getEntryText() {
+        return entryText;
+    }
+
+    public void setEntryText(String entryText) {
+        this.entryText = entryText;
+    }
+
+    public IdentifiedPlayer getCreator() {
+        return creator;
+    }
+
+    public void setCreator(IdentifiedPlayer creator) {
+        this.creator = creator;
+    }
+
+    public Set<IdentifiedPlayer> getMaintainers() {
+        return maintainers;
+    }
+
+    public void setMaintainers(Set<IdentifiedPlayer> maintainers) {
+        this.maintainers = maintainers;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
+    }
+
+    public boolean isPubliclyModifiable() {
+        return isPubliclyModifiable;
+    }
+
+    public void setPubliclyModifiable(boolean publiclyModifiable) {
+        isPubliclyModifiable = publiclyModifiable;
+    }
 }
