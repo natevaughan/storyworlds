@@ -86,19 +86,19 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
             login();
         } else {
             createNewPlayer();
-
-            List<Storyworld> storyworlds = storyworldRepository.findAll();
-            if (storyworlds == null || storyworlds.isEmpty()) {
-                sendMessage("CREATE NEW STORYWORLD");
-                createNewStoryworld();
-            } else {
-                Storyworld choice = storyworlds.get(selectIndex(storyworlds, "Storyworld"));
-                player.setCurrentStoryworld(choice);
-                player.setLocation(choice.getEntry());
-                player2Repo.save(player);
-            }
         }
 
+        sendMessage("new storyworld?");
+        List<Storyworld> storyworlds = storyworldRepository.findAll();
+        if (storyworlds == null || storyworlds.isEmpty() || ConfirmationParser.parse(getCommand())) {
+            sendMessage("CREATE NEW STORYWORLD");
+            createNewStoryworld();
+        } else {
+            Storyworld choice = storyworlds.get(selectIndex(storyworlds, "Storyworld"));
+            player.setCurrentStoryworld(choice);
+            player.setLocation(choice.getEntry());
+            player2Repo.save(player);
+        }
         Actionable response = null;
         try {
             response = messageService.process(new Message(player, "status"));

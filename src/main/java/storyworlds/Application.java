@@ -31,11 +31,6 @@ public class Application implements CommandLineRunner {
     @Autowired
     Environment env;
 
-    @Autowired
-    LocationRepository locationRepository;
-
-    List<storyworlds.model.Location> locations = new ArrayList<>();
-
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
@@ -49,28 +44,7 @@ public class Application implements CommandLineRunner {
             if (args[0].equalsIgnoreCase("console")) {
                 consoleIO.run();
             }
-            if (args[0].equalsIgnoreCase("threads")) {
-                ExecutorService exec = Executors.newFixedThreadPool(5);
 
-                for (int i = 0; i < 10; i++) {
-                    exec.execute(new DBFetcher());
-                }
-                int j = 0;
-                while (j < 100) {
-                    ++j;
-                    System.out.println(locations.size());
-                    Thread.sleep(500);
-                }
-            }
-
-        }
-    }
-
-    private class DBFetcher implements Runnable {
-
-        public void run() {
-            System.out.println("Thread reporting");
-            locations.add(locationRepository.findAll().get(0));
         }
     }
 }

@@ -10,7 +10,7 @@ xhr.onreadystatechange = function () {
       var response = JSON.parse(xhr.responseText);
       console.dir(response);
       response.forEach(function(storyworld) {
-        document.getElementById("select-storyworld").innerHTML += storyworld.title;
+        document.getElementById("select-storyworld").innerHTML += storyworld.title + "<br/>" + storyworld.description + "<br/><br/>";
       })
     } else {
       console.log('Error: ' + xhr.status); // An error occurred during the request.
