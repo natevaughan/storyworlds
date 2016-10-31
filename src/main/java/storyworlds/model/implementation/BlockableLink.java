@@ -41,14 +41,6 @@ public class BlockableLink extends AbstractLink {
         }
     }
 
-//    public BlockableLink clone(Location newToLocation) {
-//        return new BlockableLink(description, newToLocation, passText, failText, requiredItem);
-//    }
-//
-//    public BlockableLink clone(String newDescription, String newPassText) {
-//        return new BlockableLink(newDescription, toLocation, newPassText, failText, requiredItem);
-//    }
-
     public static class Builder implements LinkBuilder {
 
         private String description = null;

@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import storyworlds.exception.UncreateableException;
 import storyworlds.model.Location;
+import storyworlds.model.enumeration.Direction;
 import storyworlds.model.implementation.ImmutableLocation;
 import storyworlds.service.LocationService;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Collection;
 
 /**
@@ -30,8 +32,14 @@ public class LocationController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public Location getLocation(@PathVariable("id") String id, HttpServletResponse response) {
-        return locationService.get(id);
+    public Location getLocation(@PathVariable("id") String id, HttpServletResponse response) throws IOException {
+        Location location = locationService.get(id);
+        if (location == null) {
+            response.sendError(HttpStatus.NOT_FOUND.value(), "Not found: " + id);
+            return null;
+        }
+
+        return location;
     }
 
     @RequestMapping(value = "/template")

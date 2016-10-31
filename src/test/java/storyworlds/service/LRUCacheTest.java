@@ -1,6 +1,7 @@
 package storyworlds.service;
 
 import com.sun.jmx.snmp.tasks.ThreadService;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -36,6 +37,7 @@ public class LRUCacheTest {
     }
 
     @Test
+    @Ignore // not really a test
     public void concurrencyTest() {
         LRUCache<String, Integer> cache = new LRUCache<>(10);
 

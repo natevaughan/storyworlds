@@ -74,6 +74,11 @@ public class UsableItem implements Item {
         return result;
     }
 
+    @Override
+    public int compareTo(Item o) {
+        return name.compareTo(o.getName());
+    }
+
     public static class Builder implements ItemBuilder {
 
         private String name;
