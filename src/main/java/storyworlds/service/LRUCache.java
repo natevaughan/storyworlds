@@ -1,0 +1,92 @@
+package storyworlds.service;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.locks.ReentrantLock;
+
+/**
+ * Created by nvaughan on 10/30/2016.
+ */
+public class LRUCache<K, V> {
+
+    private Logger logr = LoggerFactory.getLogger(getClass());
+
+    private Map<K, V> hashMap;
+    private Queue<K> lruEnforcer;
+    private final Integer count;
+    private final ReentrantLock lock;
+
+    public LRUCache(Integer count) {
+        this.count = count;
+        lruEnforcer = new LinkedList<K>();
+        hashMap = new HashMap<K, V>(count + 2, 1.0F);
+        // fairness seems to have a significant performance cost
+        lock = new ReentrantLock(false);
+    }
+
+    public boolean containsKey(Object key) {
+        lock.lock();
+        try {
+            return hashMap.containsKey(key);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public V get(K key) {
+        lock.lock();
+        try {
+            if (hashMap.containsKey(key)) {
+                V value = hashMap.get(key);
+                lruEnforcer.remove(key);
+                lruEnforcer.add(key);
+                logr.debug("Retrieved " + value.getClass().getSimpleName() + " " + key + " from cache");
+                return value;
+            }
+            return null;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public V putIfAbsent(K key, V value) {
+        lock.lock();
+        try {
+            if (hashMap.containsKey(key)) {
+                lruEnforcer.remove(key);
+                lruEnforcer.add(key);
+                logr.debug("Moved " + value.getClass().getSimpleName() + " " + key + " to end of eviction queue");
+            } else {
+                hashMap.put(key, value);
+                lruEnforcer.add(key);
+                logr.debug("Added " + value.getClass().getSimpleName() + " " + key + " to cache");
+
+            }
+            while (hashMap.size() > count) {
+                hashMap.remove(lruEnforcer.poll());
+                logr.debug("Evicted " + value.getClass().getSimpleName() + " from cache");
+            }
+            return hashMap.get(key);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public V remove(Object key) {
+        lock.lock();
+        try {
+            if (hashMap.containsKey(key)) {
+                lruEnforcer.remove(key);
+                return hashMap.remove(key);
+            }
+            return null;
+        } finally {
+            lock.unlock();
+        }
+    }
+}

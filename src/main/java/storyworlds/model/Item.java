@@ -1,8 +1,6 @@
 package storyworlds.model;
 
-public interface Item extends Comparable<Item> {
-
-    public String getId();
+public interface Item extends Persistable {
 
     public String getName();
 

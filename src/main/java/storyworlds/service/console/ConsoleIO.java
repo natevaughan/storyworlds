@@ -34,7 +34,7 @@ import storyworlds.model.implementation.UsableItem;
 import storyworlds.model.implementation.WikiStoryworld;
 import storyworlds.model.implementation.persistence.ItemRepository;
 import storyworlds.model.implementation.persistence.LocationRepository;
-import storyworlds.model.implementation.persistence.PlayerRepo;
+import storyworlds.model.implementation.persistence.PlayerRepository;
 import storyworlds.model.implementation.persistence.StoryworldRepository;
 import storyworlds.service.ItemService;
 import storyworlds.service.LinkService;
@@ -69,7 +69,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
     ItemService itemService;
 
     @Autowired
-    PlayerRepo player2Repo;
+    PlayerRepository player2Repo;
 
     private StringBuilder sb = new StringBuilder();
     private MessageService messageService = new MessageService();

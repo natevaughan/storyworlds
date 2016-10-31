@@ -1,20 +1,45 @@
 package storyworlds.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.parsing.Location;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import storyworlds.model.Link;
 import storyworlds.model.Player;
-import storyworlds.model.implementation.persistence.PlayerRepo;
+import storyworlds.model.enumeration.Direction;
+import storyworlds.model.implementation.persistence.PlayerRepository;
+
+import javax.annotation.PostConstruct;
 
 /**
  * Created by nvaughan on 10/28/2016.
  */
 @Service
-public class PlayerService {
+public class PlayerService extends AbstractCachingService<Player> {
 
     @Autowired
-    PlayerRepo playerRepo;
+    private PlayerRepository playerRepo;
 
-    public Player get(String id) {
-        return playerRepo.findOne(id);
+    @Autowired
+    LocationService locationService;
+
+    @Autowired
+    private Environment env;
+
+    @PostConstruct
+    private void init() {
+        cache = new LRUCache<>(Integer.parseInt(env.getProperty(KEY_PLAYER_CACHE_SIZE)));
+        repo = playerRepo;
+    }
+
+    public Player move(String id, Direction direction) {
+        Player player = get(id);
+        storyworlds.model.Location location = locationService.get(player.getLocation().getId());
+        Link link = location.getOutboundLink(direction);
+        if (link.isPassable(player)) {
+            player.setLocation(link.getToLocation());
+            return playerRepo.save(player);
+        }
+        return player;
     }
 }

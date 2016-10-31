@@ -5,11 +5,7 @@ import storyworlds.model.enumeration.Direction;
 import java.util.Collection;
 import java.util.Map;
 
-public interface Location {
-
-    public String getId();
-
-    public void setId(String id);
+public interface Location extends Persistable {
 
     public String getDescription();
 

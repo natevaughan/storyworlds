@@ -40,14 +40,14 @@ public class Solution {
 //
 //            if (!affinityNodes.containsKey(name1)) {
 //                node1 = factory.getAffinityNode(name1);
-//                affinityNodes.put(name1, node1);
+//                affinityNodes.putIfAbsent(name1, node1);
 //            } else {
 //                node1 = affinityNodes.get(name1);
 //            }
 //
 //            if (!affinityNodes.containsKey(name2)) {
 //                node2 = factory.getAffinityNode(name2);
-//                affinityNodes.put(name2, node2);
+//                affinityNodes.putIfAbsent(name2, node2);
 //            } else {
 //                node2 = affinityNodes.get(name2);
 //            }
@@ -131,10 +131,10 @@ public class Solution {
 //
 //        public void bind(AffinityNode node, Double strength) {
 //            if (!linkedNodes.containsKey(node)) {
-//                linkedNodes.put(node, strength);
+//                linkedNodes.putIfAbsent(node, strength);
 //            }
 //            if (node.getLinkedNodes().containsKey(this)) {
-//                node.getLinkedNodes().put(this, strength);
+//                node.getLinkedNodes().putIfAbsent(this, strength);
 //            }
 //        }
 //

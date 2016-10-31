@@ -8,6 +8,8 @@ import storyworlds.create.Createable;
 import storyworlds.model.Location;
 import storyworlds.model.Storyworld;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -22,12 +24,13 @@ public class WikiStoryworld implements Storyworld {
     private Location entry;
     private String title;
     private String description;
-    private Set<Actionable> changelog;
     private String entryText;
     private IdentifiedPlayer creator;
     private Set<IdentifiedPlayer> maintainers;
     private boolean isPublic;
     private boolean isPubliclyModifiable;
+    private String color;
+    private String backgroundColor;
 
     public String getId() {
         return id;
@@ -45,7 +48,7 @@ public class WikiStoryworld implements Storyworld {
         this.entry = entry;
     }
 
-    public String getTitle() {
+    public synchronized String getTitle() {
         return title;
     }
 
@@ -53,7 +56,7 @@ public class WikiStoryworld implements Storyworld {
         this.title = title;
     }
 
-    public String getDescription() {
+    public synchronized String getDescription() {
         return description;
     }
 
@@ -61,23 +64,11 @@ public class WikiStoryworld implements Storyworld {
         this.description = description;
     }
 
-    public Set<Actionable> getChangelog() {
-        return changelog;
-    }
-
-    public void addToChangelog(Actionable actionable) {
-        this.changelog.add(actionable);
-    };
-
-    public void setChangelog(Set<Actionable> changelog) {
-        this.changelog = changelog;
-    }
-
-    public String getEntryText() {
+    public synchronized String getEntryText() {
         return entryText;
     }
 
-    public void setEntryText(String entryText) {
+    public synchronized void setEntryText(String entryText) {
         this.entryText = entryText;
     }
 
@@ -85,31 +76,50 @@ public class WikiStoryworld implements Storyworld {
         return creator;
     }
 
-    public void setCreator(IdentifiedPlayer creator) {
-        this.creator = creator;
-    }
-
-    public Set<IdentifiedPlayer> getMaintainers() {
+    public synchronized Set<IdentifiedPlayer> getMaintainers() {
         return maintainers;
     }
 
-    public void setMaintainers(Set<IdentifiedPlayer> maintainers) {
+    public synchronized void setMaintainers(Collection<IdentifiedPlayer> maintainers) {
+        this.maintainers = new HashSet<>();
+        this.maintainers.addAll(maintainers);
+    }
+
+    public synchronized void setMaintainers(Set<IdentifiedPlayer> maintainers) {
         this.maintainers = maintainers;
     }
 
-    public boolean isPublic() {
+    public synchronized boolean isPublic() {
         return isPublic;
     }
 
-    public void setPublic(boolean aPublic) {
+    public synchronized void setPublic(boolean aPublic) {
         isPublic = aPublic;
     }
 
-    public boolean isPubliclyModifiable() {
+    public synchronized boolean isPubliclyModifiable() {
         return isPubliclyModifiable;
     }
 
     public void setPubliclyModifiable(boolean publiclyModifiable) {
         isPubliclyModifiable = publiclyModifiable;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    @Override
+    public String getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    @Override
+    public void setBackgroundColor(String backgroundColor) {
+        this.backgroundColor = backgroundColor;
     }
 }

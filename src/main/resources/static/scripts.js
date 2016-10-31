@@ -1,19 +1,20 @@
-var xhr = new XMLHttpRequest();
-xhr.open('GET', 'storyworld/');
-xhr.send(null);
+var ajax = {
+    get : function(url) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
+        xhr.send(null);
 
-xhr.onreadystatechange = function () {
-  var DONE = 4; // readyState 4 means the request is done.
-  var OK = 200; // status 200 is a successful return.
-  if (xhr.readyState === DONE) {
-    if (xhr.status === OK) {
-      var response = JSON.parse(xhr.responseText);
-      console.dir(response);
-      response.forEach(function(storyworld) {
-        document.getElementById("select-storyworld").innerHTML += storyworld.title + "<br/>" + storyworld.description + "<br/><br/>";
-      })
-    } else {
-      console.log('Error: ' + xhr.status); // An error occurred during the request.
+        xhr.onreadystatechange = function () {
+            var DONE = 4;
+            var OK = 200;
+            if (xhr.readyState === DONE) {
+                if (xhr.status === OK) {
+                    var response = JSON.parse(xhr.responseText);
+                    return response;
+                } else {
+                    console.log('Error: ' + xhr.status); // An error occurred during the request.
+                }
+            }
+        };
     }
-  }
-};
+

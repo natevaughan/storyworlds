@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Collection;
 
 @Document(collection = "player")
-public interface Player {
+public interface Player extends Persistable {
 
     public String getName();
 
