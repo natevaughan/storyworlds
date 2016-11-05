@@ -12,7 +12,7 @@ import storyworlds.model.Location;
 import storyworlds.model.LocationBuilder;
 import storyworlds.model.Player;
 import storyworlds.model.Storyworld;
-import storyworlds.model.enumeration.Direction;
+import storyworlds.model.Direction;
 
 import java.util.Collection;
 import java.util.HashSet;

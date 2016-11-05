@@ -1,10 +1,10 @@
 package storyworlds.action;
 
-import storyworlds.model.enumeration.Direction;
+import storyworlds.model.Direction;
 
 public abstract class DirectionedAction extends AbstractAction {
 
-    protected Direction direction;
+    private Direction direction;
 
     public void setDirection(Direction direction) {
         this.direction = direction;

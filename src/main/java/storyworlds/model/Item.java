@@ -2,12 +2,12 @@ package storyworlds.model;
 
 public interface Item extends Persistable, Comparable<Item> {
 
-    public String getName();
+    String getName();
 
-    public String getDescription();
+    String getDescription();
 
-    public String getUseText();
+    String getUseText();
 
-    public Player getCreator();
+    Player getCreator();
 
 }

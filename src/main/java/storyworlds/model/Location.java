@@ -1,38 +1,36 @@
 package storyworlds.model;
 
-import storyworlds.model.enumeration.Direction;
-
 import java.util.Collection;
 import java.util.Map;
 
 public interface Location extends Persistable {
 
-    public String getDescription();
+    String getDescription();
 
-    public Collection<Item> getItems();
+    Collection<Item> getItems();
 
-    public void addItem(Item item);
+    void addItem(Item item);
 
-    public Map<Direction, Link> getOutboundLinks();
+    Map<Direction, Link> getOutboundLinks();
 
-    public Link getOutboundLink(Direction direction);
+    Link getOutboundLink(Direction direction);
 
-    public void addOutboundLink(Direction direction, Link link);
+    void addOutboundLink(Direction direction, Link link);
 
-    public boolean isActive();
+    boolean isActive();
 
-    public void setActive(boolean active);
+    void setActive(boolean active);
 
-    public Storyworld getStoryworld();
+    Storyworld getStoryworld();
 
-    public Location getForwardingLocation();
+    Location getForwardingLocation();
 
-    public void setForwardingLocation(Location location);
+    void setForwardingLocation(Location location);
 
-    public Location getPreviousLocation();
+    Location getPreviousLocation();
 
-    public Item getItem(String itemName);
+    Item getItem(String itemName);
 
-    public Player getCreator();
+    Player getCreator();
 }
 

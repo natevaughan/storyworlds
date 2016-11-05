@@ -1,17 +1,17 @@
 package storyworlds.action;
 
 import storyworlds.create.Createable;
-import storyworlds.model.enumeration.Direction;
+import storyworlds.model.Direction;
 
 
 public interface CreateableAction extends Actionable {
-    public Createable getCreateable();
+    Createable getCreateable();
 
-    public void setCreateable(Createable creatable);
+    void setCreateable(Createable creatable);
 
-    public void setDirection(Direction direction);
+    void setDirection(Direction direction);
 
-    public Direction getDirection();
+    Direction getDirection();
 
-    public boolean isCreateable();
+    boolean isCreateable();
 }

@@ -61,7 +61,7 @@ public class Solution {
 //            }
 //
 //            NodeCrawler crawler = factory.getNodeCrawler(affinityNodes.values());
-//            return crawler.crawlAll().getName();
+//            return crawler.crawlAll().getUsername();
 //    }
 //
 //    private class NodeCrawler {
@@ -102,7 +102,7 @@ public class Solution {
 //                    first = node;
 //                    break;
 //                }
-//                if (first.getName().compareTo(node.getName()) < 0) {
+//                if (first.getUsername().compareTo(node.getUsername()) < 0) {
 //                    first = node;
 //                }
 //            }
@@ -142,14 +142,14 @@ public class Solution {
 //            return linkedNodes;
 //        }
 //
-//        public String getName() {
+//        public String getUsername() {
 //            return name;
 //        }
 //
 //        @Override
 //        public boolean equals(Object o) {
 //            if (o instanceof AffinityNode) {
-//                return name.equals(((AffinityNode) o).getName());
+//                return name.equals(((AffinityNode) o).getUsername());
 //            }
 //            return false;
 //        }

@@ -16,7 +16,7 @@ import storyworlds.create.Createable;
 import storyworlds.exception.BadLinkException;
 import storyworlds.model.Item;
 import storyworlds.model.Link;
-import storyworlds.model.enumeration.Direction;
+import storyworlds.model.Direction;
 import storyworlds.service.message.Message;
 
 import java.util.Collection;

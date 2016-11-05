@@ -7,9 +7,9 @@ import storyworlds.exception.UncreateableException;
  */
 public interface LinkBuilder {
 
-    public LinkBuilder setPassText(String passText);
-    public LinkBuilder setDescription(String description);
-    public LinkBuilder setToLocation(Location toLocation);
-    public LinkBuilder setCreator(Player creator);
-    public Link build() throws UncreateableException;
+    LinkBuilder setPassText(String passText);
+    LinkBuilder setDescription(String description);
+    LinkBuilder setToLocation(Location toLocation);
+    LinkBuilder setCreator(Player creator);
+    Link build() throws UncreateableException;
 }

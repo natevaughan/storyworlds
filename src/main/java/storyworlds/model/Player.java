@@ -7,23 +7,23 @@ import java.util.Collection;
 @Document(collection = "player")
 public interface Player extends Persistable {
 
-    public String getName();
+    String getUsername();
 
-    public Location getLocation();
+    Location getLocation();
 
-    public void setLocation(Location location);
+    void setLocation(Location location);
 
-    public Collection<Item> listItems();
+    Collection<Item> listItems();
 
-    public void addItem(Item item);
+    void addItem(Item item);
 
-    public Item getActiveItem();
+    Item getActiveItem();
 
-    public void activate(Item item);
+    void activate(Item item);
 
-    public Collection<Location> getLocationHistory();
+    Collection<Location> getLocationHistory();
 
-    public Storyworld getCurrentStoryworld();
+    Storyworld getCurrentStoryworld();
 
-    public void setCurrentStoryworld(Storyworld storyworld);
+    void setCurrentStoryworld(Storyworld storyworld);
 }

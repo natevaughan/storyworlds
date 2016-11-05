@@ -25,7 +25,9 @@ public class WikiStoryworld implements Storyworld {
     private String title;
     private String description;
     private String entryText;
+    @DBRef
     private IdentifiedPlayer creator;
+    @DBRef
     private Set<IdentifiedPlayer> maintainers;
     private boolean isPublic;
     private boolean isPubliclyModifiable;
@@ -121,5 +123,10 @@ public class WikiStoryworld implements Storyworld {
     @Override
     public void setBackgroundColor(String backgroundColor) {
         this.backgroundColor = backgroundColor;
+    }
+
+    @Override
+    public String toString() {
+        return "Storyworld " + title + ", creator: {" + creator + "}, public: " + isPublic;
     }
 }

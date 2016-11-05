@@ -10,4 +10,6 @@ import storyworlds.model.implementation.IdentifiedPlayer;
 
 public interface PlayerRepository extends MongoRepository<Player, String> {
     IdentifiedPlayer findByEmailAndPassword(String email, String password);
+    IdentifiedPlayer findByUsername(String username);
+    IdentifiedPlayer findByEmail(String email);
 }

@@ -1,6 +1,6 @@
 package storyworlds.action.parser;
 
-import storyworlds.model.enumeration.Direction;
+import storyworlds.model.Direction;
 
 public class DirectionParser {
 

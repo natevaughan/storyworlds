@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import storyworlds.model.Item;
 import storyworlds.model.Location;
 import storyworlds.model.Player;
@@ -21,8 +23,9 @@ public class IdentifiedPlayer implements Player {
     @Id
     @JsonIgnore
     private String id;
-    private final String name;
+    private final String username;
     private final String email;
+    @JsonIgnore
     private final String password;
     @JsonIgnore
     @DBRef
@@ -40,10 +43,10 @@ public class IdentifiedPlayer implements Player {
     @DBRef
     private Item activeItem;
 
-    public IdentifiedPlayer(String name, String email, String password) {
+    public IdentifiedPlayer(String username, String email, String password) {
         this.items = new LinkedHashSet<>();
         this.previousLocations = new LinkedHashSet<>();
-        this.name = name;
+        this.username = username;
         this.email = email;
         this.password = password;
     }
@@ -64,8 +67,8 @@ public class IdentifiedPlayer implements Player {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
     public Collection<Item> listItems() {
@@ -90,9 +93,6 @@ public class IdentifiedPlayer implements Player {
         return previousLocations;
     }
 
-    public void setName(String name) {
-    }
-
     public Location getLocation() {
         return location.getForwardingLocation();
     }
@@ -100,5 +100,34 @@ public class IdentifiedPlayer implements Player {
     public void setLocation(Location location) {
         previousLocations.add(location);
         this.location = location;
+    }
+
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "IdentifiedPlayer: " + username + ", id: " + id;
     }
 }

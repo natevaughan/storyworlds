@@ -12,13 +12,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import storyworlds.exception.UncreateableException;
 import storyworlds.model.Location;
-import storyworlds.model.enumeration.Direction;
 import storyworlds.model.implementation.ImmutableLocation;
 import storyworlds.service.LocationService;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collection;
 
 /**
  * Created by nvaughan on 10/27/2016.

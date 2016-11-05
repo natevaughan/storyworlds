@@ -15,7 +15,7 @@ public class LinkService {
     public Link create(LinkBuilder linkBuilder) throws UncreateableException {
         Link link = linkBuilder.build();
 
-        logr.debug("Link created: " + link.getClass().getTypeName() + " by " + link.getCreator().getName() + " in " + link.getCreator().getCurrentStoryworld().getTitle());
+        logr.debug("Link created: " + link.getClass().getTypeName() + " by " + link.getCreator().getUsername() + " in " + link.getCreator().getCurrentStoryworld().getTitle());
 
         return link;
     }

@@ -1,5 +1,8 @@
 package storyworlds.service.message;
 
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 import storyworlds.model.Player;
 
 import java.time.Instant;
@@ -7,11 +10,14 @@ import java.time.Instant;
 /**
  * Created by nvaughan on 9/27/2016.
  */
+@Document
 public class Message {
 
+    @DBRef
     private Player player;
     private Instant time = Instant.now();
     private String command;
+    @Transient
     private StringBuilder sb = new StringBuilder();
 
     public Message() {

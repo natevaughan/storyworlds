@@ -15,6 +15,8 @@ var ajax = {
                     console.log('Error: ' + xhr.status); // An error occurred during the request.
                 }
             }
-        };
+        }
     }
+}
+console.log(ajax.get('storyworld'));
 

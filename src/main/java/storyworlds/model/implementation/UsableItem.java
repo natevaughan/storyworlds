@@ -1,5 +1,6 @@
 package storyworlds.model.implementation;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -19,6 +20,7 @@ public class UsableItem implements Item {
     private final String name;
     private final String description;
     private final String useText;
+    @JsonIgnore
     @DBRef(lazy = true)
     private final Player creator;
 

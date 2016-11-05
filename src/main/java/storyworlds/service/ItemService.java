@@ -36,7 +36,7 @@ public class ItemService extends AbstractCachingService<Item> {
 
         Item item = itemRepository.save(itemBuilder.build());
 
-        logr.debug("Item created: " + item.getName() + " by " + item.getCreator().getName() + " in " + item.getCreator().getCurrentStoryworld().getTitle());
+        logr.debug("Item created: " + item.getName() + " by " + item.getCreator().getUsername() + " in " + item.getCreator().getCurrentStoryworld().getTitle());
 
         return item;
     }

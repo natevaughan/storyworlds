@@ -2,7 +2,7 @@ package storyworlds.action;
 
 import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.create.Createable;
-import storyworlds.model.enumeration.Direction;
+import storyworlds.model.Direction;
 
 public class Edit extends AbstractCreateableAction {
 
@@ -11,13 +11,13 @@ public class Edit extends AbstractCreateableAction {
     }
 
     public boolean isCreateable() {
-        if (direction == null) {
+        if (getDirection() == null) {
             return Createable.LOCATION.equals(creatable);
         } else {
             return creatable != null
                     && !Createable.LOCATION.equals(creatable)
                     && !Createable.ERROR.equals(creatable)
-                    && !Direction.ERROR.equals(direction);
+                    && !Direction.ERROR.equals(getDirection());
         }
     }
 }

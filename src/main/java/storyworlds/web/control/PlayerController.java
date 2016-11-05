@@ -1,21 +1,17 @@
 package storyworlds.web.control;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import storyworlds.action.parser.DirectionParser;
 import storyworlds.exception.BadLinkException;
 import storyworlds.model.Player;
-import storyworlds.model.enumeration.Direction;
-import storyworlds.service.LocationService;
+import storyworlds.model.Direction;
 import storyworlds.service.PlayerService;
 
 import javax.servlet.http.HttpServletResponse;

@@ -2,13 +2,13 @@ package storyworlds.model;
 
 public interface Link {
 
-    public String getDescription();
+    String getDescription();
 
-    public boolean isPassable(Player player);
+    boolean isPassable(Player player);
     
-    public String getPassText(Player player);
+    String getPassText(Player player);
 
-    public Location getToLocation();
+    Location getToLocation();
 
-    public Player getCreator();
+    Player getCreator();
 }	

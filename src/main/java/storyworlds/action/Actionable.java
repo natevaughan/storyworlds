@@ -2,17 +2,23 @@ package storyworlds.action;
 
 import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.exception.BadLinkException;
+import storyworlds.model.Persistable;
+import storyworlds.model.Storyworld;
 import storyworlds.service.message.Message;
 
-public interface Actionable {
+public interface Actionable extends Persistable {
 
-    public void accept(ActionVisitor visitor) throws BadLinkException;
+    Storyworld getStoryworld();
 
-    public void setMessage(Message message);
+    void setStoryworld(Storyworld storyworld);
 
-    public Message getMessage();
+    void accept(ActionVisitor visitor) throws BadLinkException;
 
-    public void setSuccessful(boolean successful);
+    void setMessage(Message message);
 
-    public boolean isSuccessful();
+    Message getMessage();
+
+    void setSuccessful(boolean successful);
+
+    boolean isSuccessful();
 }

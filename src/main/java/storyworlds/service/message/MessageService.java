@@ -6,7 +6,7 @@ import storyworlds.exception.BadLinkException;
 public class MessageService {
 
     public Actionable process(Message message) throws BadLinkException {
-        System.out.println("Message " + message.getText() + " received from " + message.getPlayer().getName() + " at " + message.getTime().toString());
+        System.out.println("Message " + message.getText() + " received from " + message.getPlayer().getUsername() + " at " + message.getTime().toString());
 
         MessageTransport transport = new MessageTransport(message);
 

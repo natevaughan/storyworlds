@@ -7,7 +7,7 @@ import storyworlds.gameplay.AbstractGameplayTest;
 import storyworlds.initial.map.MapFactory;
 import storyworlds.model.Item;
 import storyworlds.model.Location;
-import storyworlds.model.enumeration.Direction;
+import storyworlds.model.Direction;
 import storyworlds.model.implementation.ImmutableLocation;
 import storyworlds.model.implementation.UsableItem;
 import storyworlds.model.implementation.WikiStoryworld;

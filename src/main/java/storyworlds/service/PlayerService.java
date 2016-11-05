@@ -1,13 +1,12 @@
 package storyworlds.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.parsing.Location;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import storyworlds.exception.BadLinkException;
 import storyworlds.model.Link;
 import storyworlds.model.Player;
-import storyworlds.model.enumeration.Direction;
+import storyworlds.model.Direction;
 import storyworlds.model.implementation.persistence.PlayerRepository;
 
 import javax.annotation.PostConstruct;

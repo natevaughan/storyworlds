@@ -5,7 +5,7 @@ import storyworlds.model.Item;
 import storyworlds.model.Link;
 import storyworlds.model.Location;
 import storyworlds.model.Player;
-import storyworlds.model.enumeration.Direction;
+import storyworlds.model.Direction;
 import storyworlds.model.implementation.BlockableLink;
 import storyworlds.model.implementation.DirectionalLink;
 import storyworlds.model.implementation.ImmutableLocation;

@@ -16,7 +16,7 @@ import storyworlds.action.Use;
 import storyworlds.action.parser.DirectionParser;
 import storyworlds.create.Createable;
 import storyworlds.create.CreateableParser;
-import storyworlds.model.enumeration.Direction;
+import storyworlds.model.Direction;
 
 /**
  * Responsibilities:
