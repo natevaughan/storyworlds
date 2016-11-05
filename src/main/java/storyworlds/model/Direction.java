@@ -6,8 +6,7 @@ public enum Direction {
     EAST("To the "),
     WEST("To the "),
     UP(""),
-    DOWN(""),
-    ERROR("");
+    DOWN("");
 
     Direction(String prefix) {
         this.prefix = prefix;

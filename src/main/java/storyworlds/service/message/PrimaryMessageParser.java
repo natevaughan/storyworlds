@@ -2,13 +2,14 @@ package storyworlds.service.message;
 
 import storyworlds.action.ActionFactory;
 import storyworlds.action.Actionable;
+import storyworlds.exception.UnrecognizedInputException;
 
 /**
  * Created by nvaughan on 9/28/2016.
  */
 public class PrimaryMessageParser implements MessageProcessor {
 
-    public void process(MessageTransport transport) {
+    public void process(MessageTransport transport) throws UnrecognizedInputException {
         String input = transport.getMessage().getCommand().trim();
 
         if (!input.isEmpty()) {
@@ -18,15 +19,13 @@ public class PrimaryMessageParser implements MessageProcessor {
             } else {
                 transport.setPrimary(input);
             }
+        } else {
+            throw new UnrecognizedInputException("Empty input");
         }
 
         Actionable actionable = ActionFactory.get(transport.getPrimary());
 
-        // XXX: todo
-        String possibleErrorMessage = actionable.getMessage().getText();
-
         actionable.setMessage(transport.getMessage());
-        actionable.getMessage().addLine(possibleErrorMessage);
         transport.setActionable(actionable);
     }
 }

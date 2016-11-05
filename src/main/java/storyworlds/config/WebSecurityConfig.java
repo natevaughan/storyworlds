@@ -28,14 +28,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .and()
-                .httpBasic();
+                .httpBasic()
+                // for development only
+                .and()
+                .csrf().disable();
     }
 
     @Autowired
     public void configAuthBuilder(AuthenticationManagerBuilder builder) throws Exception {
-//        builder
-//                .inMemoryAuthentication()
-//                .withUser("user").password("password").roles("USER");
         builder.userDetailsService(userDetailsService);
     }
 }

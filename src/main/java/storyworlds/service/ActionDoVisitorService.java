@@ -1,10 +1,8 @@
-package storyworlds.action.visitor;
+package storyworlds.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import storyworlds.action.Action;
-import storyworlds.action.Create;
-import storyworlds.action.Delete;
-import storyworlds.action.Edit;
-import storyworlds.action.Error;
 import storyworlds.action.Help;
 import storyworlds.action.Map;
 import storyworlds.action.Move;
@@ -12,11 +10,13 @@ import storyworlds.action.Quit;
 import storyworlds.action.Status;
 import storyworlds.action.Take;
 import storyworlds.action.Use;
+import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.create.Createable;
-import storyworlds.exception.BadLinkException;
+import storyworlds.exception.InvalidLinkException;
+import storyworlds.model.Direction;
 import storyworlds.model.Item;
 import storyworlds.model.Link;
-import storyworlds.model.Direction;
+import storyworlds.model.Location;
 import storyworlds.service.message.Message;
 
 import java.util.Collection;
@@ -28,57 +28,59 @@ import java.util.Collection;
  * -Setting action success
  * -Setting message text
  */
-public class ActionDoVisitor implements ActionVisitor
-{
+@Service
+public class ActionDoVisitorService implements ActionVisitor {
 
-    public void visit(Create create) {
-        StringBuilder sb = new StringBuilder();
-        if (create.isCreateable()) {
-            sb.append("OK, creating ").append(create.getCreateable());
-            if (!Createable.ITEM.equals(create.getCreateable())) {
-                sb.append(" ").append(create.getDirection());
-            }
-            create.setSuccessful(true);
-        } else {
-            sb.append("Unable to build ").append(create.getCreateable()).append("\n");
+    @Autowired
+    PlayerService playerService;
 
-            if (create.getCreateable() == null || Createable.ERROR.equals(create.getCreateable())) {
-                sb.append(enumerateCreatables("build"));
-            }
-            if (create.getDirection() == null || Direction.ERROR.equals(create.getDirection())) {
-                sb.append(enumerateDirections());
-            }
-            if (create.getMessage().getPlayer().getLocation().getOutboundLink(create.getDirection()) != null) {
-                sb.append(create.getCreateable()).append(" already exists ").append(create.getDirection().formatted().toLowerCase());
-            }
-        }
-        create.getMessage().addLine(sb.toString());
-    }
+    @Autowired
+    LocationService locationService;
 
-    public void visit(Delete delete) {
+    @Autowired
+    ItemService itemService;
 
-    }
+//    public void visit(Create create) throws UncreateableException {
+//        StringBuilder sb = new StringBuilder();
+//        if (create.isCreateable()) {
+//            sb.append("OK, creating ").append(create.getCreateable());
+//            if (!Createable.ITEM.equals(create.getCreateable())) {
+//                sb.append(" ").append(create.getDirection());
+//            }
+//            create.setSuccessful(true);
+//        } else {
+//            sb.append("Unable to build ").append(create.getCreateable()).append("\n");
+//
+//            if (create.getCreateable() == null || Createable.ERROR.equals(create.getCreateable())) {
+//                sb.append(enumerateCreatables("build"));
+//            }
+//            if (create.getDirection() == null || Direction.ERROR.equals(create.getDirection())) {
+//                sb.append(enumerateDirections());
+//            }
+//            if (create.getMessage().getPlayer().getLocation().getOutboundLink(create.getDirection()) != null) {
+//                sb.append(create.getCreateable()).append(" already exists ").append(create.getDirection().formatted().toLowerCase());
+//            }
+//        }
+//        throw new UncreateableException(sb.toString());
+//    }
 
-    public void visit(Error error) {
-    }
-
-    public void visit(Edit edit) {
-        StringBuilder sb = new StringBuilder();
-        if (edit.isCreateable()) {
-            sb.append("OK, editing ");
-            if (edit.getDirection() != null) {
-                sb.append(edit.getCreateable() + " " + edit.getDirection());
-            } else {
-                sb.append("this " + edit.getCreateable());
-            }
-            edit.setSuccessful(true);
-        } else {
-            if (Createable.LOCATION.equals(edit.getCreateable()) && edit.getDirection() != null) {
-                edit.getMessage().addLine("To edit a location, first travel to it.");
-            }
-        }
-        edit.getMessage().addLine(sb.toString());
-    }
+//    public void visit(Edit edit) {
+//        StringBuilder sb = new StringBuilder();
+//        if (edit.isCreateable()) {
+//            sb.append("OK, editing ");
+//            if (edit.getDirection() != null) {
+//                sb.append(edit.getCreateable() + " " + edit.getDirection());
+//            } else {
+//                sb.append("this " + edit.getCreateable());
+//            }
+//            edit.setSuccessful(true);
+//        } else {
+//            if (Createable.LOCATION.equals(edit.getCreateable()) && edit.getDirection() != null) {
+//                edit.getMessage().addLine("To edit a location, first travel to it.");
+//            }
+//        }
+//        edit.getMessage().addLine(sb.toString());
+//    }
 
     public void visit(Help help) {
         help.getMessage().addLine("Valid actions: ");
@@ -105,39 +107,35 @@ public class ActionDoVisitor implements ActionVisitor
         map.getMessage().addLine("Map feature not yet supported");
     }
 
-    public void visit(Move move) throws BadLinkException {
+    @Override
+    public void visit(Quit quit) {
 
-        if (Direction.ERROR.equals(move.getDirection())) {
-            move.getMessage().addLine("Invalid direction");
-            return;
-        }
+    }
+
+    public void visit(Move move) throws InvalidLinkException {
 
         Link link = move.getMessage().getPlayer().getLocation().getOutboundLink(move.getDirection());
 
         if (link == null) {
-            move.getMessage().addLine("Nothing " + move.getDirection().formatted());
-            return;
+            throw new InvalidLinkException("Nothing " + move.getDirection().formatted());
         }
 
         if (link.getToLocation() == null) {
-            throw new BadLinkException("Bad link: no destination location.");
+            throw new InvalidLinkException("Bad link: no destination location.");
         }
-
-        move.getMessage().addLine(move.getMessage().getPlayer().getLocation().getOutboundLink(move.getDirection()).getPassText(move.getMessage().getPlayer()));
 
         if (!link.isPassable(move.getMessage().getPlayer())) {
-            return;
+            throw new InvalidLinkException(link.getPassText(move.getMessage().getPlayer()));
         }
+
+        Location toLocation = locationService.get(link.getToLocation().getForwardingLocation());
+
+        move.getMessage().addLine(link.getPassText(move.getMessage().getPlayer()));
 
         move.setSuccessful(true);
 
         move.getMessage().getPlayer().setLocation(move.getMessage().getPlayer().getLocation().getOutboundLink(move.getDirection()).getToLocation());
         describeLocation(move.getMessage());
-    }
-
-    public void visit(Quit quit) {
-        quit.setSuccessful(true);
-        quit.getMessage().addLine("Thanks for playing.");
     }
 
     public void visit(Take take) {
@@ -185,10 +183,10 @@ public class ActionDoVisitor implements ActionVisitor
         sb.append("Please specify a direction: ");
         int i = 0;
         for (Direction direction : Direction.values()) {
-            if (i > 0)
+            if (i > 0) {
                 sb.append(", ");
-            if (!Direction.ERROR.equals(direction))
-                sb.append(direction);
+            }
+            sb.append(direction);
             ++i;
         }
         return sb.toString();
@@ -207,5 +205,4 @@ public class ActionDoVisitor implements ActionVisitor
         }
         return sb.toString();
     }
-
 }

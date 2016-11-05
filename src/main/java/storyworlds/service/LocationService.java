@@ -5,13 +5,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import storyworlds.action.Delete;
 import storyworlds.exception.UncreateableException;
+import storyworlds.model.Direction;
+import storyworlds.model.Link;
+import storyworlds.model.LinkBuilder;
 import storyworlds.model.Location;
 import storyworlds.model.LocationBuilder;
 import storyworlds.model.implementation.persistence.LocationRepository;
 import storyworlds.model.implementation.persistence.PlayerRepository;
 import storyworlds.model.implementation.persistence.StoryworldRepository;
+import sun.reflect.annotation.TypeAnnotation;
 
 import javax.annotation.PostConstruct;
 
@@ -37,8 +40,22 @@ public class LocationService extends AbstractCachingService<Location> {
     }
 
     public Location create(LocationBuilder builder) throws UncreateableException {
+        return create(builder.build());
+    }
 
-        Location location = locationRepository.save(builder.build());
+    public Location create(LinkBuilder builder, Direction direction) throws UncreateableException {
+        Link link = builder.build();
+        if (link.getToLocation().getId() == null) {
+            create(link.getToLocation());
+        }
+        Location currentLocation = link.getCreator().getLocation();
+        currentLocation.addOutboundLink(direction, link);
+        return link.getToLocation();
+    }
+
+    private Location create(Location location) {
+
+        locationRepository.save(location);
 
         cache.putIfAbsent(location.getId(), location);
 
@@ -47,12 +64,12 @@ public class LocationService extends AbstractCachingService<Location> {
         return location;
     }
 
-    public void delete(Delete delete) {
-        // XXX: todo
-    }
-
     public void update(Location previousLocation) {
         locationRepository.save(previousLocation);
+    }
+
+    public Location get(Location toLocation) {
+        return get(toLocation.getId());
     }
 }
 

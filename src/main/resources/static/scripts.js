@@ -18,5 +18,5 @@ var ajax = {
         }
     }
 }
-console.log(ajax.get('storyworld'));
+console.log(ajax.get('storyworld/'));
 

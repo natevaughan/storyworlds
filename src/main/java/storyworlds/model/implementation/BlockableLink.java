@@ -5,6 +5,7 @@ import storyworlds.exception.UncreateableException;
 import storyworlds.model.Item;
 import storyworlds.model.LinkBuilder;
 import storyworlds.model.Location;
+import storyworlds.model.LocationBuilder;
 import storyworlds.model.Player;
 
 /**
@@ -45,6 +46,7 @@ public class BlockableLink extends AbstractLink {
 
         private String description = null;
         private Location toLocation = null;
+        private LocationBuilder toLocationBuilder = null;
         private String passText = null;
         private Item requiredItem = null;
         private String failText = null;
@@ -61,6 +63,11 @@ public class BlockableLink extends AbstractLink {
 
         public BlockableLink.Builder setDescription(String description) {
             this.description = description;
+            return this;
+        }
+
+        public Builder setToLocationBuilder(LocationBuilder toLocationBuilder) {
+            this.toLocationBuilder = toLocationBuilder;
             return this;
         }
 
@@ -90,8 +97,12 @@ public class BlockableLink extends AbstractLink {
         }
 
         private void validate() throws UncreateableException {
+            validate(this.toLocationBuilder != null && this.toLocation != null, "found both a location and a location builder");
+            if (this.toLocationBuilder != null) {
+                this.toLocation = toLocationBuilder.build();
+            }
+            validate(this.toLocation == null, "null to location and location builder");
             validate(this.description == null || this.description.isEmpty(), "null or empty description");
-            validate(this.toLocation == null, "null to location");
             validate(this.passText == null || this.passText.isEmpty(), "null pass text");
             validate(this.failText == null || this.failText.isEmpty(), "null fail text");
             validate(this.requiredItem == null, "null required item");

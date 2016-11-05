@@ -1,4 +1,4 @@
-package storyworlds.action.parser;
+package storyworlds.service.console;
 
 import org.junit.Test;
 import storyworlds.service.console.ConfirmationParser;

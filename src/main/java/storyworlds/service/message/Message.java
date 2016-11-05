@@ -1,5 +1,6 @@
 package storyworlds.service.message;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -14,6 +15,7 @@ import java.time.Instant;
 public class Message {
 
     @DBRef
+    @JsonIgnore
     private Player player;
     private Instant time = Instant.now();
     private String command;
@@ -51,7 +53,11 @@ public class Message {
     public String getText() {
         return sb.toString();
     }
-    
+
+    public void setText(String text) {
+        // no op for Jackson
+    };
+
     public void addLine(String text) {
         sb.append("\n");
         sb.append(text);

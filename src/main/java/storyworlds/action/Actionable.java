@@ -1,7 +1,8 @@
 package storyworlds.action;
 
 import storyworlds.action.visitor.ActionVisitor;
-import storyworlds.exception.BadLinkException;
+import storyworlds.exception.InvalidDirectionException;
+import storyworlds.exception.InvalidLinkException;
 import storyworlds.model.Persistable;
 import storyworlds.model.Storyworld;
 import storyworlds.service.message.Message;
@@ -12,7 +13,7 @@ public interface Actionable extends Persistable {
 
     void setStoryworld(Storyworld storyworld);
 
-    void accept(ActionVisitor visitor) throws BadLinkException;
+    void accept(ActionVisitor visitor) throws InvalidLinkException, InvalidDirectionException;
 
     void setMessage(Message message);
 

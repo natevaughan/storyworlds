@@ -21,7 +21,6 @@ import java.util.Set;
 @Document(collection = "player")
 public class IdentifiedPlayer implements Player {
     @Id
-    @JsonIgnore
     private String id;
     private final String username;
     private final String email;

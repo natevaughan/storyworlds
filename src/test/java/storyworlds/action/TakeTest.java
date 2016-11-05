@@ -2,7 +2,9 @@ package storyworlds.action;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import storyworlds.exception.BadLinkException;
+import storyworlds.exception.InvalidDirectionException;
+import storyworlds.exception.InvalidLinkException;
+import storyworlds.exception.UnrecognizedInputException;
 import storyworlds.gameplay.AbstractGameplayTest;
 import storyworlds.initial.map.MapFactory;
 import storyworlds.model.Item;
@@ -21,7 +23,7 @@ import static org.junit.Assert.assertTrue;
 public class TakeTest extends AbstractGameplayTest {
 
     @Test
-    public void takeItem() throws BadLinkException {
+    public void takeItem() throws InvalidLinkException, UnrecognizedInputException, InvalidDirectionException {
         Item item = new UsableItem("bar", "", "", user);
         Set<Item> items = new HashSet<>();
         items.add(item);
@@ -33,7 +35,7 @@ public class TakeTest extends AbstractGameplayTest {
 
     @Test
     @Ignore
-    public void takeThenMoveTest() throws BadLinkException {
+    public void takeThenMoveTest() throws InvalidLinkException, UnrecognizedInputException, InvalidDirectionException {
         Location location = MapFactory.getStartMap(user);
         user.setLocation(location);
         messageService.process(new Message(user, "take key"));
