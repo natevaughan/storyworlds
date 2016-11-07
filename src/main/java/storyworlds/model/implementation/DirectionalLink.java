@@ -1,9 +1,6 @@
 package storyworlds.model.implementation;
 
-import storyworlds.exception.UncreateableException;
-import storyworlds.model.LinkBuilder;
 import storyworlds.model.Location;
-import storyworlds.model.LocationBuilder;
 import storyworlds.model.Player;
 
 public class DirectionalLink extends AbstractLink {

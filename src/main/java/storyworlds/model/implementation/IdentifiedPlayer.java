@@ -2,14 +2,13 @@ package storyworlds.model.implementation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import storyworlds.model.Item;
-import storyworlds.model.Location;
+import storyworlds.exception.UncreateableException;
 import storyworlds.model.Player;
-import storyworlds.model.Storyworld;
+import storyworlds.model.Progress;
+import storyworlds.model.builder.AbstractBuilder;
+import storyworlds.model.builder.PlayerBuilder;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -19,43 +18,28 @@ import java.util.Set;
  * Created by nvaughan on 10/19/2016.
  */
 @Document(collection = "player")
-public class IdentifiedPlayer implements Player {
+public class IdentifiedPlayer extends AbstractBuilder implements Player, PlayerBuilder {
     @Id
     private String id;
-    private final String username;
-    private final String email;
+    private String username;
     @JsonIgnore
-    private final String password;
+    private String email;
     @JsonIgnore
-    @DBRef
-    private Storyworld currentStoryworld;
+    private String password;
     @JsonIgnore
-    @DBRef
-    private Location location;
-    @JsonIgnore
-    @DBRef
-    private Set<Location> previousLocations;
-    @JsonIgnore
-    @DBRef
-    private Set<Item> items;
-    @JsonIgnore
-    @DBRef
-    private Item activeItem;
+    private Set<GrantedAuthority> grantedAuthorities = new LinkedHashSet<>();
+
+    private Set<Progress> progress = new LinkedHashSet<>();
+
+    private Progress currentProgress;
+
+    public IdentifiedPlayer() {
+    };
 
     public IdentifiedPlayer(String username, String email, String password) {
-        this.items = new LinkedHashSet<>();
-        this.previousLocations = new LinkedHashSet<>();
         this.username = username;
         this.email = email;
         this.password = password;
-    }
-
-    public Storyworld getCurrentStoryworld() {
-        return currentStoryworld;
-    }
-
-    public void setCurrentStoryworld(Storyworld storyworld) {
-        this.currentStoryworld = storyworld;
     }
 
     public String getId() {
@@ -70,63 +54,61 @@ public class IdentifiedPlayer implements Player {
         return username;
     }
 
-    public Collection<Item> listItems() {
-        return items;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void addItem(Item item) {
-        items.add(item);
+    public String getEmail() {
+        return email;
     }
 
-    public Item getActiveItem() {
-        return activeItem;
-    }
-
-    public void activate(Item item) {
-        if (items.contains(item)) {
-            this.activeItem = item;
-        }
-    }
-
-    public Collection<Location> getLocationHistory() {
-        return previousLocations;
-    }
-
-    public Location getLocation() {
-        return location.getForwardingLocation();
-    }
-
-    public void setLocation(Location location) {
-        previousLocations.add(location);
-        this.location = location;
-    }
-
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public boolean isAccountNonExpired() {
-        return true;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public boolean isAccountNonLocked() {
-        return true;
+    public Set<GrantedAuthority> getGrantedAuthorities() {
+        return grantedAuthorities;
     }
 
-    public boolean isCredentialsNonExpired() {
-        return true;
+    public void setGrantedAuthorities(Collection<GrantedAuthority> grantedAuthorities) {
+        this.grantedAuthorities = new LinkedHashSet<>();
+        this.grantedAuthorities.addAll(grantedAuthorities);
     }
 
-    public boolean isEnabled() {
-        return true;
+    public Set<Progress> getProgress() {
+        return progress;
+    }
+
+    public void setProgress(Set<Progress> progress) {
+        this.progress = progress;
+    }
+
+    public Progress getCurrentProgress() {
+        return currentProgress;
+    }
+
+    public void setCurrentProgress(Progress currentProgress) {
+        this.progress.add(currentProgress);
+        this.currentProgress = currentProgress;
     }
 
     @Override
     public String toString() {
         return "IdentifiedPlayer: " + username + ", id: " + id;
+    }
+
+    public IdentifiedPlayer build() throws UncreateableException {
+        validate(username == null || username.isEmpty(), "Null or empty username");
+        validate(email == null || email.isEmpty(), "Null or empty username");
+        validate(password == null || password.isEmpty(), "Null or empty username");
+        return this;
     }
 }

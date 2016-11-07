@@ -6,6 +6,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import storyworlds.config.PropertyKeys;
 import storyworlds.model.Persistable;
 
+import java.util.Collection;
+
 /**
  * Created by nvaughan on 10/30/2016.
  */
@@ -13,21 +15,45 @@ public class AbstractCachingService<T extends Persistable> implements PropertyKe
 
     protected Logger logr = LoggerFactory.getLogger(getClass());
 
-
     protected LRUCache<String, T> cache;
     protected MongoRepository<T, String> repo;
 
     public T get(String id) {
-        T object = cache.get(id);
+        T entity = cache.get(id);
 
-        if (object == null) {
-            object = repo.findOne(id);
-            if (object == null) {
+        if (entity == null) {
+            entity = repo.findOne(id);
+            if (entity == null) {
                 return null;
             }
-            object = cache.putIfAbsent(object.getId(), object);
+            entity = cache.putIfAbsent(entity.getId(), entity);
         }
 
-        return object;
+        return entity;
+    }
+
+    public T update(T entity) {
+        if  (entity == null) {
+            return null;
+        }
+        if (entity.getId() == null) {
+            return create(entity);
+        }
+        cache.put(entity.getId(), entity);
+        return repo.save(entity);
+    }
+
+
+    public T create(T entity) {
+        entity = repo.save(entity);
+        return cache.put(entity.getId(), entity);
+    }
+
+    public Collection<T> list() {
+        return repo.findAll();
+    }
+
+    public void deleteAll() {
+        repo.deleteAll();
     }
 }

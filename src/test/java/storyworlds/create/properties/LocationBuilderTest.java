@@ -1,13 +1,11 @@
 package storyworlds.create.properties;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import storyworlds.exception.UncreateableException;
 import storyworlds.gameplay.AbstractMapGameplayTest;
 import storyworlds.model.Location;
-import storyworlds.model.implementation.ImmutableLocation;
 import storyworlds.model.implementation.WikiStoryworld;
-import storyworlds.model.implementation.builder.ImmutableLocationBuilder;
+import storyworlds.model.builder.ImmutableLocationBuilder;
 
 import static org.junit.Assert.assertNotNull;
 

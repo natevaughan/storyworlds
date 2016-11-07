@@ -1,6 +1,8 @@
 package storyworlds.model;
 
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.GrantedAuthority;
+import storyworlds.model.implementation.StoryworldProgress;
 
 import java.util.Collection;
 
@@ -9,21 +11,13 @@ public interface Player extends Persistable {
 
     String getUsername();
 
-    Location getLocation();
+    Collection<GrantedAuthority> getGrantedAuthorities();
 
-    void setLocation(Location location);
+    void setGrantedAuthorities(Collection<GrantedAuthority> grantedAuthorities);
 
-    Collection<Item> listItems();
+    Collection<Progress> getProgress();
 
-    void addItem(Item item);
+    Progress getCurrentProgress();
 
-    Item getActiveItem();
-
-    void activate(Item item);
-
-    Collection<Location> getLocationHistory();
-
-    Storyworld getCurrentStoryworld();
-
-    void setCurrentStoryworld(Storyworld storyworld);
+    void setCurrentProgress(Progress progress);
 }

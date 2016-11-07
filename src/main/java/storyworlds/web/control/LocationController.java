@@ -1,6 +1,5 @@
 package storyworlds.web.control;
 
-import jdk.nashorn.internal.ir.Block;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,14 +15,13 @@ import storyworlds.action.parser.DirectionParser;
 import storyworlds.exception.InvalidDirectionException;
 import storyworlds.exception.UncreateableException;
 import storyworlds.model.Direction;
-import storyworlds.model.LinkBuilder;
+import storyworlds.model.builder.LinkBuilder;
 import storyworlds.model.Location;
-import storyworlds.model.LocationBuilder;
-import storyworlds.model.implementation.BlockableLink;
-import storyworlds.model.implementation.DirectionalLink;
-import storyworlds.model.implementation.ImmutableLocation;
+import storyworlds.model.builder.LocationBuilder;
+import storyworlds.model.implementation.IdentifiedPlayer;
 import storyworlds.model.implementation.UserDetailsImpl;
 import storyworlds.service.LocationService;
+import storyworlds.service.PlayerService;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -37,6 +35,16 @@ public class LocationController {
 
     @Autowired
     LocationService locationService;
+
+    @Autowired
+    PlayerService playerService;
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @ResponseBody
+    public Location getCurrentLocation(HttpServletResponse response) {
+        IdentifiedPlayer player = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPlayer();
+        return playerService.get(player).getCurrentProgress().getLocation();
+    }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
@@ -63,7 +71,8 @@ public class LocationController {
     @ResponseStatus(HttpStatus.CREATED)
     public Location create(@PathVariable("id") String id, @PathVariable("direction") String direction, @RequestBody LinkBuilder builder, HttpServletResponse response) throws UncreateableException, InvalidDirectionException {
         Direction dir = DirectionParser.parse(direction);
-        builder.setCreator(((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPlayer());
+        IdentifiedPlayer player = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPlayer();
+        builder.setCreator(player);
         return locationService.create(builder, dir);
     }
 

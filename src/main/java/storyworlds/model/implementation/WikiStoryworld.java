@@ -78,6 +78,10 @@ public class WikiStoryworld implements Storyworld {
         return creator;
     }
 
+    public void setCreator(IdentifiedPlayer creator) {
+        this.creator = creator;
+    }
+
     public synchronized Set<IdentifiedPlayer> getMaintainers() {
         return maintainers;
     }
@@ -85,10 +89,6 @@ public class WikiStoryworld implements Storyworld {
     public synchronized void setMaintainers(Collection<IdentifiedPlayer> maintainers) {
         this.maintainers = new HashSet<>();
         this.maintainers.addAll(maintainers);
-    }
-
-    public synchronized void setMaintainers(Set<IdentifiedPlayer> maintainers) {
-        this.maintainers = maintainers;
     }
 
     public synchronized boolean isPublic() {

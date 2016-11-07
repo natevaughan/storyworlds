@@ -45,7 +45,6 @@ public class LRUCache<K, V> {
                 V value = hashMap.get(key);
                 lruEnforcer.remove(key);
                 lruEnforcer.add(key);
-                logr.debug("Retrieved " + value.getClass().getSimpleName() + " " + key + " from cache");
                 return value;
             }
             return null;
@@ -55,21 +54,23 @@ public class LRUCache<K, V> {
     }
 
     public V putIfAbsent(K key, V value) {
+        if (key == null || value == null) {
+            return null;
+        }
         lock.lock();
         try {
             if (hashMap.containsKey(key)) {
                 lruEnforcer.remove(key);
                 lruEnforcer.add(key);
-                logr.debug("Moved " + value.getClass().getSimpleName() + " " + key + " to end of eviction queue");
             } else {
                 hashMap.put(key, value);
                 lruEnforcer.add(key);
-                logr.debug("Added " + value.getClass().getSimpleName() + " " + key + " to cache");
+                logr.info("Added " + value.getClass().getSimpleName() + " " + key + " to cache; capacity is " + hashMap.size() + " / " + count);
 
             }
             while (hashMap.size() > count) {
                 hashMap.remove(lruEnforcer.poll());
-                logr.debug("Evicted " + value.getClass().getSimpleName() + " from cache");
+                logr.info("Evicted " + value.getClass().getSimpleName() + " from cache; capacity is " + hashMap.size() + " / " + count);
             }
             return hashMap.get(key);
         } finally {
@@ -85,6 +86,24 @@ public class LRUCache<K, V> {
                 return hashMap.remove(key);
             }
             return null;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public V put(K key, V value) {
+        if (key == null || value == null) {
+            return null;
+        }
+        lock.lock();
+        try {
+            if (hashMap.containsKey(key)) {
+                lruEnforcer.remove(key);
+                hashMap.put(key, value);
+                lruEnforcer.add(key);
+                logr.info("Overwrote " + value.getClass().getSimpleName() + " " + key + " to cache");
+            }
+            return value;
         } finally {
             lock.unlock();
         }

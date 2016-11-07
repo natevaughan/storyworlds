@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import storyworlds.exception.UncreateableException;
 import storyworlds.model.Item;
-import storyworlds.model.ItemBuilder;
+import storyworlds.model.builder.ItemBuilder;
 import storyworlds.model.Player;
 
 /**
@@ -81,53 +81,4 @@ public class UsableItem implements Item {
         return name.compareTo(o.getName());
     }
 
-    public static class Builder implements ItemBuilder {
-
-        private String name;
-        private String description;
-        private String useText;
-        private Player creator;
-
-        public static UsableItem.Builder newInstance() {
-            return new Builder();
-        }
-
-        public Builder setName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder setDescription(String description) {
-            this.description = description;
-            return this;
-        }
-
-        public Builder setUseText(String useText) {
-            this.useText = useText;
-            return this;
-        }
-
-        public Builder setCreator(Player creator) {
-            this.creator = creator;
-            return this;
-        }
-
-        public Item build() throws UncreateableException {
-            validate();
-            return new UsableItem(name,description, useText, creator);
-        }
-
-        private void validate() throws UncreateableException {
-            validate(this.name == null || this.name.isEmpty(), "null or empty description");
-            validate(this.description == null || this.description.isEmpty(), "null or empty description");
-            validate(this.useText == null || this.useText.isEmpty(), "null or empty use message");
-            validate(this.creator == null, "null creator");
-        }
-
-        private void validate(Boolean condition, String message) throws UncreateableException {
-            if (condition) {
-                throw new UncreateableException(message);
-            }
-        }
-    }
 }

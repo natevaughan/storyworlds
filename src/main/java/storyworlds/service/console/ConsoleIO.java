@@ -1,6 +1,7 @@
 package storyworlds.service.console;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import storyworlds.action.Actionable;
 import storyworlds.action.Help;
@@ -14,23 +15,25 @@ import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.constants.GameTextConstants;
 import storyworlds.exception.InvalidDirectionException;
 import storyworlds.exception.InvalidLinkException;
+import storyworlds.exception.UncreateableException;
 import storyworlds.exception.UnrecognizedInputException;
 import storyworlds.model.Direction;
 import storyworlds.model.Location;
+import storyworlds.model.Progress;
 import storyworlds.model.Storyworld;
 import storyworlds.model.implementation.IdentifiedPlayer;
 import storyworlds.model.implementation.ImmutableLocation;
+import storyworlds.model.implementation.StoryworldProgress;
 import storyworlds.model.implementation.WikiStoryworld;
-import storyworlds.model.implementation.persistence.ItemRepository;
-import storyworlds.model.implementation.persistence.LocationRepository;
-import storyworlds.model.implementation.persistence.PlayerRepository;
-import storyworlds.model.implementation.persistence.StoryworldRepository;
 import storyworlds.service.ItemService;
 import storyworlds.service.LinkService;
 import storyworlds.service.LocationService;
+import storyworlds.service.PlayerService;
+import storyworlds.service.StoryworldService;
 import storyworlds.service.message.Message;
 import storyworlds.service.message.MessageService;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
@@ -39,28 +42,26 @@ import java.util.Scanner;
 public class ConsoleIO implements ActionVisitor, GameTextConstants {
 
     @Autowired
-    StoryworldRepository storyworldRepository;
-
-    @Autowired
-    LocationRepository locationRepository;
-
-    @Autowired
-    ItemRepository itemRepository;
+    StoryworldService storyworldService;
 
     @Autowired
     LocationService locationService;
 
     @Autowired
-    LinkService linkService;
-
-    @Autowired
     ItemService itemService;
 
     @Autowired
-    PlayerRepository player2Repo;
+    LinkService linkService;
+
+    @Autowired
+    PlayerService playerService;
+
+    @Autowired
+    MessageService messageService;
+
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     private StringBuilder sb = new StringBuilder();
-    private MessageService messageService = new MessageService();
     private Scanner scanner = new Scanner(System.in);
     private IdentifiedPlayer player;
 
@@ -77,16 +78,26 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
         }
 
         sendMessage("new storyworld?");
-        List<Storyworld> storyworlds = storyworldRepository.findAll();
+        List<Storyworld> storyworlds = new ArrayList<>(storyworldService.list());
+        Storyworld choice;
+        Progress progress = null;
         if (storyworlds == null || storyworlds.isEmpty() || ConfirmationParser.parse(getCommand())) {
             sendMessage("CREATE NEW STORYWORLD");
-            createNewStoryworld();
+            choice = createNewStoryworld();
         } else {
-            Storyworld choice = storyworlds.get(selectIndex(storyworlds, "Storyworld"));
-            player.setCurrentStoryworld(choice);
-            player.setLocation(choice.getEntry());
-            player2Repo.save(player);
+            choice = storyworlds.get(selectIndex(storyworlds, "Storyworld"));
+            for (Progress p : player.getProgress()) {
+                if (progress.getStoryworld().equals(choice)) {
+                    progress = p;
+                }
+            }
         }
+        if (progress == null) {
+            progress = new StoryworldProgress(choice);
+        }
+        player.setCurrentProgress(progress);
+        playerService.update(player);
+
         Actionable response = null;
         try {
             response = messageService.process(new Message(player, "status"));
@@ -134,18 +145,33 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
     }
 
     private void login() {
-        sendMessage("Enter your email address:");
-        String email = getCommand();
-        sendMessage("Enter your password");
-        String pass = getCommand();
-        player = player2Repo.findByEmailAndPassword(email, pass);
+        int i = 0;
+        IdentifiedPlayer temp;
+        while (player == null && i < 5) {
+            ++i;
+            sendMessage("Enter your username:");
+            String email = getCommand();
+            sendMessage("Enter your password");
+            String pass = getCommand();
+            pass = encoder.encode(pass);
+            temp = (IdentifiedPlayer) playerService.getByUsername(email);
+            if (temp == null) {
+                sendMessage("User not found");
+                continue;
+            }
+            if (temp.getPassword().equals(pass)) {
+                player = temp;
+            } else {
+                sendMessage("Incorrect password");
+            }
+        }
     }
 
     private void reset() {
-        storyworldRepository.deleteAll();
-        locationRepository.deleteAll();
-        player2Repo.deleteAll();
-        itemRepository.deleteAll();
+        storyworldService.deleteAll();
+        locationService.deleteAll();
+        playerService.deleteAll();
+        itemService.deleteAll();
     }
 
     public void addLine(String text) {
@@ -174,25 +200,28 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
         String email = getCommand();
         sendMessage("Please enter your password:");
         String password = getCommand();
-
-        player = player2Repo.save(new IdentifiedPlayer(name, email, password));
+        try {
+            player = new IdentifiedPlayer(name, email, password).build();
+            playerService.create(player);
+        } catch (UncreateableException e) {
+            sendMessage(e.getMessage());
+        }
     }
 
-    private void createNewStoryworld() {
+    private Storyworld createNewStoryworld() {
         Storyworld storyworld = new WikiStoryworld();
+        storyworld.setCreator(player);
         sendMessage("What would you like the title of your storyworld to be?");
         storyworld.setTitle(getCommand());
         sendMessage("What would you like the description of your storyworld to be?");
         storyworld.setDescription(getCommand());
         sendMessage("What would you like the starting location's text to be?");
         Location start = new ImmutableLocation(getCommand(), storyworld, new HashSet<>(), null, player);
-        storyworldRepository.save(storyworld);
-        locationRepository.save(start);
+        storyworldService.create(storyworld);
+        locationService.create(start);
         storyworld.setEntry(start);
-        storyworldRepository.save(storyworld);
-        player.setCurrentStoryworld(storyworld);
-        player.setLocation(storyworld.getEntry());
-        player2Repo.save(player);
+        storyworldService.update(storyworld);
+        return storyworld;
     }
 
 //    public void visit(Create create) {
@@ -242,7 +271,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
 //                    sendMessage(e.getMessage());
 //                    if (location != null) {
 //                        sendMessage("rolling back location create");
-//                        locationRepository.delete(location);
+//                        locationService.delete(location);
 //                    }
 //                    if (link != null) {
 //                        sendMessage("rolling back link create");
@@ -342,7 +371,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
 //
 //                    Location location = locationService.create(locationBuilder);
 //                    cloneLinks(location, formerLocation);
-//                    locationRepository.save(location);
+//                    locationService.create(location);
 //
 //                    // retire formerLocation
 //                    formerLocation.setActive(false);
@@ -350,7 +379,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
 //                    locationService.update(formerLocation);
 //
 //                    player.setLocation(location);
-//                    player2Repo.save(player);
+//                    playerService.create(player);
 //                } catch (UncreateableException e) {
 //                    sendMessage(e.getMessage());
 //                }
@@ -383,7 +412,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
     }
 
     public void visit(Move move) {
-        player2Repo.save(player);
+        playerService.create(player);
     }
 
     public void visit(Map map) {

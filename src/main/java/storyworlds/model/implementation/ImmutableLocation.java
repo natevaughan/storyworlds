@@ -5,17 +5,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-import storyworlds.exception.UncreateableException;
 import storyworlds.model.Item;
 import storyworlds.model.Link;
 import storyworlds.model.Location;
-import storyworlds.model.LocationBuilder;
 import storyworlds.model.Player;
 import storyworlds.model.Storyworld;
 import storyworlds.model.Direction;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;

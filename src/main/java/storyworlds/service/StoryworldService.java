@@ -26,8 +26,4 @@ public class StoryworldService extends AbstractCachingService<Storyworld> {
         cache = new LRUCache<>(Integer.parseInt(env.getProperty(KEY_STORYWORLD_CACHE_SIZE)));
         repo = storyworldRepository;
     }
-
-    public Collection<Storyworld> list() {
-        return storyworldRepository.findAll();
-    }
 }

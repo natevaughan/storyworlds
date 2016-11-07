@@ -1,8 +1,11 @@
 package storyworlds.model;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import java.util.Collection;
 import java.util.Map;
 
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include= JsonTypeInfo.As.PROPERTY, property="@class")
 public interface Location extends Persistable {
 
     String getDescription();

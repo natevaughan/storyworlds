@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import storyworlds.exception.UncreateableException;
 import storyworlds.gameplay.AbstractMapGameplayTest;
+import storyworlds.model.builder.UsableItemBuilder;
 import storyworlds.model.implementation.UsableItem;
 import storyworlds.service.ItemService;
 import storyworlds.service.message.Message;
@@ -23,29 +24,27 @@ public class ItemBuilderTest extends AbstractMapGameplayTest {
     public void createMessage() {
         Message message = new Message();
         message.setPlayer(user);
-        itemService = new ItemService();
     }
 
     @Test(expected = UncreateableException.class)
     public void nullMessageThrowsExceptionTest() throws UncreateableException {
-        UsableItem.Builder props = UsableItem.Builder.newInstance();
+        UsableItemBuilder props = new UsableItemBuilder();
         props.setName("aa").setDescription("bb").setUseText("cc");
-        itemService.create(props);
+        props.build();
     }
 
     @Test(expected = UncreateableException.class)
     public void badItemPropertiesTest() throws Exception {
-        UsableItem.Builder builder = UsableItem.Builder.newInstance();
+        UsableItemBuilder builder = new UsableItemBuilder();
         builder.setName("aa").setUseText(null).setDescription("bb");
-        itemService.create(builder);
+        builder.build();
     }
 
 
     @Test(expected = UncreateableException.class)
     public void badItemPropertiesTest2() throws Exception {
-        UsableItem.Builder props = UsableItem.Builder.newInstance();
+        UsableItemBuilder props = new UsableItemBuilder();
         props.setName("").setUseText("").setDescription("");
-        ItemService itemService = new ItemService();
-        itemService.create(props);
+        props.build();
     }
 }

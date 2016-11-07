@@ -22,15 +22,15 @@ public class MoveTest extends AbstractMapGameplayTest {
     @Ignore // set up mockito mocking to avoid calling repo
     public void testMoveUser() throws Exception {
         messageService.process(new Message(user, "mOve nOrtH"));
-        assertFalse("Player should no longer be in start location", user.getLocation().equals(start));
+        assertFalse("Player should no longer be in start location", user.getCurrentProgress().getLocation().equals(start));
         messageService.process(new Message(user, "mOve SOuTh"));
-        assertTrue("Executor should return user to start location", user.getLocation().equals(start));
+        assertTrue("Executor should return user to start location", user.getCurrentProgress().getLocation().equals(start));
     }
 
     @Test(expected = InvalidLinkException.class)
     public void ensureUserCannotMoveBeyondBoundary() throws Exception {
         Location boundedLocation = MapFactory.getBlankLocation(user);
-        user.setLocation(boundedLocation);
+        user.getCurrentProgress().setLocation(boundedLocation);
         messageService.process(new Message(user, "mOve nOrtH"));
     }
 

@@ -13,6 +13,7 @@ import storyworlds.action.Use;
 import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.create.Createable;
 import storyworlds.exception.InvalidLinkException;
+import storyworlds.exception.UnrecognizedInputException;
 import storyworlds.model.Direction;
 import storyworlds.model.Item;
 import storyworlds.model.Link;
@@ -92,11 +93,11 @@ public class ActionDoVisitorService implements ActionVisitor {
 
     public void visit(Status status) {
         describeLocation(status.getMessage());
-        if (status.getMessage().getPlayer().listItems().isEmpty()) {
+        if (status.getMessage().getPlayer().getCurrentProgress().getItems().isEmpty()) {
             status.getMessage().addLine("You have no items");
         } else {
             status.getMessage().addLine("Your inventory: ");
-            for (Item item : status.getMessage().getPlayer().listItems()) {
+            for (Item item : status.getMessage().getPlayer().getCurrentProgress().getItems()) {
                 status.getMessage().addLine(item.getName());
             }
         }
@@ -114,7 +115,7 @@ public class ActionDoVisitorService implements ActionVisitor {
 
     public void visit(Move move) throws InvalidLinkException {
 
-        Link link = move.getMessage().getPlayer().getLocation().getOutboundLink(move.getDirection());
+        Link link = move.getMessage().getPlayer().getCurrentProgress().getLocation().getOutboundLink(move.getDirection());
 
         if (link == null) {
             throw new InvalidLinkException("Nothing " + move.getDirection().formatted());
@@ -134,45 +135,47 @@ public class ActionDoVisitorService implements ActionVisitor {
 
         move.setSuccessful(true);
 
-        move.getMessage().getPlayer().setLocation(move.getMessage().getPlayer().getLocation().getOutboundLink(move.getDirection()).getToLocation());
+        move.getMessage().getPlayer().getCurrentProgress().setLocation(move.getMessage().getPlayer().getCurrentProgress().getLocation().getOutboundLink(move.getDirection()).getToLocation());
         describeLocation(move.getMessage());
     }
 
-    public void visit(Take take) {
-        if (take.getMessage().getPlayer().getLocation().getItem(take.getItemName()) == null) {
-            take.getMessage().addLine("Item not found: " + take.getItemName());
-            return;
+    public void visit(Take take) throws UnrecognizedInputException {
+        if (take.getMessage().getPlayer().getCurrentProgress().getLocation().getItem(take.getItemName()) == null) {
+            throw new UnrecognizedInputException("Item not found: " + take.getItemName());
         }
         take.setSuccessful(true);
-        take.getMessage().getPlayer().addItem(take.getMessage().getPlayer().getLocation().getItem(take.getItemName()));
+        take.getMessage().getPlayer().getCurrentProgress().addItem(take.getMessage().getPlayer().getCurrentProgress().getLocation().getItem(take.getItemName()));
+        playerService.update(take.getMessage().getPlayer());
         take.getMessage().addLine("You take the " + take.getItemName());
     }
 
     public void visit(Use use) {
-        Collection<Item> items = use.getMessage().getPlayer().listItems();
+        Collection<Item> items = use.getMessage().getPlayer().getCurrentProgress().getItems();
 
         if (use.getItemName() == null) {
-            use.getMessage().addLine("You don't have a " + use.getItemName());
+            use.getMessage().addLine("You must specify an item to use.");
             return;
         }
 
         for (Item i : items) {
-            if (i.getName().equals(use.getItemName())) {
-                use.getMessage().getPlayer().activate(i);
+            if (i.getName().equalsIgnoreCase(use.getItemName())) {
+                use.getMessage().getPlayer().getCurrentProgress().setActiveItem(i);
                 use.setSuccessful(true);
                 use.getMessage().addLine(i.getUseText());
+                return;
             }
         }
+        use.getMessage().addLine("You don't have item " + use.getItemName());
     }
 
     private void describeLocation(Message m) {
-        m.addLine(m.getPlayer().getLocation().getDescription());
-        java.util.Map<Direction, Link> links = m.getPlayer().getLocation().getOutboundLinks();
+        m.addLine(m.getPlayer().getCurrentProgress().getLocation().getDescription());
+        java.util.Map<Direction, Link> links = m.getPlayer().getCurrentProgress().getLocation().getOutboundLinks();
         for (Direction direction : links.keySet()) {
             m.addLine(direction.formatted() + " is " + links.get(direction).getDescription());
         }
-        for (Item item : m.getPlayer().getLocation().getItems()) {
-            if (!m.getPlayer().listItems().contains(item)) {
+        for (Item item : m.getPlayer().getCurrentProgress().getLocation().getItems()) {
+            if (!m.getPlayer().getCurrentProgress().getItems().contains(item)) {
                 m.addLine("There is a " + item.getName() + " here");
             }
         }

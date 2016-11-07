@@ -1,5 +1,6 @@
 package storyworlds.model;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import storyworlds.model.implementation.IdentifiedPlayer;
 
 import java.util.Collection;
@@ -7,6 +8,7 @@ import java.util.Collection;
 /**
  * Created by nvaughan on 10/15/2016.
  */
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include= JsonTypeInfo.As.PROPERTY, property="@class")
 public interface Storyworld extends Persistable {
     Location getEntry();
     void setEntry(Location entry);
@@ -17,6 +19,7 @@ public interface Storyworld extends Persistable {
     String getEntryText();
     void setEntryText(String entryText);
     IdentifiedPlayer getCreator();
+    void setCreator(IdentifiedPlayer player);
     boolean isPublic();
     void setPublic(boolean isPublic);
     boolean isPubliclyModifiable();

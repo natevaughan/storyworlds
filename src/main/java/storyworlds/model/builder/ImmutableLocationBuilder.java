@@ -1,9 +1,8 @@
-package storyworlds.model.implementation.builder;
+package storyworlds.model.builder;
 
 import storyworlds.exception.UncreateableException;
 import storyworlds.model.Item;
 import storyworlds.model.Location;
-import storyworlds.model.LocationBuilder;
 import storyworlds.model.Player;
 import storyworlds.model.Storyworld;
 import storyworlds.model.implementation.ImmutableLocation;
