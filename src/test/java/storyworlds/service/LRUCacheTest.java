@@ -32,8 +32,8 @@ public class LRUCacheTest {
         cache.putIfAbsent("two", 2);
         cache.putIfAbsent("three", 3);
         cache.putIfAbsent("four", 4);
-        assertFalse("cache should remove elements in oldest order",cache.containsKey("one"));
-        assertTrue("cache should contain elements up to capacity", cache.containsKey("two"));
+        assertFalse("lruCache should remove elements in oldest order",cache.containsKey("one"));
+        assertTrue("lruCache should contain elements up to capacity", cache.containsKey("two"));
     }
 
     @Test

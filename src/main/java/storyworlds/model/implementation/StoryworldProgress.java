@@ -35,7 +35,7 @@ public class StoryworldProgress implements Progress {
 
     public StoryworldProgress(Storyworld storyworld) {
         this.storyworld = storyworld;
-        setLocation(storyworld.getEntry());
+       // setLocation(storyworld.getEntry());
     }
 
     public Storyworld getStoryworld() {
@@ -56,6 +56,9 @@ public class StoryworldProgress implements Progress {
     }
 
     public Location getLocation() {
+        if (location == null) {
+            location = storyworld.getEntry();
+        }
         return location;
     }
 

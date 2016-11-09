@@ -5,15 +5,14 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import storyworlds.exception.InvalidLinkException;
-import storyworlds.exception.UncreateableException;
 import storyworlds.model.Link;
 import storyworlds.model.Player;
 import storyworlds.model.Direction;
+import storyworlds.model.implementation.AnonymousPlayer;
 import storyworlds.model.implementation.IdentifiedPlayer;
 import storyworlds.model.implementation.persistence.PlayerRepository;
 
 import javax.annotation.PostConstruct;
-import java.util.Collection;
 
 /**
  * Created by nvaughan on 10/28/2016.
@@ -34,7 +33,7 @@ public class PlayerService extends AbstractCachingService<Player> {
 
     @PostConstruct
     private void init() {
-        cache = new LRUCache<>(Integer.parseInt(env.getProperty(KEY_PLAYER_CACHE_SIZE)));
+        lruCache = new LRUCache<>(Integer.parseInt(env.getProperty(KEY_PLAYER_CACHE_SIZE)));
         repo = playerRepo;
         encoder = new BCryptPasswordEncoder();
     }
@@ -64,6 +63,7 @@ public class PlayerService extends AbstractCachingService<Player> {
             ((IdentifiedPlayer) player).setPassword(encoder.encode(((IdentifiedPlayer) player).getPassword()));
         }
         return super.create(player);
+
     }
 
     public Player getByUsername(String username) {

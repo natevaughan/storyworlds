@@ -217,7 +217,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
         storyworld.setDescription(getCommand());
         sendMessage("What would you like the starting location's text to be?");
         Location start = new ImmutableLocation(getCommand(), storyworld, new HashSet<>(), null, player);
-        storyworldService.create(storyworld);
+        storyworldService.create(storyworld, false);
         locationService.create(start);
         storyworld.setEntry(start);
         storyworldService.update(storyworld);

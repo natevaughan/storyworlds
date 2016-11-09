@@ -5,9 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import storyworlds.exception.UncreateableException;
 import storyworlds.model.Item;
-import storyworlds.model.builder.ItemBuilder;
 import storyworlds.model.implementation.persistence.ItemRepository;
 
 import javax.annotation.PostConstruct;
@@ -28,7 +26,7 @@ public class ItemService extends AbstractCachingService<Item> {
 
     @PostConstruct
     private void setup() {
-        cache = new LRUCache<String, Item>(Integer.parseInt(env.getProperty(KEY_ITEM_CACHE_SIZE)));
+        lruCache = new LRUCache<String, Item>(Integer.parseInt(env.getProperty(KEY_ITEM_CACHE_SIZE)));
         repo = itemRepository;
     }
 }

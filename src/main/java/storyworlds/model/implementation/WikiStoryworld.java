@@ -3,14 +3,13 @@ package storyworlds.model.implementation;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-import storyworlds.action.Actionable;
-import storyworlds.create.Createable;
 import storyworlds.model.Location;
 import storyworlds.model.Storyworld;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * Created by nvaughan on 10/15/2016.
@@ -25,12 +24,12 @@ public class WikiStoryworld implements Storyworld {
     private String title;
     private String description;
     private String entryText;
-    @DBRef
+    @DBRef(lazy = true)
     private IdentifiedPlayer creator;
-    @DBRef
-    private Set<IdentifiedPlayer> maintainers;
-    private boolean isPublic;
-    private boolean isPubliclyModifiable;
+    @DBRef(lazy = true)
+    private Set<IdentifiedPlayer> maintainers = new ConcurrentSkipListSet<>();
+    private boolean isPublic = true;
+    private boolean isPubliclyModifiable = true;
     private String color;
     private String backgroundColor;
 
@@ -43,7 +42,7 @@ public class WikiStoryworld implements Storyworld {
     }
 
     public synchronized Location getEntry() {
-        return entry.getForwardingLocation();
+        return entry;
     }
 
     public synchronized void setEntry(Location entry) {
@@ -74,11 +73,11 @@ public class WikiStoryworld implements Storyworld {
         this.entryText = entryText;
     }
 
-    public IdentifiedPlayer getCreator() {
+    public synchronized IdentifiedPlayer getCreator() {
         return creator;
     }
 
-    public void setCreator(IdentifiedPlayer creator) {
+    public synchronized void setCreator(IdentifiedPlayer creator) {
         this.creator = creator;
     }
 
@@ -107,26 +106,24 @@ public class WikiStoryworld implements Storyworld {
         isPubliclyModifiable = publiclyModifiable;
     }
 
-    public String getColor() {
+    public synchronized String getColor() {
         return color;
     }
 
-    public void setColor(String color) {
+    public synchronized void setColor(String color) {
         this.color = color;
     }
 
-    @Override
-    public String getBackgroundColor() {
+    public synchronized String getBackgroundColor() {
         return backgroundColor;
     }
 
-    @Override
-    public void setBackgroundColor(String backgroundColor) {
+    public synchronized void setBackgroundColor(String backgroundColor) {
         this.backgroundColor = backgroundColor;
     }
 
     @Override
-    public String toString() {
+    public synchronized String toString() {
         return "Storyworld " + title + ", creator: {" + creator + "}, public: " + isPublic;
     }
 }

@@ -23,19 +23,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-//                .authorizeRequests()
-//                .antMatchers("/index", "/signup")
-//                .permitAll()
-//                .anyRequest().authenticated()
-//                .and()
-//                .authorizeRequests()
-//                .anyRequest().authenticated()
-//                .and()
-//                .formLogin()
-//                .and()
-//                .httpBasic()
+                .authorizeRequests()
+                .antMatchers("/index", "/signup")
+                .permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .authorizeRequests()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .and()
+                .httpBasic()
                 // for development only
-//                .and()
+                .and()
                 .csrf().disable();
     }
 

@@ -3,6 +3,8 @@ package storyworlds.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -65,12 +67,12 @@ public class LRUCache<K, V> {
             } else {
                 hashMap.put(key, value);
                 lruEnforcer.add(key);
-                logr.info("Added " + value.getClass().getSimpleName() + " " + key + " to cache; capacity is " + hashMap.size() + " / " + count);
+                logr.info("Added " + value.getClass().getSimpleName() + " " + key + " to lruCache; capacity is " + hashMap.size() + " / " + count);
 
             }
             while (hashMap.size() > count) {
                 hashMap.remove(lruEnforcer.poll());
-                logr.info("Evicted " + value.getClass().getSimpleName() + " from cache; capacity is " + hashMap.size() + " / " + count);
+                logr.info("Evicted " + value.getClass().getSimpleName() + " from lruCache; capacity is " + hashMap.size() + " / " + count);
             }
             return hashMap.get(key);
         } finally {
@@ -101,9 +103,18 @@ public class LRUCache<K, V> {
                 lruEnforcer.remove(key);
                 hashMap.put(key, value);
                 lruEnforcer.add(key);
-                logr.info("Overwrote " + value.getClass().getSimpleName() + " " + key + " to cache");
+                logr.info("Overwrote " + value.getClass().getSimpleName() + " " + key + " to lruCache");
             }
             return value;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public ArrayList<V> snapshot() {
+        lock.lock();
+        try {
+            return new ArrayList<V>(hashMap.values());
         } finally {
             lock.unlock();
         }

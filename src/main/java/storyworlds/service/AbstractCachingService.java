@@ -15,18 +15,18 @@ public class AbstractCachingService<T extends Persistable> implements PropertyKe
 
     protected Logger logr = LoggerFactory.getLogger(getClass());
 
-    protected LRUCache<String, T> cache;
+    protected LRUCache<String, T> lruCache;
     protected MongoRepository<T, String> repo;
 
     public T get(String id) {
-        T entity = cache.get(id);
+        T entity = lruCache.get(id);
 
         if (entity == null) {
             entity = repo.findOne(id);
             if (entity == null) {
                 return null;
             }
-            entity = cache.putIfAbsent(entity.getId(), entity);
+            entity = lruCache.putIfAbsent(entity.getId(), entity);
         }
 
         return entity;
@@ -39,14 +39,18 @@ public class AbstractCachingService<T extends Persistable> implements PropertyKe
         if (entity.getId() == null) {
             return create(entity);
         }
-        cache.put(entity.getId(), entity);
+        lruCache.put(entity.getId(), entity);
         return repo.save(entity);
     }
 
 
     public T create(T entity) {
         entity = repo.save(entity);
-        return cache.put(entity.getId(), entity);
+        return lruCache.put(entity.getId(), entity);
+    }
+
+    public T cache(T entity) {
+        return lruCache.put(entity.getId(), entity);
     }
 
     public Collection<T> list() {

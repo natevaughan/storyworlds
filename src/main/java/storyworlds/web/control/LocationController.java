@@ -12,11 +12,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import storyworlds.action.parser.DirectionParser;
+import storyworlds.exception.BadRequestException;
 import storyworlds.exception.InvalidDirectionException;
 import storyworlds.exception.UncreateableException;
 import storyworlds.model.Direction;
-import storyworlds.model.builder.LinkBuilder;
 import storyworlds.model.Location;
+import storyworlds.model.Player;
+import storyworlds.model.builder.LinkBuilder;
 import storyworlds.model.builder.LocationBuilder;
 import storyworlds.model.implementation.IdentifiedPlayer;
 import storyworlds.model.implementation.UserDetailsImpl;
@@ -31,7 +33,7 @@ import java.io.IOException;
  */
 @Controller
 @RequestMapping(value = "/location")
-public class LocationController {
+public class LocationController extends AbstractController {
 
     @Autowired
     LocationService locationService;
@@ -39,11 +41,17 @@ public class LocationController {
     @Autowired
     PlayerService playerService;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "/current", method = RequestMethod.GET)
     @ResponseBody
-    public Location getCurrentLocation(HttpServletResponse response) {
-        IdentifiedPlayer player = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPlayer();
-        return playerService.get(player).getCurrentProgress().getLocation();
+    public Location getCurrentLocation(HttpServletResponse response) throws BadRequestException {
+        Object o =  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (o instanceof UserDetailsImpl) {
+            Player player = ((UserDetailsImpl) o).getPlayer();
+            return playerService.get(player).getCurrentProgress().getLocation();
+        } else {
+            throw new BadRequestException("No current player is set");
+        }
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)

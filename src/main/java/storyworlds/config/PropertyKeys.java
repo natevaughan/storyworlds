@@ -10,5 +10,6 @@ public interface PropertyKeys {
     public static final String KEY_STORYWORLD_CACHE_SIZE = "storyworld.cache.size";
     public static final String KEY_LOCATION_CACHE_SIZE = "location.cache.size";
     public static final String KEY_ITEM_CACHE_SIZE = "item.cache.size";
+    public static final String KEY_ANONYMOUS_PLAYER_CACHE_TIMEOUT = "anonymous.player.cache.timeout";
 
 }

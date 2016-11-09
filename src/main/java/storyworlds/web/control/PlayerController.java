@@ -2,6 +2,9 @@ package storyworlds.web.control;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,8 +20,10 @@ import storyworlds.exception.UncreateableException;
 import storyworlds.exception.UnrecognizedInputException;
 import storyworlds.model.Player;
 import storyworlds.model.builder.PlayerBuilder;
+import storyworlds.model.implementation.AnonymousPlayer;
 import storyworlds.model.implementation.IdentifiedPlayer;
 import storyworlds.model.implementation.UserDetailsImpl;
+import storyworlds.service.AnonymousPlayerService;
 import storyworlds.service.PlayerService;
 import storyworlds.service.message.Message;
 import storyworlds.service.message.MessageService;
@@ -38,12 +43,15 @@ public class PlayerController extends AbstractController {
     PlayerService playerService;
 
     @Autowired
+    AnonymousPlayerService anonymousPlayerService;
+
+    @Autowired
     MessageService messageService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/")
     @ResponseBody
-    public Collection<Player> list(HttpServletResponse response) {
-        return playerService.list();
+    public Object list(HttpServletResponse response) {
+        return SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
@@ -55,7 +63,7 @@ public class PlayerController extends AbstractController {
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
     @ResponseBody
     public Player update(@RequestBody IdentifiedPlayer player, @PathVariable String id, HttpServletResponse response) throws Exception {
-        Player sessionPlayer = playerService.get(((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPlayer());
+        IdentifiedPlayer sessionPlayer = (IdentifiedPlayer) playerService.get(((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPlayer());
         if (!player.getId().equals(id) || !sessionPlayer.getId().equals(player.getId())) {
             throw new UnauthorizedException("ID mismatch among logged in player, player object, and path ID variable");
         }
@@ -68,6 +76,17 @@ public class PlayerController extends AbstractController {
         return playerService.create(playerBuilder.build());
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/create/anonymous", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Player createAnonymous(HttpServletResponse response) throws UncreateableException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Player player = anonymousPlayerService.cache(new AnonymousPlayer());
+
+//        Authentication authentication = new AnonymousAuthenticationToken(player.getId(), player, player.getGrantedAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return player;
+
+    }
 
     @RequestMapping(method = RequestMethod.POST, value = "/{id}/action", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

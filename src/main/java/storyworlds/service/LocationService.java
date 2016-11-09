@@ -33,7 +33,7 @@ public class LocationService extends AbstractCachingService<Location> {
 
     @PostConstruct
     private void init() {
-        this.cache = new LRUCache<String, Location>(Integer.parseInt(env.getProperty(KEY_LOCATION_CACHE_SIZE)));
+        this.lruCache = new LRUCache<String, Location>(Integer.parseInt(env.getProperty(KEY_LOCATION_CACHE_SIZE)));
         this.repo = locationRepository;
     }
 
