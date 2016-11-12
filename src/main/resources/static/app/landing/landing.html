@@ -26,7 +26,7 @@
 <div class="action margin-bottom" ui-sref="create">
     + Create new storyworld
 </div>
-<div class="action margin-bottom" ng-repeat="storyworld in storyworlds">
+<div class="action margin-bottom" ng-repeat="storyworld in storyworlds" ng-click="play(storyworld)">
     <div>{{storyworld.title}}</div>
     <div>{{storyworld.description}}</div>
 </div>

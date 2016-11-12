@@ -1,5 +1,7 @@
 package storyworlds.service.message;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import storyworlds.action.Actionable;
@@ -10,11 +12,13 @@ import storyworlds.exception.UnrecognizedInputException;
 @Service
 public class MessageService {
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     MessageExecutor executor;
 
     public Actionable process(Message message) throws InvalidLinkException, UnrecognizedInputException, InvalidDirectionException {
-        System.out.println("Message " + message.getText() + " received from " + message.getPlayer().getUsername() + " at " + message.getTime().toString());
+        logger.info(message.getPlayer().getUsername() + "," + message.getCommand() + "," + message.getTime().toEpochMilli());
 
         MessageTransport transport = new MessageTransport(message);
 

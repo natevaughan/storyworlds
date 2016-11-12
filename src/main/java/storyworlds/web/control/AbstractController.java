@@ -13,6 +13,7 @@ import storyworlds.exception.UnauthorizedException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import storyworlds.exception.UnrecognizedInputException;
 
 /**
  * Created by nvaughan on 10/30/2016.
@@ -21,7 +22,7 @@ public class AbstractController {
     protected Logger logr = LoggerFactory.getLogger(getClass());
 
 
-    @ExceptionHandler({InvalidLinkException.class, BadRequestException.class})
+    @ExceptionHandler({InvalidLinkException.class, BadRequestException.class, UnrecognizedInputException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public @ResponseBody
     String handleBadLink(Exception e, HttpServletResponse response) throws IOException {

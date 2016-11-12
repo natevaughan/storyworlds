@@ -10,6 +10,7 @@ import storyworlds.action.Quit;
 import storyworlds.action.Status;
 import storyworlds.action.Take;
 import storyworlds.action.Use;
+import storyworlds.action.parser.Article;
 import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.create.Createable;
 import storyworlds.exception.InvalidLinkException;
@@ -165,7 +166,7 @@ public class ActionDoVisitorService implements ActionVisitor {
                 return;
             }
         }
-        use.getMessage().addLine("You don't have item " + use.getItemName());
+        use.getMessage().addLine("You don't have " + Article.get(use.getItemName()) + " " + use.getItemName());
     }
 
     private void describeLocation(Message m) {

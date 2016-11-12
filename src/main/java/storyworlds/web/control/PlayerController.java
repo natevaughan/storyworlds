@@ -50,7 +50,7 @@ public class PlayerController extends AbstractController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/")
     @ResponseBody
-    public Object list(HttpServletResponse response) {
+    public Object current(HttpServletResponse response) {
         return SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
@@ -88,9 +88,9 @@ public class PlayerController extends AbstractController {
 
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/{id}/action", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, value = "/action", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Actionable action(@PathVariable String id, @RequestBody Message message, HttpServletResponse response) throws IOException, InvalidLinkException, UnrecognizedInputException, InvalidDirectionException {
+    public Actionable action(@RequestBody Message message, HttpServletResponse response) throws IOException, InvalidLinkException, UnrecognizedInputException, InvalidDirectionException {
         Player player = playerService.get(((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPlayer());
         message.setPlayer(player);
         return messageService.process(message);
