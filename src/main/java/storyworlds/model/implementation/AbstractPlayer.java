@@ -17,7 +17,11 @@ public abstract class AbstractPlayer extends AbstractBuilder implements Player {
 
     @JsonIgnore
     protected Set<GrantedAuthority> grantedAuthorities = new LinkedHashSet<>();
+
+    @JsonIgnore
     protected Set<Progress> progress = new LinkedHashSet<>();
+
+    @JsonIgnore
     protected Progress currentProgress;
 
     protected AbstractPlayer() {

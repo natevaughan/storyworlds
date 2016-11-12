@@ -9,6 +9,7 @@ body, input, a:link, a:visited {
   color: #f0fafd; */
   font-family: "Courier New", "Courier", "fixed-width";
   font-size: 14pt;
+  white-space: pre-line;
 }
 
 a:link, a:visited {

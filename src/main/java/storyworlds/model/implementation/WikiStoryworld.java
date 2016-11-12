@@ -24,13 +24,17 @@ public class WikiStoryworld implements Storyworld {
     private String description;
     private String entryText;
     @DBRef(lazy = true)
-    private final IdentifiedPlayer creator;
+    private IdentifiedPlayer creator; // make final once jackson deserializer is in place
     @DBRef(lazy = true)
     private Set<IdentifiedPlayer> maintainers          = new ConcurrentSkipListSet<>();
     private boolean               isPublic             = true;
     private boolean               isPubliclyModifiable = true;
     private String color;
     private String backgroundColor;
+
+    // create custom jackson deserializer and eliminate
+    public WikiStoryworld() {
+    }
 
     public WikiStoryworld(IdentifiedPlayer creator) {
         this.creator = creator;
@@ -78,6 +82,10 @@ public class WikiStoryworld implements Storyworld {
 
     public synchronized IdentifiedPlayer getCreator() {
         return creator;
+    }
+
+    public void setCreator(IdentifiedPlayer creator) {
+        this.creator = creator;
     }
 
     public synchronized Set<IdentifiedPlayer> getMaintainers() {

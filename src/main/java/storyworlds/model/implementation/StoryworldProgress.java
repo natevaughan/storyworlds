@@ -14,7 +14,6 @@ import storyworlds.model.Storyworld;
  */
 public class StoryworldProgress implements Progress {
 
-    @JsonIgnore
     @DBRef
     private final Storyworld storyworld;
 

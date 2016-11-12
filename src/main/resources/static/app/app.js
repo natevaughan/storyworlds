@@ -11,9 +11,10 @@ angular
 .controller('createCtrl', ['$scope', '$http',  function($scope, $http) {
     $scope.name = "nate";
 }])
-.controller('playCtrl', ['$scope', '$http','$window', 'currentStoryworld', function($scope, $http, $window, currentStoryworld  ) {
+.controller('playCtrl', ['$scope', '$http','$window', 'currentProgress', function($scope, $http, $window, currentProgress  ) {
     $scope.messages = [];
-    $scope.messages.push({text:currentStoryworld.entry.description});
+    $scope.storyworld = currentProgress.storyworld;
+    $scope.messages.push({text:currentProgress.location.description});
     $scope.command = {text:''};
     $scope.send = function(command) {
         if (!command || !command.text)
@@ -28,7 +29,6 @@ angular
             $scope.messages.push({text:response.data.message});
         });
     }
-    $scope.storyworld = currentStoryworld;
     $window.document.getElementById('user-input').focus();
 }])
 angular
