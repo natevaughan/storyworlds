@@ -3,6 +3,7 @@ package storyworlds.action;
 import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.exception.InvalidDirectionException;
 import storyworlds.exception.InvalidLinkException;
+import storyworlds.exception.NotFoundException;
 import storyworlds.exception.UnrecognizedInputException;
 import storyworlds.model.Persistable;
 import storyworlds.model.Storyworld;
@@ -14,7 +15,7 @@ public interface Actionable extends Persistable {
 
     void setStoryworld(Storyworld storyworld);
 
-    void accept(ActionVisitor visitor) throws InvalidLinkException, InvalidDirectionException, UnrecognizedInputException;
+    void accept(ActionVisitor visitor) throws InvalidLinkException, InvalidDirectionException, UnrecognizedInputException, NotFoundException;
 
     void setMessage(Message message);
 

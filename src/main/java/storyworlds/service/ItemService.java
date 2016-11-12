@@ -1,5 +1,6 @@
 package storyworlds.service;
 
+import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,8 +8,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import storyworlds.model.Item;
 import storyworlds.model.implementation.persistence.ItemRepository;
-
-import javax.annotation.PostConstruct;
 
 /**
  * Created by nvaughan on 10/7/2016.

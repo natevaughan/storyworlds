@@ -1,20 +1,20 @@
 package storyworlds.service;
 
 
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import storyworlds.exception.NotFoundException;
 import storyworlds.exception.UncreateableException;
 import storyworlds.model.Direction;
 import storyworlds.model.Link;
-import storyworlds.model.builder.LinkBuilder;
 import storyworlds.model.Location;
+import storyworlds.model.builder.LinkBuilder;
 import storyworlds.model.builder.LocationBuilder;
 import storyworlds.model.implementation.persistence.LocationRepository;
 import storyworlds.model.implementation.persistence.PlayerRepository;
 import storyworlds.model.implementation.persistence.StoryworldRepository;
-
-import javax.annotation.PostConstruct;
 
 @Service
 public class LocationService extends AbstractCachingService<Location> {
@@ -46,7 +46,11 @@ public class LocationService extends AbstractCachingService<Location> {
         // if coming from front end, LinkBuilder will just have an id for toLocation
         // .build() method requires a Location or LocationBuilder obj
         if (builder.getToLocationId() != null) {
-            builder.setToLocation(get(builder.getToLocationId()));
+            try {
+                builder.setToLocation(get(builder.getToLocationId()));
+            } catch (NotFoundException e) {
+                throw new UncreateableException(e);
+            }
         }
         Link link = builder.build();
 
@@ -58,11 +62,15 @@ public class LocationService extends AbstractCachingService<Location> {
         currentLocation.addOutboundLink(direction, link);
 
         // the link lives in the current location, which must be updated
-        update(currentLocation);
+        try {
+            update(currentLocation);
+        } catch (NotFoundException e) {
+            throw new UncreateableException(e);
+        }
         return link.getToLocation();
     }
 
-    public Location get(Location toLocation) {
+    public Location get(Location toLocation) throws NotFoundException {
         return get(toLocation.getId());
     }
 }

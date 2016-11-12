@@ -1,5 +1,6 @@
 package storyworlds.service;
 
+import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import storyworlds.action.Action;
@@ -14,14 +15,12 @@ import storyworlds.action.parser.Article;
 import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.create.Createable;
 import storyworlds.exception.InvalidLinkException;
-import storyworlds.exception.UnrecognizedInputException;
+import storyworlds.exception.NotFoundException;
 import storyworlds.model.Direction;
 import storyworlds.model.Item;
 import storyworlds.model.Link;
 import storyworlds.model.Location;
 import storyworlds.service.message.Message;
-
-import java.util.Collection;
 
 /**
  * Responsibilities
@@ -130,7 +129,11 @@ public class ActionDoVisitorService implements ActionVisitor {
             throw new InvalidLinkException(link.getPassText(move.getMessage().getPlayer()));
         }
 
-        Location toLocation = locationService.get(link.getToLocation().getForwardingLocation());
+        try {
+            Location toLocation = locationService.get(link.getToLocation().getForwardingLocation());
+        } catch (NotFoundException e) {
+            throw new InvalidLinkException(e);
+        }
 
         move.getMessage().addLine(link.getPassText(move.getMessage().getPlayer()));
 
@@ -140,9 +143,9 @@ public class ActionDoVisitorService implements ActionVisitor {
         describeLocation(move.getMessage());
     }
 
-    public void visit(Take take) throws UnrecognizedInputException {
+    public void visit(Take take) throws NotFoundException {
         if (take.getMessage().getPlayer().getCurrentProgress().getLocation().getItem(take.getItemName()) == null) {
-            throw new UnrecognizedInputException("Item not found: " + take.getItemName());
+            throw new NotFoundException("Item not found: " + take.getItemName());
         }
         take.setSuccessful(true);
         take.getMessage().getPlayer().getCurrentProgress().addItem(take.getMessage().getPlayer().getCurrentProgress().getLocation().getItem(take.getItemName()));

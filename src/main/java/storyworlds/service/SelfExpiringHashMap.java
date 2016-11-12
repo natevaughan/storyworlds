@@ -1,8 +1,5 @@
 package storyworlds.service;
 
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -11,6 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A thread-safe implementation of a HashMap which entries expires after the specified life time.

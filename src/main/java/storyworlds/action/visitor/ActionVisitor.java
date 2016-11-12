@@ -9,7 +9,7 @@ import storyworlds.action.Take;
 import storyworlds.action.Use;
 import storyworlds.exception.InvalidDirectionException;
 import storyworlds.exception.InvalidLinkException;
-import storyworlds.exception.UnrecognizedInputException;
+import storyworlds.exception.NotFoundException;
 
 public interface ActionVisitor {
     void visit(Help help);
@@ -17,6 +17,6 @@ public interface ActionVisitor {
     void visit(Map map);
     void visit(Quit quit);
     void visit(Status status);
-    void visit(Take take) throws UnrecognizedInputException;
+    void visit(Take take) throws NotFoundException;
     void visit(Use use);
 }

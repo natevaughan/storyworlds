@@ -1,24 +1,21 @@
 package storyworlds.model.implementation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import storyworlds.exception.UncreateableException;
 import storyworlds.model.Player;
-import storyworlds.model.Progress;
-import storyworlds.model.builder.AbstractBuilder;
 import storyworlds.model.builder.PlayerBuilder;
-
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 /**
  * Created by nvaughan on 10/19/2016.
  */
 @Document(collection = "player")
-public class IdentifiedPlayer extends AbstractBuilder implements Player, PlayerBuilder {
+public class IdentifiedPlayer extends AbstractPlayer implements Player, PlayerBuilder {
     @Id
     private String id;
     private String username;
@@ -26,12 +23,6 @@ public class IdentifiedPlayer extends AbstractBuilder implements Player, PlayerB
     private String email;
     @JsonIgnore
     private String password;
-    @JsonIgnore
-    private Set<GrantedAuthority> grantedAuthorities = new LinkedHashSet<>();
-
-    private Set<Progress> progress = new LinkedHashSet<>();
-
-    private Progress currentProgress;
 
     public IdentifiedPlayer() {
     };
@@ -81,23 +72,6 @@ public class IdentifiedPlayer extends AbstractBuilder implements Player, PlayerB
     public void setGrantedAuthorities(Collection<GrantedAuthority> grantedAuthorities) {
         this.grantedAuthorities = new LinkedHashSet<>();
         this.grantedAuthorities.addAll(grantedAuthorities);
-    }
-
-    public Set<Progress> getProgress() {
-        return progress;
-    }
-
-    public void setProgress(Set<Progress> progress) {
-        this.progress = progress;
-    }
-
-    public Progress getCurrentProgress() {
-        return currentProgress;
-    }
-
-    public void setCurrentProgress(Progress currentProgress) {
-        this.progress.add(currentProgress);
-        this.currentProgress = currentProgress;
     }
 
     @Override

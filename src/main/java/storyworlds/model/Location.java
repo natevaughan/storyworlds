@@ -1,7 +1,6 @@
 package storyworlds.model;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import java.util.Collection;
 import java.util.Map;
 

@@ -1,6 +1,5 @@
 package storyworlds.model.builder;
 
-import storyworlds.exception.UncreateableException;
 import storyworlds.model.Buildable;
 import storyworlds.model.Item;
 

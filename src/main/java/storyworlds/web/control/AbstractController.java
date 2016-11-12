@@ -1,5 +1,7 @@
 package storyworlds.web.control;
 
+import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -10,9 +12,6 @@ import storyworlds.exception.BadRequestException;
 import storyworlds.exception.InvalidLinkException;
 import storyworlds.exception.NotFoundException;
 import storyworlds.exception.UnauthorizedException;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import storyworlds.exception.UnrecognizedInputException;
 
 /**
@@ -31,7 +30,7 @@ public class AbstractController {
     }
 
     @ExceptionHandler(NotFoundException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public @ResponseBody
     String handleNotFound(Exception e, HttpServletResponse response) throws IOException {
         response.sendError(HttpStatus.NOT_FOUND.value(), e.getMessage());

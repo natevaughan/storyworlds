@@ -1,10 +1,8 @@
 package storyworlds.model;
 
+import java.util.Collection;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
-import storyworlds.model.implementation.StoryworldProgress;
-
-import java.util.Collection;
 
 @Document(collection = "player")
 public interface Player extends Persistable {
@@ -16,6 +14,8 @@ public interface Player extends Persistable {
     void setGrantedAuthorities(Collection<GrantedAuthority> grantedAuthorities);
 
     Collection<Progress> getProgress();
+
+    Progress getProgress(Storyworld storyworld);
 
     Progress getCurrentProgress();
 

@@ -1,5 +1,7 @@
 package storyworlds.web.control;
 
+import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import storyworlds.action.parser.DirectionParser;
 import storyworlds.exception.BadRequestException;
 import storyworlds.exception.InvalidDirectionException;
+import storyworlds.exception.NotFoundException;
 import storyworlds.exception.UncreateableException;
 import storyworlds.model.Direction;
 import storyworlds.model.Location;
@@ -24,9 +27,6 @@ import storyworlds.model.implementation.IdentifiedPlayer;
 import storyworlds.model.implementation.UserDetailsImpl;
 import storyworlds.service.LocationService;
 import storyworlds.service.PlayerService;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * Created by nvaughan on 10/27/2016.
@@ -43,7 +43,7 @@ public class LocationController extends AbstractController {
 
     @RequestMapping(value = "/current", method = RequestMethod.GET)
     @ResponseBody
-    public Location getCurrentLocation(HttpServletResponse response) throws BadRequestException {
+    public Location getCurrentLocation(HttpServletResponse response) throws BadRequestException, NotFoundException {
         Object o =  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (o instanceof UserDetailsImpl) {
@@ -56,7 +56,7 @@ public class LocationController extends AbstractController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public Location getLocation(@PathVariable("id") String id, HttpServletResponse response) throws IOException {
+    public Location getLocation(@PathVariable("id") String id, HttpServletResponse response) throws IOException, NotFoundException {
         Location location = locationService.get(id);
         if (location == null) {
             response.sendError(HttpStatus.NOT_FOUND.value(), "Not found: " + id);

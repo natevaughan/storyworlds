@@ -10,7 +10,6 @@ import storyworlds.action.Take;
 import storyworlds.action.Use;
 import storyworlds.action.parser.DirectionParser;
 import storyworlds.exception.InvalidDirectionException;
-import storyworlds.model.Direction;
 
 /**
  * Responsibilities:

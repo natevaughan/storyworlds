@@ -1,11 +1,6 @@
 package storyworlds.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-
 import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 /**
  * Created by nvaughan on 11/6/2016.

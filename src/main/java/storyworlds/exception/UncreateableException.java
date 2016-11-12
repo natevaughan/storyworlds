@@ -9,4 +9,8 @@ public class UncreateableException extends Exception {
     public UncreateableException(String s) {
         super(s);
     }
+
+    public UncreateableException(Throwable cause) {
+        super(cause);
+    }
 }

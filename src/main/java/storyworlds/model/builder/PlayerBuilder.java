@@ -1,7 +1,6 @@
 package storyworlds.model.builder;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import storyworlds.exception.UncreateableException;
 import storyworlds.model.Buildable;
 import storyworlds.model.Player;
 

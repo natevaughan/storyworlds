@@ -1,5 +1,8 @@
 package storyworlds.web.control;
 
+import java.util.Collection;
+import java.util.HashSet;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,12 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import storyworlds.exception.UncreateableException;
 import storyworlds.model.Player;
 import storyworlds.model.builder.PlayerBuilder;
-import storyworlds.model.implementation.IdentifiedPlayer;
 import storyworlds.service.PlayerService;
-
-import javax.servlet.http.HttpServletResponse;
-import java.util.Collection;
-import java.util.HashSet;
 
 /**
  * Created by nvaughan on 11/5/2016.

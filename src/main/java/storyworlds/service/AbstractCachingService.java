@@ -1,12 +1,12 @@
 package storyworlds.service;
 
+import java.util.Collection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import storyworlds.config.PropertyKeys;
+import storyworlds.exception.NotFoundException;
 import storyworlds.model.Persistable;
-
-import java.util.Collection;
 
 /**
  * Created by nvaughan on 10/30/2016.
@@ -18,13 +18,13 @@ public class AbstractCachingService<T extends Persistable> implements PropertyKe
     protected LRUCache<String, T> lruCache;
     protected MongoRepository<T, String> repo;
 
-    public T get(String id) {
+    public T get(String id) throws NotFoundException {
         T entity = lruCache.get(id);
 
         if (entity == null) {
             entity = repo.findOne(id);
             if (entity == null) {
-                return null;
+                throw new NotFoundException(entity.getClass().getSimpleName() + " not found: " + entity.getId());
             }
             entity = lruCache.putIfAbsent(entity.getId(), entity);
         }
@@ -32,9 +32,9 @@ public class AbstractCachingService<T extends Persistable> implements PropertyKe
         return entity;
     }
 
-    public T update(T entity) {
+    public T update(T entity) throws NotFoundException {
         if  (entity == null) {
-            return null;
+            throw new NotFoundException(entity.getClass().getSimpleName() + " not found: " + entity.getId());
         }
         if (entity.getId() == null) {
             return create(entity);

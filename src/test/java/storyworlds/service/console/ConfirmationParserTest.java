@@ -1,7 +1,6 @@
 package storyworlds.service.console;
 
 import org.junit.Test;
-import storyworlds.service.console.ConfirmationParser;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

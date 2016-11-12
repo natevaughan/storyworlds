@@ -1,5 +1,9 @@
 package storyworlds.service.console;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Scanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,16 +19,17 @@ import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.constants.GameTextConstants;
 import storyworlds.exception.InvalidDirectionException;
 import storyworlds.exception.InvalidLinkException;
+import storyworlds.exception.NotFoundException;
 import storyworlds.exception.UncreateableException;
 import storyworlds.exception.UnrecognizedInputException;
 import storyworlds.model.Direction;
 import storyworlds.model.Location;
 import storyworlds.model.Progress;
 import storyworlds.model.Storyworld;
+import storyworlds.model.builder.WikiStoryworldBuilder;
 import storyworlds.model.implementation.IdentifiedPlayer;
 import storyworlds.model.implementation.ImmutableLocation;
 import storyworlds.model.implementation.StoryworldProgress;
-import storyworlds.model.implementation.WikiStoryworld;
 import storyworlds.service.ItemService;
 import storyworlds.service.LinkService;
 import storyworlds.service.LocationService;
@@ -32,11 +37,6 @@ import storyworlds.service.PlayerService;
 import storyworlds.service.StoryworldService;
 import storyworlds.service.message.Message;
 import storyworlds.service.message.MessageService;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Scanner;
 
 @Service
 public class ConsoleIO implements ActionVisitor, GameTextConstants {
@@ -65,7 +65,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
     private Scanner scanner = new Scanner(System.in);
     private IdentifiedPlayer player;
 
-    public void run() {
+    public void run() throws Exception {
         sendMessage("reset?");
         if (ConfirmationParser.parse(getCommand())) {
             reset();
@@ -208,19 +208,23 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
         }
     }
 
-    private Storyworld createNewStoryworld() {
-        Storyworld storyworld = new WikiStoryworld();
-        storyworld.setCreator(player);
+    private Storyworld createNewStoryworld() throws UncreateableException {
+        WikiStoryworldBuilder builder = new WikiStoryworldBuilder();
+        builder.setCreator(player);
         sendMessage("What would you like the title of your storyworld to be?");
-        storyworld.setTitle(getCommand());
+        builder.setTitle(getCommand());
         sendMessage("What would you like the description of your storyworld to be?");
-        storyworld.setDescription(getCommand());
+        builder.setDescription(getCommand());
         sendMessage("What would you like the starting location's text to be?");
+        Storyworld storyworld = storyworldService.create(builder, false);
         Location start = new ImmutableLocation(getCommand(), storyworld, new HashSet<>(), null, player);
-        storyworldService.create(storyworld, false);
         locationService.create(start);
         storyworld.setEntry(start);
-        storyworldService.update(storyworld);
+        try {
+            storyworldService.update(storyworld);
+        } catch (NotFoundException e) {
+            throw new UncreateableException(e);
+        }
         return storyworld;
     }
 
@@ -232,7 +236,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
 //        switch (create.getCreateable()) {
 //            case LOCATION:
 //                sendMessage("Would you like the link to the location to require the user to have an item?");
-//                boolean blockable = ConfirmationParser.parse(getCommand());
+//                boolean blockable = ConfirmationParser.validate(getCommand());
 //                LinkBuilder linkBuilder = DirectionalLink.Builder.newInstance();;
 //                if (blockable) {
 //                    linkBuilder = BlockableLink.Builder.newInstance();
@@ -346,7 +350,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
 
 //    public void visit(Delete delete) {
 //        sendMessage("Are you sure you want to delete " + delete.getCreateable() + " " + delete.getDirection() + "?");
-//        if (ConfirmationParser.parse(getCommand())) {
+//        if (ConfirmationParser.validate(getCommand())) {
 //            if (Createable.LOCATION.equals(delete.getCreateable())) {
 //                locationService.delete(delete);
 //            }

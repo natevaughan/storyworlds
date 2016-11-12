@@ -6,12 +6,12 @@ public class Solution {
 //
 //        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 //
-//        String result = parse(reader);
+//        String result = validate(reader);
 //        System.out.println(result);
 //
 //    }
 //
-//    public static String parse(BufferedReader reader) throws Exception {
+//    public static String validate(BufferedReader reader) throws Exception {
 //        Double threshold = Double.parseDouble(reader.readLine().trim());
 //        Integer lineCount = Integer.parseInt(reader.readLine().trim());
 //        int i = 0;
@@ -28,7 +28,7 @@ public class Solution {
 //
 //            // fail fast
 //            if (lineArgs.length < 3) {
-//                throw new Exception("Could not parse input. Line was: \n" + line);
+//                throw new Exception("Could not validate input. Line was: \n" + line);
 //            }
 //
 //            String name1 = lineArgs[0].trim();

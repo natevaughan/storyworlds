@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import storyworlds.exception.UncreateableException;
 import storyworlds.gameplay.AbstractMapGameplayTest;
 import storyworlds.model.builder.UsableItemBuilder;
-import storyworlds.model.implementation.UsableItem;
 import storyworlds.service.ItemService;
 import storyworlds.service.message.Message;
 

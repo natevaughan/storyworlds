@@ -52,8 +52,8 @@ angular
             controller: 'playCtrl',
             templateUrl: 'app/play/play.html',
             resolve: {
-                currentStoryworld : ['$http', '$stateParams', function($http, $stateParams) {
-                    return $http.get("storyworld/" + $stateParams.storyworldId).then(function(response) {
+                currentProgress : ['$http', '$stateParams', function($http, $stateParams) {
+                    return $http.post("player/play/" + $stateParams.storyworldId, {}).then(function(response) {
                         return response.data;
                 })
             }]}

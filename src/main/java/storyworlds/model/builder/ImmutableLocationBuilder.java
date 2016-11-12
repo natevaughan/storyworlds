@@ -1,14 +1,13 @@
 package storyworlds.model.builder;
 
+import java.util.Collection;
+import java.util.HashSet;
 import storyworlds.exception.UncreateableException;
 import storyworlds.model.Item;
 import storyworlds.model.Location;
 import storyworlds.model.Player;
 import storyworlds.model.Storyworld;
 import storyworlds.model.implementation.ImmutableLocation;
-
-import java.util.Collection;
-import java.util.HashSet;
 
 /**
  * Created by nvaughan on 11/5/2016.

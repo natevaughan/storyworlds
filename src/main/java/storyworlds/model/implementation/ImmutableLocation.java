@@ -2,20 +2,19 @@
 package storyworlds.model.implementation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import storyworlds.model.Direction;
 import storyworlds.model.Item;
 import storyworlds.model.Link;
 import storyworlds.model.Location;
 import storyworlds.model.Player;
 import storyworlds.model.Storyworld;
-import storyworlds.model.Direction;
-
-import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 @Document(collection = "location")
 public class ImmutableLocation implements Location {

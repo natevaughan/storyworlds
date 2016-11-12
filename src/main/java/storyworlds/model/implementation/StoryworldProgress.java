@@ -1,14 +1,13 @@
 package storyworlds.model.implementation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import storyworlds.model.Item;
 import storyworlds.model.Location;
 import storyworlds.model.Progress;
 import storyworlds.model.Storyworld;
-
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 /**
  * Created by nvaughan on 11/6/2016.

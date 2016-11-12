@@ -12,8 +12,8 @@ public class ActionParserTest {
 
     @Test
     public void testParser() throws UnrecognizedInputException {
-        assertTrue("Parser should successfully parse upper and lowercase move string", Action.MOVE.equals(ActionFactory.parse("MOVe")));
-        assertTrue("Parser should successfully parse upper and lowercase move string", Action.MOVE.equals(ActionFactory.parse(" movE ")));
+        assertTrue("Parser should successfully validate upper and lowercase move string", Action.MOVE.equals(ActionFactory.parse("MOVe")));
+        assertTrue("Parser should successfully validate upper and lowercase move string", Action.MOVE.equals(ActionFactory.parse(" movE ")));
     }
 
     @Test(expected = UnrecognizedInputException.class)

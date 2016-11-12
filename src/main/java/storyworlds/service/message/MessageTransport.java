@@ -1,9 +1,6 @@
 package storyworlds.service.message;
 
 import storyworlds.action.Actionable;
-import storyworlds.exception.InvalidDirectionException;
-import storyworlds.exception.InvalidLinkException;
-import storyworlds.exception.UnrecognizedInputException;
 
 /**
  * Created by nvaughan on 9/28/2016.
@@ -21,7 +18,7 @@ public class MessageTransport {
         secondary = null;
     }
 
-    public void accept(MessageProcessor processor) throws InvalidLinkException, UnrecognizedInputException, InvalidDirectionException {
+    public void accept(MessageProcessor processor) throws Exception {
         processor.process(this);
     }
 

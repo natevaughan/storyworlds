@@ -1,15 +1,14 @@
 package storyworlds.model.implementation;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import storyworlds.model.Location;
 import storyworlds.model.Storyworld;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * Created by nvaughan on 10/15/2016.
@@ -25,13 +24,17 @@ public class WikiStoryworld implements Storyworld {
     private String description;
     private String entryText;
     @DBRef(lazy = true)
-    private IdentifiedPlayer creator;
+    private final IdentifiedPlayer creator;
     @DBRef(lazy = true)
-    private Set<IdentifiedPlayer> maintainers = new ConcurrentSkipListSet<>();
-    private boolean isPublic = true;
-    private boolean isPubliclyModifiable = true;
+    private Set<IdentifiedPlayer> maintainers          = new ConcurrentSkipListSet<>();
+    private boolean               isPublic             = true;
+    private boolean               isPubliclyModifiable = true;
     private String color;
     private String backgroundColor;
+
+    public WikiStoryworld(IdentifiedPlayer creator) {
+        this.creator = creator;
+    }
 
     public String getId() {
         return id;
@@ -77,10 +80,6 @@ public class WikiStoryworld implements Storyworld {
         return creator;
     }
 
-    public synchronized void setCreator(IdentifiedPlayer creator) {
-        this.creator = creator;
-    }
-
     public synchronized Set<IdentifiedPlayer> getMaintainers() {
         return maintainers;
     }
@@ -95,7 +94,7 @@ public class WikiStoryworld implements Storyworld {
     }
 
     public synchronized void setPublic(boolean aPublic) {
-        isPublic = aPublic;
+        this.isPublic = aPublic;
     }
 
     public synchronized boolean isPubliclyModifiable() {
@@ -125,5 +124,25 @@ public class WikiStoryworld implements Storyworld {
     @Override
     public synchronized String toString() {
         return "Storyworld " + title + ", creator: {" + creator + "}, public: " + isPublic;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        WikiStoryworld that = (WikiStoryworld) o;
+
+        return id.equals(that.id);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }

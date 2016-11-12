@@ -1,9 +1,8 @@
 package storyworlds.web.control;
 
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -13,12 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import storyworlds.action.Actionable;
-import storyworlds.exception.InvalidDirectionException;
-import storyworlds.exception.InvalidLinkException;
+import storyworlds.exception.NotFoundException;
 import storyworlds.exception.UnauthorizedException;
 import storyworlds.exception.UncreateableException;
-import storyworlds.exception.UnrecognizedInputException;
 import storyworlds.model.Player;
+import storyworlds.model.Progress;
 import storyworlds.model.builder.PlayerBuilder;
 import storyworlds.model.implementation.AnonymousPlayer;
 import storyworlds.model.implementation.IdentifiedPlayer;
@@ -27,10 +25,6 @@ import storyworlds.service.AnonymousPlayerService;
 import storyworlds.service.PlayerService;
 import storyworlds.service.message.Message;
 import storyworlds.service.message.MessageService;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Collection;
 
 /**
  * Created by nvaughan on 10/28/2016.
@@ -56,7 +50,7 @@ public class PlayerController extends AbstractController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     @ResponseBody
-    public Player getById(@PathVariable String id, HttpServletResponse response) {
+    public Player getById(@PathVariable String id, HttpServletResponse response) throws NotFoundException {
         return playerService.get(id);
     }
 
@@ -90,10 +84,17 @@ public class PlayerController extends AbstractController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/action", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Actionable action(@RequestBody Message message, HttpServletResponse response) throws IOException, InvalidLinkException, UnrecognizedInputException, InvalidDirectionException {
+    public Actionable action(@RequestBody Message message, HttpServletResponse response) throws Exception {
         Player player = playerService.get(((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPlayer());
         message.setPlayer(player);
         return messageService.process(message);
     }
 
+
+    @RequestMapping(method = RequestMethod.POST, value = "/play/{storyworldId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Progress play(@RequestBody Object o, @PathVariable String storyworldId, HttpServletResponse response) throws NotFoundException {
+        Player player = playerService.get(((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPlayer());
+        return playerService.play(player, storyworldId).getCurrentProgress();
+    }
 }

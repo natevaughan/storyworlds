@@ -8,16 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-import storyworlds.model.implementation.persistence.LocationRepository;
 import storyworlds.service.console.ConsoleIO;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"storyworlds.service", "storyworlds.web.control", "storyworlds.config"})

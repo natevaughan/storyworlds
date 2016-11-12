@@ -1,7 +1,5 @@
 package storyworlds.config;
 
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
 /**
  * Created by nvaughan on 11/2/2016.
  */

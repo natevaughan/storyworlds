@@ -1,12 +1,11 @@
 package storyworlds.service.message;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.time.Instant;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import storyworlds.model.Player;
-
-import java.time.Instant;
 
 /**
  * Created by nvaughan on 9/27/2016.

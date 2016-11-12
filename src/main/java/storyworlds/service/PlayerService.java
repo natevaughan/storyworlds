@@ -1,18 +1,20 @@
 package storyworlds.service;
 
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import storyworlds.exception.InvalidLinkException;
+import storyworlds.exception.NotFoundException;
+import storyworlds.model.Direction;
 import storyworlds.model.Link;
 import storyworlds.model.Player;
-import storyworlds.model.Direction;
-import storyworlds.model.implementation.AnonymousPlayer;
+import storyworlds.model.Progress;
+import storyworlds.model.Storyworld;
 import storyworlds.model.implementation.IdentifiedPlayer;
+import storyworlds.model.implementation.StoryworldProgress;
 import storyworlds.model.implementation.persistence.PlayerRepository;
-
-import javax.annotation.PostConstruct;
 
 /**
  * Created by nvaughan on 10/28/2016.
@@ -27,6 +29,9 @@ public class PlayerService extends AbstractCachingService<Player> {
     LocationService locationService;
 
     @Autowired
+    StoryworldService storyworldService;
+
+    @Autowired
     private Environment env;
 
     private BCryptPasswordEncoder encoder;
@@ -38,11 +43,11 @@ public class PlayerService extends AbstractCachingService<Player> {
         encoder = new BCryptPasswordEncoder();
     }
 
-    public Player get(Player player) {
+    public Player get(Player player) throws NotFoundException {
         return get(player.getId());
     }
 
-    public Player move(String id, Direction direction) throws InvalidLinkException {
+    public Player move(String id, Direction direction) throws InvalidLinkException, NotFoundException {
         Player player = get(id);
         storyworlds.model.Location location = locationService.get(player.getCurrentProgress().getLocation().getId());
         Link link = location.getOutboundLink(direction);
@@ -73,5 +78,16 @@ public class PlayerService extends AbstractCachingService<Player> {
     public Player getByEmail(String email) {
         return playerRepo.findByEmail(email);
 
+    }
+
+    public Player play(Player player, String storyworldId) throws NotFoundException {
+        Storyworld storyworld = storyworldService.get(storyworldId);
+        Progress progress = player.getProgress(storyworldService.get(storyworldId));
+        if (progress == null) {
+            progress = new StoryworldProgress(storyworld);
+            progress.setLocation(storyworld.getEntry());
+        }
+        player.setCurrentProgress(progress);
+        return update(player);
     }
 }
