@@ -22,6 +22,7 @@ import storyworlds.model.implementation.AnonymousPlayer;
 import storyworlds.model.implementation.IdentifiedPlayer;
 import storyworlds.model.implementation.UserDetailsImpl;
 import storyworlds.service.AnonymousPlayerService;
+import storyworlds.service.LocationService;
 import storyworlds.service.PlayerService;
 import storyworlds.service.message.Message;
 import storyworlds.service.message.MessageService;
@@ -42,6 +43,9 @@ public class PlayerController extends AbstractController {
     @Autowired
     MessageService messageService;
 
+    @Autowired
+    LocationService locationService;
+
     @RequestMapping(method = RequestMethod.GET, value = "/")
     @ResponseBody
     public Object current(HttpServletResponse response) {
@@ -61,7 +65,7 @@ public class PlayerController extends AbstractController {
         if (!player.getId().equals(id) || !sessionPlayer.getId().equals(player.getId())) {
             throw new UnauthorizedException("ID mismatch among logged in player, player object, and path ID variable");
         }
-        return playerService.update(player.build());
+        return playerService.createOrUpdate(player.build());
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -86,6 +90,8 @@ public class PlayerController extends AbstractController {
     @ResponseBody
     public Actionable action(@RequestBody Message message, HttpServletResponse response) throws Exception {
         Player player = playerService.get(((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPlayer());
+        // ensure most recent copy of location is set
+        player.getCurrentProgress().setLocation(locationService.get(player.getCurrentProgress().getLocation()));
         message.setPlayer(player);
         return messageService.process(message);
     }

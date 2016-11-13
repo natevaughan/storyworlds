@@ -67,7 +67,7 @@ public class StoryworldService extends AbstractCachingService<Storyworld> {
         Location location = locationService.create(locationBuilder.build());
         storyworld.setEntry(location);
         try {
-            return super.update(storyworld);
+            return super.createOrUpdate(storyworld);
         } catch (NotFoundException e) {
             // should never get here, we just created the storyworld
             throw new UncreateableException(e);

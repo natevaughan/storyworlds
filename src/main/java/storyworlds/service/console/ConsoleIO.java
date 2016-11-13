@@ -1,7 +1,6 @@
 package storyworlds.service.console;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +18,15 @@ import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.constants.GameTextConstants;
 import storyworlds.exception.InvalidDirectionException;
 import storyworlds.exception.InvalidLinkException;
-import storyworlds.exception.NotFoundException;
 import storyworlds.exception.UncreateableException;
 import storyworlds.exception.UnrecognizedInputException;
 import storyworlds.model.Direction;
 import storyworlds.model.Location;
 import storyworlds.model.Progress;
 import storyworlds.model.Storyworld;
+import storyworlds.model.builder.ImmutableLocationBuilder;
 import storyworlds.model.builder.WikiStoryworldBuilder;
 import storyworlds.model.implementation.IdentifiedPlayer;
-import storyworlds.model.implementation.ImmutableLocation;
 import storyworlds.model.implementation.StoryworldProgress;
 import storyworlds.service.ItemService;
 import storyworlds.service.LinkService;
@@ -96,7 +94,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
             progress = new StoryworldProgress(choice);
         }
         player.setCurrentProgress(progress);
-        playerService.update(player);
+        playerService.createOrUpdate(player);
 
         Actionable response = null;
         try {
@@ -211,20 +209,17 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
     private Storyworld createNewStoryworld() throws UncreateableException {
         WikiStoryworldBuilder builder = new WikiStoryworldBuilder();
         builder.setCreator(player);
+        builder.setPubliclyModifiable(true);
+        builder.setVisible(true);
         sendMessage("What would you like the title of your storyworld to be?");
         builder.setTitle(getCommand());
         sendMessage("What would you like the description of your storyworld to be?");
         builder.setDescription(getCommand());
-        sendMessage("What would you like the starting location's text to be?");
-        Storyworld storyworld = storyworldService.create(builder, false);
-        Location start = new ImmutableLocation(getCommand(), storyworld, new HashSet<>(), null, player);
-        locationService.create(start);
-        storyworld.setEntry(start);
-        try {
-            storyworldService.update(storyworld);
-        } catch (NotFoundException e) {
-            throw new UncreateableException(e);
-        }
+        sendMessage("What would you like the introduction to the storyworld to be? (users will see this only when they begin)");
+        builder.setEntryText(getCommand());
+        sendMessage("What would you like the starting location's text to be? (users will see this every time they return to this location)");
+        builder.setEntryBuilder(new ImmutableLocationBuilder().setCreator(player).setDescription(getCommand()));
+        Storyworld      storyworld = storyworldService.create(builder, false);
         return storyworld;
     }
 
@@ -270,7 +265,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
 //                    linkBuilder.setToLocation(location);
 //                    link = linkService.create(linkBuilder);
 //                    player.getLocation().addOutboundLink(create.getDirection(), link);
-//                    locationService.update(player.getLocation());
+//                    locationService.createOrUpdate(player.getLocation());
 //                } catch (UncreateableException | NullPointerException e) {
 //                    sendMessage(e.getMessage());
 //                    if (location != null) {
@@ -280,7 +275,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
 //                    if (link != null) {
 //                        sendMessage("rolling back link create");
 //                        player.getLocation().getOutboundLinks().remove(create.getDirection(), location);
-//                        locationService.update(player.getLocation());
+//                        locationService.createOrUpdate(player.getLocation());
 //                    }
 //                }
 //                break;
@@ -316,7 +311,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
 //                try {
 //                    Link createdLink = linkService.create(directionalLinkBuilder);
 //                    player.getLocation().addOutboundLink(create.getDirection(), createdLink);
-//                    locationService.update(player.getLocation());
+//                    locationService.createOrUpdate(player.getLocation());
 //                } catch (UncreateableException e) {
 //                    sendMessage(e.getMessage());
 //                }
@@ -333,7 +328,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
 //                try {
 //                    Item item = itemService.create(itemBuilder);
 //                    player.getLocation().addItem(item);
-//                    locationService.update(player.getLocation());
+//                    locationService.createOrUpdate(player.getLocation());
 //                } catch (UncreateableException e) {
 //                    sendMessage(e.getMessage());
 //                }
@@ -380,7 +375,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
 //                    // retire formerLocation
 //                    formerLocation.setActive(false);
 //                    formerLocation.setForwardingLocation(location);
-//                    locationService.update(formerLocation);
+//                    locationService.createOrUpdate(formerLocation);
 //
 //                    player.setLocation(location);
 //                    playerService.create(player);
@@ -400,7 +395,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
 //                try {
 //                    Link link = linkService.create(linkBuilder);
 //                    edit.getMessage().getPlayer().getLocation().addOutboundLink(edit.getDirection(), link);
-//                    locationService.update(edit.getMessage().getPlayer().getLocation());
+//                    locationService.createOrUpdate(edit.getMessage().getPlayer().getLocation());
 //                } catch (UncreateableException e) {
 //                    sendMessage(e.getMessage());
 //                }

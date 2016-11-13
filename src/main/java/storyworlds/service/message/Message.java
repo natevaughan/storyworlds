@@ -50,7 +50,7 @@ public class Message {
     }
 
     public String getText() {
-        return sb.toString();
+        return sb.toString().trim();
     }
 
     public void setText(String text) {

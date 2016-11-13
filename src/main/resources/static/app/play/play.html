@@ -1,6 +1,10 @@
-<h2>{{storyworld.title}}</h2>
-<h3>{{storyworld.description}}</h3>
-<div class="messages" ng-repeat="message in messages">{{message.text}}</div>
-<form ng-submit="send(command)">
-  &gt;&nbsp<input id="user-input" ng-model="command.text" autocomplete="off"/>
-</form>
+<div class="full" ng-style="storyworldColors">
+  <div class="container">
+    <h2>{{storyworld.title}}</h2>
+    <h3>{{storyworld.description}}</h3>
+    <div class="messages padded margin-bottom" ng-repeat="message in messages">{{message.text}}</div>
+    <form ng-submit="send(command)">
+      &gt;&nbsp<input id="user-input" ng-model="command.text" autocomplete="off" ng-style="storyworldColors"/>
+    </form>
+  </div>
+</div>

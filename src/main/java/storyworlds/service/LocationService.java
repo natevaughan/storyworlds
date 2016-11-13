@@ -61,9 +61,9 @@ public class LocationService extends AbstractCachingService<Location> {
         Location currentLocation = link.getCreator().getCurrentProgress().getLocation();
         currentLocation.addOutboundLink(direction, link);
 
-        // the link lives in the current location, which must be updated
+        // createOrUpdate the current location to persist link
         try {
-            update(currentLocation);
+            createOrUpdate(currentLocation);
         } catch (NotFoundException e) {
             throw new UncreateableException(e);
         }

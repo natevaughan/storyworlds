@@ -149,7 +149,7 @@ public class ActionDoVisitorService implements ActionVisitor {
         }
         take.setSuccessful(true);
         take.getMessage().getPlayer().getCurrentProgress().addItem(take.getMessage().getPlayer().getCurrentProgress().getLocation().getItem(take.getItemName()));
-        playerService.update(take.getMessage().getPlayer());
+        playerService.createOrUpdate(take.getMessage().getPlayer());
         take.getMessage().addLine("You take the " + take.getItemName());
     }
 

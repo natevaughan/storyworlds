@@ -65,14 +65,6 @@ public class LocationController extends AbstractController {
 
         return location;
     }
-//
-//    @RequestMapping(value = "/template")
-//    @ResponseBody
-//    public ImmutableLocation.Builder getTemplate() {
-//        ImmutableLocation.Builder builder = new ImmutableLocation.Builder();
-//        builder.setDescription("A description that will be shown when the player arrives");
-//        return builder;
-//    }
 
     @RequestMapping(value = "/{id}/create/{direction}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

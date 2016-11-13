@@ -32,12 +32,9 @@ public class AbstractCachingService<T extends Persistable> implements PropertyKe
         return entity;
     }
 
-    public T update(T entity) throws NotFoundException {
-        if  (entity == null) {
-            throw new NotFoundException(entity.getClass().getSimpleName() + " not found: " + entity.getId());
-        }
+    public T createOrUpdate(T entity) throws NotFoundException {
         if (entity.getId() == null) {
-            return create(entity);
+            create(entity);
         }
         lruCache.put(entity.getId(), entity);
         return repo.save(entity);

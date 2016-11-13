@@ -14,16 +14,16 @@ import storyworlds.model.implementation.WikiStoryworld;
  */
 public class WikiStoryworldBuilder extends AbstractBuilder implements StoryworldBuilder {
 
-    private LocationBuilder              entryBuilder; // optional for location to be built then bound
+    private LocationBuilder              entryBuilder;          // optional for location to be built then bound
     private String                       title;
     private String                       description;
     private String                       entryText;
     private IdentifiedPlayer             creator;
-    private Collection<IdentifiedPlayer> maintainers;     // optional
+    private Collection<IdentifiedPlayer> maintainers;           // optional
     private Boolean                      visible;
     private Boolean                      publiclyModifiable;
-    private String                       color;
-    private String                       backgroundColor;
+    private String                       color;                 // optional
+    private String                       backgroundColor;       //optional
 
     public WikiStoryworldBuilder setEntryBuilder(LocationBuilder entryBuilder) {
         this.entryBuilder = entryBuilder;
@@ -82,19 +82,28 @@ public class WikiStoryworldBuilder extends AbstractBuilder implements Storyworld
 
     /**
      * Builds a new storyworld but does not set its entry location
+     *
      * @throws UncreateableException
      */
     public Storyworld build() throws UncreateableException {
         validate(StringUtils.isEmpty(this.title), "empty title");
         validate(StringUtils.isEmpty(this.description), "empty description");
-        validate(StringUtils.isEmpty(this.entryText), "empty entryBuilder text");
+        validate(StringUtils.isEmpty(this.entryText), "empty entry text");
         validate(this.creator == null, "null creator");
         validate(this.visible == null, "null public field");
         validate(this.publiclyModifiable == null, "null publicly modifiable field");
 
         try {
-            this.color = HexColor.validate(this.color);
-            this.backgroundColor = HexColor.validate(this.backgroundColor);
+            if (this.color != null) {
+                this.color = HexColor.validate(this.color);
+            } else {
+                this.color = "#f0fafd";
+            }
+            if (this.backgroundColor != null) {
+                this.backgroundColor = HexColor.validate(this.backgroundColor);
+            } else {
+                this.backgroundColor = "#111a1f";
+            }
         } catch (InvalidColorException e) {
             throw new UncreateableException(e);
         }

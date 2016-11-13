@@ -87,7 +87,17 @@ public class PlayerService extends AbstractCachingService<Player> {
             progress = new StoryworldProgress(storyworld);
             progress.setLocation(storyworld.getEntry());
         }
+        // ensure most recent copy of location is set
+        progress.setLocation(locationService.get(player.getCurrentProgress().getLocation()));
         player.setCurrentProgress(progress);
-        return update(player);
+        return createOrUpdate(player);
+    }
+
+    @Override
+    public Player createOrUpdate(Player player) throws NotFoundException {
+        super.createOrUpdate(player);
+        // ensure current progress has cached location for concurrency
+        player.getCurrentProgress().setLocation(locationService.get(player.getCurrentProgress().getLocation()));
+        return player;
     }
 }
