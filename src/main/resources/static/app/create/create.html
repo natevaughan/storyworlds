@@ -1,2 +1,34 @@
-<a ui-sref="landing">home</a>
-<div></div>
+<div class="full bg-white">
+  <div class="container">
+    <h2>New Storyworld</h2>
+    <form>
+      <div class="columns-2">Title:</div>
+      <div class="columns-2"><input type="text" ng-model="storyworld.title" autocomplete="off"/></div>
+      <div class="columns-2"> Description:</div>
+      <div class="columns-2"><input type="text" ng-model="storyworld.description" autocomplete="off"/></div>
+      <div class="columns-2 textarea-label">Entry text:</div>
+      <div class="columns-2"><textarea ng-model="storyworld.entryText"></textarea></div>
+      <div class="columns-2 textarea-label">Starting location description:</div>
+      <div class="columns-2"><textarea ng-model="storyworld.entryBuilder.description"></textarea></div>
+      <div class="columns-2" ng-show="customColors">Text color (hex):</div>
+      <div class="columns-2" ng-show="customColors"><input type="text" ng-model="storyworld.color"/></div>
+      <div class="columns-2" ng-show="customColors">Background color (hex):</div>
+      <div class="columns-2" ng-show="customColors"><input type="text" ng-model="storyworld.backgroundColor"/>
+      </div>
+      <div class="action" ng-click="customColors = !customColors">Customize colors <span
+              ng-show="!customColors">+</span> <span ng-show="customColors">-</span></div>
+      <div class="textarea-label">
+        <button type="submit">Create</button>
+        <a ui-sref="landing">home</a>
+      </div>
+    </form>
+    <div ng-style="storyworld">
+      <h2>{{storyworld.title}}</h2>
+      <h3>{{storyworld.description}}</h3>
+      <div class="messages padded margin-bottom">{{storyworld.entryText}}</div>
+      <div class="messages padded margin-bottom">{{storyworld.entryBuilder.description}}</div>
+        &gt;
+    </div>
+    <div class="padded bottom-align margin-bottom"> <a ui-sref="landing">return to storyworlds home</a></div>
+  </div>
+</div>

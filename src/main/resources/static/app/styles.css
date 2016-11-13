@@ -9,19 +9,19 @@ html {
 }
 
 body {
-    min-height: 100vh;
+    background-size: 100% 100%;
+    background-image: url("background2.jpg");
 }
 
-body, input, a:link, a:visited {
+body, input, textarea, a:link, a:visited {
   font-family: "Courier New", "Courier", "fixed-width";
   font-size: 14pt;
+}
+
+body, a:link, a:visited {
   line-height: 1.8em;
   vertical-align: middle;
   color: #111111;
-}
-
-a:link, a:visited {
-    text-decoration: none;
 }
 
 svg {
@@ -51,11 +51,53 @@ h3 {
     padding-bottom: .5em;
 }
 
+
+h3 {
+    font-size: 14pt;
+    font-weight: 500;
+    text-align: center;
+    padding-top: .5em;
+    padding-bottom: .5em;
+}
+
+
+input, textarea {
+    width: 100%;
+}
+
+textarea {
+    height: 3.5em;
+}
+
+#title-svg {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#user-input {
+    border: 0;
+    width: 90%;
+}
+
+#user-input:focus {
+    outline-width: 0;
+}
+
 .container {
     width: 800px;
     margin-right: auto;
     margin-left: auto;
     top:0px;
+}
+
+.columns-2 {
+    width: 45%;
+    display: inline-block;
+}
+
+.textarea-label {
+    line-height: 3.5em;
+    vertical-align: middle;
 }
 
 .action:hover{
@@ -73,19 +115,18 @@ h3 {
   white-space: pre-line;
 }
 
-#user-input {
-    border: 0;
-}
-
-#user-input:focus {
-    outline-width: 0;
-}
-
 .full {
     min-height: 1200px;
+    background-color: #ffffff;
+    opacity: .95;
 }
 
 .padded {
     padding-left: 1em;
     padding-right: 1em;
+}
+
+.bottom-align {
+    position: absolute;
+    bottom: 0;
 }

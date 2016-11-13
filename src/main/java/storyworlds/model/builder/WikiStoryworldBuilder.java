@@ -96,13 +96,9 @@ public class WikiStoryworldBuilder extends AbstractBuilder implements Storyworld
         try {
             if (this.color != null) {
                 this.color = HexColor.validate(this.color);
-            } else {
-                this.color = "#f0fafd";
             }
             if (this.backgroundColor != null) {
                 this.backgroundColor = HexColor.validate(this.backgroundColor);
-            } else {
-                this.backgroundColor = "#111a1f";
             }
         } catch (InvalidColorException e) {
             throw new UncreateableException(e);

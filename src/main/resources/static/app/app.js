@@ -9,10 +9,22 @@ angular
     }
 }])
 .controller('createCtrl', ['$scope', '$http',  function($scope, $http) {
-    $scope.name = "nate";
+    $scope.storyworld = {
+            "@class" : "storyworlds.model.builder.WikiStoryworldBuilder",
+            "title" : "",
+            "description" : "",
+            "entryText" : "",
+            "visible" : true,
+            "publiclyModifiable" : true,
+            'color': '#111111',
+            'backgroundColor': '#ffffff',
+            "entryBuilder" : {
+                "@class" :"storyworlds.model.builder.ImmutableLocationBuilder",
+                "description" : ""
+            }
+        }
 }])
 .controller('playCtrl', ['$scope', '$http','$window', 'currentProgress', function($scope, $http, $window, currentProgress  ) {
-    $scope.storyworldColors = {'color': currentProgress.storyworld.color, 'background-color': currentProgress.storyworld.backgroundColor};
     $scope.messages = [];
     $scope.storyworld = currentProgress.storyworld;
     $scope.command = {text:''};

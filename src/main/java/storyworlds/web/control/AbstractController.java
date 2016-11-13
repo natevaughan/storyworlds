@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import storyworlds.exception.BadRequestException;
+import storyworlds.exception.InvalidDirectionException;
 import storyworlds.exception.InvalidLinkException;
 import storyworlds.exception.NotFoundException;
 import storyworlds.exception.UnauthorizedException;
@@ -21,7 +22,7 @@ public class AbstractController {
     protected Logger logr = LoggerFactory.getLogger(getClass());
 
 
-    @ExceptionHandler({InvalidLinkException.class, BadRequestException.class, UnrecognizedInputException.class})
+    @ExceptionHandler({InvalidLinkException.class, BadRequestException.class, UnrecognizedInputException.class, InvalidDirectionException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public @ResponseBody
     String handleBadLink(Exception e, HttpServletResponse response) throws IOException {
