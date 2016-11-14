@@ -13,7 +13,7 @@ public class LocationBuilderTest extends AbstractMapGameplayTest {
 
     @Test
     public void testGoodLocationProperties() throws UncreateableException {
-        Location location = new ImmutableLocationBuilder().setDescription("aa").setStoryworld(new WikiStoryworld(user)).build();
+        Location location = new ImmutableLocationBuilder().setDescription("aa").setStoryworld(new WikiStoryworld(user)).setCreator(user).build();
         assertNotNull(location);
     }
 
