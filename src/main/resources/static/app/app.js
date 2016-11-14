@@ -36,10 +36,10 @@ angular
         $http.post('player/action', {'command': text })
         .then(function(response) {
             $scope.messages.push({text:response.data.message.text});
-            trimLatest($scope.messages, 3);
+            trimLatest($scope.messages, 2);
         }, function(response) {
             $scope.messages.push({text:response.data.message});
-            trimLatest($scope.messages, 3);
+            trimLatest($scope.messages, 2);
         });
     }
     function trimLatest(array, size) {
