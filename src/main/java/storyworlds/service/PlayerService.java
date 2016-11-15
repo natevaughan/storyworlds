@@ -80,18 +80,37 @@ public class PlayerService extends AbstractCachingService<Player> {
 
     }
 
-    public Player play(Player player, String storyworldId) throws NotFoundException {
+    public Player resume(Player player, String storyworldId) throws NotFoundException {
         Storyworld storyworld = storyworldService.get(storyworldId);
         Progress progress = player.getProgress(storyworldService.get(storyworldId));
         if (progress == null) {
-            progress = new StoryworldProgress(storyworld);
-            progress.setLocation(storyworld.getEntry());
+            start(player, storyworldId);
         }
+
+        player.setCurrentProgress(progress);
         // ensure most recent copy of location is set
         progress.setLocation(locationService.get(player.getCurrentProgress().getLocation()));
-        player.setCurrentProgress(progress);
+
         return createOrUpdate(player);
     }
+
+    public Player start(Player player, String storyworldId) throws NotFoundException {
+        Storyworld storyworld = storyworldService.get(storyworldId);
+        Progress progress = new StoryworldProgress(storyworld);
+        progress.setLocation(storyworld.getEntry());
+
+        // because .equals is based on the storyworld, this should remove the old progress
+        player.getProgress().remove(progress);
+
+        // put new progress into set
+        player.setCurrentProgress(progress);
+
+        // ensure most recent copy of location is set
+        progress.setLocation(locationService.get(player.getCurrentProgress().getLocation()));
+
+        return createOrUpdate(player);
+    }
+
 
     @Override
     public Player createOrUpdate(Player player) throws NotFoundException {

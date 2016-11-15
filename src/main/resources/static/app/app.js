@@ -23,6 +23,15 @@ angular
                 "description" : ""
             }
         }
+
+        $scope.create = function() {
+            $http.post('storyworld/create', $scope.storyworld).then(function(response) {
+                    alert(JSON.stringify(response));
+                }, function (response) {
+                    alert(response);
+                });
+
+        };
 }])
 .controller('playCtrl', ['$scope', '$http','$window', 'currentProgress', function($scope, $http, $window, currentProgress  ) {
     $scope.messages = [];

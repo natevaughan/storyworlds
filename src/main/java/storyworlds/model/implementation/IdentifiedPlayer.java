@@ -16,6 +16,7 @@ import storyworlds.model.builder.PlayerBuilder;
  */
 @Document(collection = "player")
 public class IdentifiedPlayer extends AbstractPlayer implements Player, PlayerBuilder {
+
     @Id
     private String id;
     private String username;

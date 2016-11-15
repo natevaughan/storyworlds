@@ -101,6 +101,13 @@ public class PlayerController extends AbstractController {
     @ResponseBody
     public Progress play(@RequestBody Object o, @PathVariable String storyworldId, HttpServletResponse response) throws NotFoundException {
         Player player = playerService.get(((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPlayer());
-        return playerService.play(player, storyworldId).getCurrentProgress();
+        return playerService.resume(player, storyworldId).getCurrentProgress();
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/restart/{storyworldId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Progress restart(@RequestBody Object o, @PathVariable String storyworldId, HttpServletResponse response) throws NotFoundException {
+        Player player = playerService.get(((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPlayer());
+        return playerService.start(player, storyworldId).getCurrentProgress();
     }
 }

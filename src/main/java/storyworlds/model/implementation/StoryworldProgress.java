@@ -33,7 +33,6 @@ public class StoryworldProgress implements Progress {
 
     public StoryworldProgress(Storyworld storyworld) {
         this.storyworld = storyworld;
-       // setLocation(storyworld.getEntry());
     }
 
     public Storyworld getStoryworld() {
@@ -73,5 +72,25 @@ public class StoryworldProgress implements Progress {
         if (items.contains(activeItem)) {
             this.activeItem = activeItem;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        StoryworldProgress that = (StoryworldProgress) o;
+
+        return storyworld.equals(that.storyworld);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return storyworld.hashCode();
     }
 }

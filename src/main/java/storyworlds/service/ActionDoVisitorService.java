@@ -86,7 +86,7 @@ public class ActionDoVisitorService implements ActionVisitor {
     public void visit(Help help) {
         help.getMessage().addLine("Valid actions: ");
         for (Action action : Action.values()) {
-            help.getMessage().addLine(action.toString());
+            help.getMessage().addLine(action.getExplanation());
         }
         help.setSuccessful(true);
     }
