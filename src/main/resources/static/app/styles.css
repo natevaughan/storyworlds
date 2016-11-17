@@ -10,7 +10,7 @@ html {
 
 body {
     background-size: 100% 100%;
-    background-image: url("background2.jpg");
+    background-image: url("background3.jpg");
 }
 
 body, input, textarea, a:link, a:visited {
@@ -83,20 +83,52 @@ textarea {
     outline-width: 0;
 }
 
-.container {
-    width: 800px;
+.grid-container{
+    width: 100%;
+    max-width: 800px;
     margin-right: auto;
     margin-left: auto;
-    top:0px;
 }
 
-.columns-2 {
-    width: 45%;
-    display: inline-block;
+.header {
+    background-color: #222;
+    color:#ccc;
+    height: 55px;
+    padding:.5em;
+}
+
+.header path {
+  stroke-width: 3;
+  stroke: #ccc;
+  fill: none;
+}
+
+.row:before,
+.row:after {
+    content:"";
+      display: table ;
+    clear:both;
+}
+
+[class*='col-'] {
+    float: left;
+    min-height: 1px;
+    width: 16.66%;
+}
+
+.col-1{ width: 16.66%; }
+.col-2{ width: 33.33%; }
+.col-3{ width: 50%;    }
+.col-4{ width: 66.66%; }
+.col-5{ width: 83.33%; }
+.col-6{ width: 100%;   }
+
+.clickable {
+    cursor: pointer;
 }
 
 .textarea-label {
-    line-height: 3.5em;
+    line-height: 4em;
     vertical-align: middle;
 }
 
@@ -118,7 +150,7 @@ textarea {
 .full {
     min-height: 1200px;
     background-color: #ffffff;
-    opacity: .95;
+    opacity: .90;
 }
 
 .padded {

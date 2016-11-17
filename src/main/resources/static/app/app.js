@@ -1,5 +1,8 @@
 angular
 .module('storyworlds', ['storyworlds.state'])
+.controller('headerCtrl', ['$scope', '$http', '$state', function($scope, $http, $state) {
+    $scope.foo = 'poohbah';
+}])
 .controller('landingCtrl', ['$scope', '$http', '$state', function($scope, $http, $state) {
     $http.get('storyworld/').then(function(response) {
         $scope.storyworlds = response.data;
@@ -65,21 +68,40 @@ angular
 .config(['$stateProvider','$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/');
 
+    var abstractHeader = {controller: 'headerCtrl',
+                          templateUrl: 'app/header/header.html'};
+
     $stateProvider
         .state('landing', {
             url: '/',
-            controller: 'landingCtrl',
-            templateUrl: 'app/landing/landing.html'
+            views: {
+                header : {template: '', controller: 'headerCtrl'},
+                body : {
+                    controller: 'landingCtrl',
+                    templateUrl: 'app/landing/landing.html'
+                }
+
+            }
         })
         .state('create', {
             url: '/create',
-            controller: 'createCtrl',
-            templateUrl: 'app/create/create.html'
+            views: {
+                header : abstractHeader,
+                body : {
+                    controller: 'createCtrl',
+                    templateUrl: 'app/create/create.html'
+                }
+            }
         })
         .state('play', {
             url: '/play/:storyworldId',
-            controller: 'playCtrl',
-            templateUrl: 'app/play/play.html',
+            views: {
+                header : abstractHeader,
+                body : {
+                    controller: 'playCtrl',
+                    templateUrl: 'app/play/play.html'
+                }
+            },
             resolve: {
                 currentProgress : ['$http', '$stateParams', function($http, $stateParams) {
                     return $http.post("player/play/" + $stateParams.storyworldId, {}).then(function(response) {

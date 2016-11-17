@@ -1,19 +1,31 @@
 <div class="full bg-white">
-  <div class="container">
+  <div class="grid-container">
     <h2>New Storyworld</h2>
     <form ng-submit="create()">
-      <div class="columns-2">Title:</div>
-      <div class="columns-2"><input type="text" ng-model="storyworld.title" autocomplete="off"/></div>
-      <div class="columns-2"> Description:</div>
-      <div class="columns-2"><input type="text" ng-model="storyworld.description" autocomplete="off"/></div>
-      <div class="columns-2 textarea-label">Entry text:</div>
-      <div class="columns-2"><textarea ng-model="storyworld.entryText"></textarea></div>
-      <div class="columns-2 textarea-label">Starting location description:</div>
-      <div class="columns-2"><textarea ng-model="storyworld.entryBuilder.description"></textarea></div>
-      <div class="columns-2" ng-show="customColors">Text color (hex):</div>
-      <div class="columns-2" ng-show="customColors"><input type="text" ng-model="storyworld.color"/></div>
-      <div class="columns-2" ng-show="customColors">Background color (hex):</div>
-      <div class="columns-2" ng-show="customColors"><input type="text" ng-model="storyworld.backgroundColor"/>
+      <div class="row">
+        <div class="col-3">Title:</div>
+        <div class="col-3"><input type="text" ng-model="storyworld.title" autocomplete="off"/></div>
+      </div>
+      <div class="row">
+        <div class="col-3"> Description:</div>
+        <div class="col-3"><input type="text" ng-model="storyworld.description" autocomplete="off"/></div>
+      </div>
+      <div class="row">
+        <div class="col-3 textarea-label">Entry text:</div>
+        <div class="col-3"><textarea ng-model="storyworld.entryText"></textarea></div>
+      </div>
+      <div class="row">
+        <div class="col-3 textarea-label">Starting location description:</div>
+        <div class="col-3"><textarea ng-model="storyworld.entryBuilder.description"></textarea></div>
+      </div>
+      <div class="row">
+        <div class="col-3" ng-show="customColors">Text color (hex):</div>
+        <div class="col-3" ng-show="customColors"><input type="text" ng-model="storyworld.color"/></div>
+      </div>
+      <div class="row">
+        <div class="col-3" ng-show="customColors">Background color (hex):</div>
+        <div class="col-3" ng-show="customColors"><input type="text" ng-model="storyworld.backgroundColor"/>
+        </div>
       </div>
       <div class="action" ng-click="customColors = !customColors">Customize colors <span
               ng-show="!customColors">+</span> <span ng-show="customColors">-</span></div>
@@ -27,8 +39,7 @@
       <h3>{{storyworld.description}}</h3>
       <div class="messages padded margin-bottom">{{storyworld.entryText}}</div>
       <div class="messages padded margin-bottom">{{storyworld.entryBuilder.description}}</div>
-        &gt;
+      &gt;
     </div>
-    <div class="padded bottom-align margin-bottom"> <a ui-sref="landing">return to storyworlds home</a></div>
   </div>
 </div>
