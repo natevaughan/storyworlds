@@ -44,6 +44,7 @@ public class MapFactory implements GameTextConstants {
 
     public static Location getBlankLocation(IdentifiedPlayer player) {
         Location location = new ImmutableLocation(BLANK_LOCATION_TEXT, new WikiStoryworld(player), new HashSet<>(), null, player);
+        location.setId("default.id");
         return location;
     }
 

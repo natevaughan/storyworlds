@@ -1,7 +1,14 @@
 angular
 .module('storyworlds', ['storyworlds.state'])
 .controller('headerCtrl', ['$scope', '$http', '$state', function($scope, $http, $state) {
-    $scope.foo = 'poohbah';
+    $scope.data = $state.current.data;
+    if (!$state.current.data.user) {
+        $http.get('player/').then(function(response) {
+            $state.current.data.user = response.data;
+        }, function(response) {
+            // do something
+        });
+    }
 }])
 .controller('landingCtrl', ['$scope', '$http', '$state', function($scope, $http, $state) {
     $http.get('storyworld/').then(function(response) {
@@ -48,10 +55,10 @@ angular
         $http.post('player/action', {'command': text })
         .then(function(response) {
             $scope.messages.push({text:response.data.message.text});
-            trimLatest($scope.messages, 2);
+            trimLatest($scope.messages, 1);
         }, function(response) {
             $scope.messages.push({text:response.data.message});
-            trimLatest($scope.messages, 2);
+            trimLatest($scope.messages, 1);
         });
     }
     function trimLatest(array, size) {
@@ -71,8 +78,10 @@ angular
     var abstractHeader = {controller: 'headerCtrl',
                           templateUrl: 'app/header/header.html'};
 
+    var data = {user:null};
+
     $stateProvider
-        .state('landing', {
+        .state('home', {
             url: '/',
             views: {
                 header : {template: '', controller: 'headerCtrl'},
@@ -81,7 +90,8 @@ angular
                     templateUrl: 'app/landing/landing.html'
                 }
 
-            }
+            },
+            data: data
         })
         .state('create', {
             url: '/create',
@@ -91,7 +101,8 @@ angular
                     controller: 'createCtrl',
                     templateUrl: 'app/create/create.html'
                 }
-            }
+            },
+            data: data
         })
         .state('play', {
             url: '/play/:storyworldId',
@@ -107,8 +118,8 @@ angular
                     return $http.post("player/play/" + $stateParams.storyworldId, {}).then(function(response) {
                         return response.data;
                 })
-            }]}
-
+            }]},
+            data: data
         })
 
 }]);

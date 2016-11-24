@@ -21,6 +21,7 @@ public class AbstractMapGameplayTest extends AbstractGameplayTest {
     public void setup() {
         super.setup();
         storyworld = new WikiStoryworld(user);
+        storyworld.setId("default.id");
         storyworld.setEntry(MapFactory.getStartMap(user));
         Progress progress = new StoryworldProgress(storyworld);
         user.setCurrentProgress(progress);

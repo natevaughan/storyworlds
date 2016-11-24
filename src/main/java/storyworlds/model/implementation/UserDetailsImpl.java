@@ -1,5 +1,6 @@
 package storyworlds.model.implementation;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,6 +14,7 @@ public class UserDetailsImpl implements UserDetails {
 
 
     private IdentifiedPlayer player;
+    @JsonIgnore
     private Collection<GrantedAuthority> authorities;
 
     public UserDetailsImpl(IdentifiedPlayer player) {
@@ -21,18 +23,20 @@ public class UserDetailsImpl implements UserDetails {
         authorities.add(new SimpleGrantedAuthority("USER"));
     }
 
+    @JsonIgnore
     private boolean accountNonExpired = true;
-
+    @JsonIgnore
     private boolean accountNonLocked = true;
-
+    @JsonIgnore
     private boolean credentialsNonExpired = true;
-
+    @JsonIgnore
     private boolean enabled = true;
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return player.getPassword();
     }
