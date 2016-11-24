@@ -6,6 +6,12 @@ public class ActionFactory {
     public static Actionable get(String input) throws UnrecognizedInputException {
         Action action = parse(input);
         switch (action) {
+            case CREATE:
+                return new Create();
+            case EDIT:
+                return new Edit();
+            case DELETE:
+                return new Delete();
             case HELP:
                 return new Help();
             case MAP:

@@ -4,6 +4,9 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import storyworlds.action.Action;
+import storyworlds.action.Create;
+import storyworlds.action.Delete;
+import storyworlds.action.Edit;
 import storyworlds.action.Help;
 import storyworlds.action.Map;
 import storyworlds.action.Move;
@@ -16,6 +19,7 @@ import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.create.Createable;
 import storyworlds.exception.InvalidLinkException;
 import storyworlds.exception.NotFoundException;
+import storyworlds.exception.UncreateableException;
 import storyworlds.model.Direction;
 import storyworlds.model.Item;
 import storyworlds.model.Link;
@@ -41,47 +45,52 @@ public class ActionDoVisitorService implements ActionVisitor {
     @Autowired
     ItemService itemService;
 
-//    public void visit(Create create) throws UncreateableException {
-//        StringBuilder sb = new StringBuilder();
-//        if (create.isCreateable()) {
-//            sb.append("OK, creating ").append(create.getCreateable());
-//            if (!Createable.ITEM.equals(create.getCreateable())) {
-//                sb.append(" ").append(create.getDirection());
-//            }
-//            create.setSuccessful(true);
-//        } else {
-//            sb.append("Unable to build ").append(create.getCreateable()).append("\n");
-//
-//            if (create.getCreateable() == null || Createable.ERROR.equals(create.getCreateable())) {
-//                sb.append(enumerateCreatables("build"));
-//            }
-//            if (create.getDirection() == null || Direction.ERROR.equals(create.getDirection())) {
-//                sb.append(enumerateDirections());
-//            }
-//            if (create.getMessage().getPlayer().getLocation().getOutboundLink(create.getDirection()) != null) {
-//                sb.append(create.getCreateable()).append(" already exists ").append(create.getDirection().formatted().toLowerCase());
-//            }
-//        }
-//        throw new UncreateableException(sb.toString());
-//    }
+    public void visit(Create create) throws UncreateableException {
+        StringBuilder sb = new StringBuilder();
+        if (create.isCreateable()) {
+            sb.append("OK, creating ").append(create.getCreateable());
+            if (!Createable.ITEM.equals(create.getCreateable())) {
+                sb.append(" ").append(create.getDirection());
+            }
+            create.setSuccessful(true);
+        } else {
+            sb.append("Unable to build ").append(create.getCreateable()).append("\n");
 
-//    public void visit(Edit edit) {
-//        StringBuilder sb = new StringBuilder();
-//        if (edit.isCreateable()) {
-//            sb.append("OK, editing ");
-//            if (edit.getDirection() != null) {
-//                sb.append(edit.getCreateable() + " " + edit.getDirection());
-//            } else {
-//                sb.append("this " + edit.getCreateable());
-//            }
-//            edit.setSuccessful(true);
-//        } else {
-//            if (Createable.LOCATION.equals(edit.getCreateable()) && edit.getDirection() != null) {
-//                edit.getMessage().addLine("To edit a location, first travel to it.");
-//            }
-//        }
-//        edit.getMessage().addLine(sb.toString());
-//    }
+            if (create.getCreateable() == null) {
+                sb.append(enumerateCreatables("build"));
+            }
+            if (create.getDirection() == null) {
+                sb.append(enumerateDirections());
+            }
+            if (create.getMessage().getPlayer().getCurrentProgress().getLocation().getOutboundLink(create.getDirection()) != null) {
+                sb.append(create.getCreateable()).append(" already exists ").append(create.getDirection().formatted().toLowerCase());
+            }
+        }
+        throw new UncreateableException(sb.toString());
+    }
+
+    public void visit(Edit edit) {
+        StringBuilder sb = new StringBuilder();
+        if (edit.isCreateable()) {
+            sb.append("OK, editing ");
+            if (edit.getDirection() != null) {
+                sb.append(edit.getCreateable() + " " + edit.getDirection());
+            } else {
+                sb.append("this " + edit.getCreateable());
+            }
+            edit.setSuccessful(true);
+        } else {
+            if (Createable.LOCATION.equals(edit.getCreateable()) && edit.getDirection() != null) {
+                edit.getMessage().addLine("To edit a location, first travel to it.");
+            }
+        }
+        edit.getMessage().addLine(sb.toString());
+    }
+
+    @Override
+    public void visit(Delete delete) throws Exception {
+
+    }
 
     public void visit(Help help) {
         help.getMessage().addLine("Valid actions: ");
@@ -206,8 +215,7 @@ public class ActionDoVisitorService implements ActionVisitor {
         for (Createable createables : Createable.values()) {
             if (i > 0)
                 sb.append(", ");
-            if (!Createable.ERROR.equals(createables))
-                sb.append(createables);
+            sb.append(createables);
             ++i;
         }
         return sb.toString();

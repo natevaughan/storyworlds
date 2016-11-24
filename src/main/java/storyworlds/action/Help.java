@@ -7,7 +7,7 @@ import storyworlds.action.visitor.ActionVisitor;
  */
 public class Help extends AbstractAction {
 
-    public void accept(ActionVisitor visitor) {
+    public void accept(ActionVisitor visitor) throws Exception {
         visitor.visit(this);
     }
 

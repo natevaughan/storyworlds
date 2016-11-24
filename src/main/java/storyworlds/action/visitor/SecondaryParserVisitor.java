@@ -1,6 +1,9 @@
 package storyworlds.action.visitor;
 
 import storyworlds.action.Actionable;
+import storyworlds.action.Create;
+import storyworlds.action.Delete;
+import storyworlds.action.Edit;
 import storyworlds.action.Help;
 import storyworlds.action.Map;
 import storyworlds.action.Move;
@@ -19,6 +22,18 @@ import storyworlds.exception.InvalidDirectionException;
 public class SecondaryParserVisitor implements ActionVisitor {
 
     private String secondary = null;
+
+    public void visit(Create create) throws InvalidDirectionException {
+        create.setDirection(DirectionParser.parse(secondary));
+    }
+
+    public void visit(Delete delete) throws InvalidDirectionException {
+        delete.setDirection(DirectionParser.parse(secondary));
+    }
+
+    public void visit(Edit edit) throws InvalidDirectionException {
+        edit.setDirection(DirectionParser.parse(secondary));
+    }
 
     public void visit(Help help) {
         setUnrecognizedModifier(help);

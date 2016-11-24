@@ -5,7 +5,7 @@ import storyworlds.exception.InvalidDirectionException;
 import storyworlds.exception.InvalidLinkException;
 
 public class Move extends DirectionedAction {
-    public void accept(ActionVisitor visitor) throws InvalidLinkException, InvalidDirectionException {
+    public void accept(ActionVisitor visitor) throws Exception {
         visitor.visit(this);
     }
 

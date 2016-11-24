@@ -3,10 +3,14 @@ package storyworlds.service.console;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import storyworlds.action.Actionable;
+import storyworlds.action.Create;
+import storyworlds.action.Delete;
+import storyworlds.action.Edit;
 import storyworlds.action.Help;
 import storyworlds.action.Map;
 import storyworlds.action.Move;
@@ -16,18 +20,29 @@ import storyworlds.action.Take;
 import storyworlds.action.Use;
 import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.constants.GameTextConstants;
+import storyworlds.create.Createable;
 import storyworlds.exception.InvalidDirectionException;
 import storyworlds.exception.InvalidLinkException;
+import storyworlds.exception.NotFoundException;
 import storyworlds.exception.UncreateableException;
 import storyworlds.exception.UnrecognizedInputException;
 import storyworlds.model.Direction;
+import storyworlds.model.Item;
+import storyworlds.model.Link;
 import storyworlds.model.Location;
 import storyworlds.model.Progress;
 import storyworlds.model.Storyworld;
+import storyworlds.model.builder.BlockableLinkBuilder;
+import storyworlds.model.builder.DirectionalLinkBuilder;
 import storyworlds.model.builder.ImmutableLocationBuilder;
+import storyworlds.model.builder.LinkBuilder;
+import storyworlds.model.builder.UsableItemBuilder;
 import storyworlds.model.builder.WikiStoryworldBuilder;
+import storyworlds.model.implementation.BlockableLink;
+import storyworlds.model.implementation.DirectionalLink;
 import storyworlds.model.implementation.IdentifiedPlayer;
 import storyworlds.model.implementation.StoryworldProgress;
+import storyworlds.model.implementation.UsableItem;
 import storyworlds.service.ItemService;
 import storyworlds.service.LinkService;
 import storyworlds.service.LocationService;
@@ -35,6 +50,9 @@ import storyworlds.service.PlayerService;
 import storyworlds.service.StoryworldService;
 import storyworlds.service.message.Message;
 import storyworlds.service.message.MessageService;
+
+import static storyworlds.create.Createable.ITEM;
+import static storyworlds.create.Createable.STORYWORLD;
 
 @Service
 public class ConsoleIO implements ActionVisitor, GameTextConstants {
@@ -223,188 +241,212 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
         return storyworld;
     }
 
-//    public void visit(Create create) {
-//        if (!create.isCreateable()) {
-//            return;
-//        }
-//
-//        switch (create.getCreateable()) {
-//            case LOCATION:
-//                sendMessage("Would you like the link to the location to require the user to have an item?");
-//                boolean blockable = ConfirmationParser.validate(getCommand());
-//                LinkBuilder linkBuilder = DirectionalLink.Builder.newInstance();;
-//                if (blockable) {
-//                    linkBuilder = BlockableLink.Builder.newInstance();
-//                }
-//                if (linkBuilder instanceof BlockableLink.Builder) {
-//                    sendMessage("What would you like the required item to be?");
-//                    List<Item> items = new ArrayList<>(player.listItems());
-//                    Item choice = items.get(selectIndex(items, "item"));
-//                    ((BlockableLink.Builder) linkBuilder).setRequiredItem(choice);
-//                    sendMessage("What would you like the text to be if the user does not have the required item (and is blocked from passing through the link)?");
-//                    ((BlockableLink.Builder) linkBuilder).setFailText(getCommand());
-//                }
-//                linkBuilder.setCreator(player);
-//                sendMessage("What would you like the text describing the link to the location to say? \n" +
-//                        "It should complete this sentence: " + create.getDirection().formatted() + " there is...");
-//                linkBuilder.setDescription(getCommand());
-//                sendMessage("What would you like the text of the link to be while the user moves to the new location?");
-//                linkBuilder.setPassText(getCommand());
-//                sendMessage("What would you like the text of the location to be once the user arrives?");
-//
-//                ImmutableLocation.Builder locationBuilder = ImmutableLocation.Builder.newInstance();
-//                locationBuilder.setCreator(player);
-//                locationBuilder.setDescription(getCommand())
-//                    .setStoryworld(player.getCurrentStoryworld());
-//
-//                Location location = null;
-//                Link link = null;
-//
-//                try {
-//                    location = locationService.create(locationBuilder);
-//                    linkBuilder.setToLocation(location);
-//                    link = linkService.create(linkBuilder);
-//                    player.getLocation().addOutboundLink(create.getDirection(), link);
-//                    locationService.createOrUpdate(player.getLocation());
-//                } catch (UncreateableException | NullPointerException e) {
-//                    sendMessage(e.getMessage());
-//                    if (location != null) {
+    public void visit(Create create) throws NotFoundException, UncreateableException {
+        if (!create.isCreateable()) {
+            return;
+        }
+
+        switch (create.getCreateable()) {
+            case LOCATION:
+                sendMessage("Would you like the link to the location to require the user to have an item?");
+                boolean blockable = ConfirmationParser.parse(getCommand());
+                LinkBuilder linkBuilder = new DirectionalLinkBuilder();;
+                if (blockable) {
+                    linkBuilder = new BlockableLinkBuilder();
+                }
+                if (linkBuilder instanceof BlockableLinkBuilder) {
+                    sendMessage("What would you like the required item to be?");
+                    List<Item> items  = new ArrayList<>(player.getCurrentProgress().getItems());
+                    Item       choice = items.get(selectIndex(items, "item"));
+                    ((BlockableLinkBuilder) linkBuilder).setRequiredItem(choice);
+                    sendMessage("What would you like the text to be if the user does not have the required item (and is blocked from passing through the link)?");
+                    ((BlockableLinkBuilder) linkBuilder).setFailText(getCommand());
+                }
+                linkBuilder.setCreator(player);
+                sendMessage("What would you like the text describing the link to the location to say? \n" +
+                        "It should complete this sentence: " + create.getDirection().formatted() + " there is...");
+                linkBuilder.setDescription(getCommand());
+                sendMessage("What would you like the text of the link to be while the user moves to the new location?");
+                linkBuilder.setPassText(getCommand());
+                sendMessage("What would you like the text of the location to be once the user arrives?");
+
+                ImmutableLocationBuilder locationBuilder = new ImmutableLocationBuilder();
+                locationBuilder.setCreator(player);
+                locationBuilder.setDescription(getCommand())
+                    .setStoryworld(player.getCurrentProgress().getStoryworld());
+
+                Location location = null;
+                Link link = null;
+
+                try {
+                    location = locationService.create(locationBuilder);
+                    linkBuilder.setToLocation(location);
+                    link = linkService.create(linkBuilder);
+                    player.getCurrentProgress().getLocation().addOutboundLink(create.getDirection(), link);
+                    locationService.createOrUpdate(player.getCurrentProgress().getLocation());
+                } catch (UncreateableException | NullPointerException e) {
+                    sendMessage(e.getMessage());
+                    if (location != null) {
+                        // XXX not implemented
 //                        sendMessage("rolling back location create");
 //                        locationService.delete(location);
-//                    }
-//                    if (link != null) {
-//                        sendMessage("rolling back link create");
-//                        player.getLocation().getOutboundLinks().remove(create.getDirection(), location);
-//                        locationService.createOrUpdate(player.getLocation());
-//                    }
-//                }
-//                break;
-//            case LINK:
-//                DirectionalLink.Builder directionalLinkBuilder = DirectionalLink.Builder.newInstance();
-//                directionalLinkBuilder.setCreator(player);
-//                sendMessage("What would you like the text describing the link to say? \n" +
-//                        "It should complete this sentence: " + create.getDirection().formatted() + " there is...");
-//                directionalLinkBuilder.setDescription(getCommand());
-//                sendMessage("What would you like the text of the link to be while the user moves to the new location?");
-//                directionalLinkBuilder.setPassText(getCommand());
-//                sendMessage("Which location would you like to connect the link to?");
-//                int i = 1;
-//                List<Location> locationHistory = new ArrayList<>(create.getMessage().getPlayer().getLocationHistory());
-//                for (Location loc: locationHistory) {
-//                    if (loc.isActive()) {
-//                        String[] text = loc.getDescription().split("\n");
-//                        sendMessage("previous Location " + i + ": " + StringUtils.abbreviate(text[0], 30));
-//                        i++;
-//                    }
-//                }
-//                sendMessage("Enter the number of the desired location:");
-//                try {
-//                    Integer index  = Integer.parseInt(getCommand());
-//                    if (index >= i || index < 1) {
-//                        sendMessage("Invalid number");
-//                    } else {
-//                        directionalLinkBuilder.setToLocation(locationHistory.get(index - 1));
-//                    }
-//                } catch (NumberFormatException nfe) {
-//                    sendMessage("invalid number");
-//                }
-//                try {
-//                    Link createdLink = linkService.create(directionalLinkBuilder);
-//                    player.getLocation().addOutboundLink(create.getDirection(), createdLink);
-//                    locationService.createOrUpdate(player.getLocation());
-//                } catch (UncreateableException e) {
-//                    sendMessage(e.getMessage());
-//                }
-//                break;
-//            case ITEM:
-//                UsableItem.Builder itemBuilder = UsableItem.Builder.newInstance();
-//                itemBuilder.setCreator(player);
-//                sendMessage("What would you like the one-word name of the item to be?");
-//                itemBuilder.setName(getCommand());
-//                sendMessage("What would you like the description of the item to be?");
-//                itemBuilder.setDescription(getCommand());
-//                sendMessage("What would you like the description of using the item to be?");
-//                itemBuilder.setUseText(getCommand());
-//                try {
-//                    Item item = itemService.create(itemBuilder);
-//                    player.getLocation().addItem(item);
-//                    locationService.createOrUpdate(player.getLocation());
-//                } catch (UncreateableException e) {
-//                    sendMessage(e.getMessage());
-//                }
-//                break;
-//
-//            case STORYWORLD:
-//                createNewStoryworld();
-//                break;
-//            default:
-//
-//                break;
-//        }
-//    }
+                    }
+                    if (link != null) {
+                        sendMessage("rolling back link create");
+                        player.getCurrentProgress().getLocation().getOutboundLinks().remove(create.getDirection(), location);
+                        locationService.createOrUpdate(player.getCurrentProgress().getLocation());
+                    }
+                }
+                break;
+            case LINK:
+                DirectionalLinkBuilder directionalLinkBuilder = new DirectionalLinkBuilder();
+                directionalLinkBuilder.setCreator(player);
+                sendMessage("What would you like the text describing the link to say? \n" +
+                        "It should complete this sentence: " + create.getDirection().formatted() + " there is...");
+                directionalLinkBuilder.setDescription(getCommand());
+                sendMessage("What would you like the text of the link to be while the user moves to the new location?");
+                directionalLinkBuilder.setPassText(getCommand());
+                sendMessage("Which location would you like to connect the link to?");
+                int i = 1;
+                List<Location> locationHistory = new ArrayList<>(create.getMessage().getPlayer().getCurrentProgress().getVisitedLocations());
+                for (Location loc: locationHistory) {
+                    if (loc.isActive()) {
+                        String[] text = loc.getDescription().split("\n");
+                        sendMessage("previous Location " + i + ": " + StringUtils.abbreviate(text[0], 30));
+                        i++;
+                    }
+                }
+                sendMessage("Enter the number of the desired location:");
+                try {
+                    Integer index  = Integer.parseInt(getCommand());
+                    if (index >= i || index < 1) {
+                        sendMessage("Invalid number");
+                    } else {
+                        directionalLinkBuilder.setToLocation(locationHistory.get(index - 1));
+                    }
+                } catch (NumberFormatException nfe) {
+                    sendMessage("invalid number");
+                }
+                try {
+                    Link createdLink = linkService.create(directionalLinkBuilder);
+                    player.getCurrentProgress().getLocation().addOutboundLink(create.getDirection(), createdLink);
+                    locationService.createOrUpdate(player.getCurrentProgress().getLocation());
+                } catch (UncreateableException e) {
+                    sendMessage(e.getMessage());
+                }
+                break;
+            case ITEM:
+                UsableItemBuilder itemBuilder = new UsableItemBuilder();
+                itemBuilder.setCreator(player);
+                sendMessage("What would you like the one-word name of the item to be?");
+                itemBuilder.setName(getCommand());
+                sendMessage("What would you like the description of the item to be?");
+                itemBuilder.setDescription(getCommand());
+                sendMessage("What would you like the description of using the item to be?");
+                itemBuilder.setUseText(getCommand());
+                try {
+                    Item item = itemService.create(itemBuilder.build());
+                    player.getCurrentProgress().getLocation().addItem(item);
+                    locationService.createOrUpdate(player.getCurrentProgress().getLocation());
+                } catch (UncreateableException e) {
+                    sendMessage(e.getMessage());
+                }
+                break;
 
-//    public void visit(Delete delete) {
-//        sendMessage("Are you sure you want to delete " + delete.getCreateable() + " " + delete.getDirection() + "?");
-//        if (ConfirmationParser.validate(getCommand())) {
-//            if (Createable.LOCATION.equals(delete.getCreateable())) {
+            case STORYWORLD:
+                createNewStoryworld();
+                break;
+            default:
+
+                break;
+        }
+    }
+
+    public void visit(Delete delete) {
+        sendMessage("Are you sure you want to delete " + delete.getCreateable() + " " + delete.getDirection() + "?");
+        if (ConfirmationParser.parse(getCommand())) {
+            if (Createable.LOCATION.equals(delete.getCreateable())) {
+                // XXX not implemented
 //                locationService.delete(delete);
-//            }
-//        }
-//    }
+            }
+        }
+    }
 
-//    public void visit(Edit edit) {
-//        if (!edit.isCreateable()) {
-//            return;
-//        }
-//        edit.getMessage().resetText();
-//        switch(edit.getCreateable()) {
-//            case LOCATION:
-//                ImmutableLocation.Builder locationBuilder = ImmutableLocation.Builder.newInstance();
-//                locationBuilder.setCreator(player);
-//                sendMessage("What would you like the text of the location to be once the user arrives?");
-//                locationBuilder.setDescription(getCommand());
-//                Location formerLocation = edit.getMessage().getPlayer().getLocation();
-//                locationBuilder.setPreviousLocation(formerLocation);
-//                locationBuilder.setStoryworld(edit.getMessage().getPlayer().getCurrentStoryworld());
-//                try {
-//
-//                    Location location = locationService.create(locationBuilder);
-//                    cloneLinks(location, formerLocation);
-//                    locationService.create(location);
-//
-//                    // retire formerLocation
-//                    formerLocation.setActive(false);
-//                    formerLocation.setForwardingLocation(location);
-//                    locationService.createOrUpdate(formerLocation);
-//
-//                    player.setLocation(location);
-//                    playerService.create(player);
-//                } catch (UncreateableException e) {
-//                    sendMessage(e.getMessage());
-//                }
-//                break;
-//            case LINK:
-//                DirectionalLink.Builder linkBuilder = DirectionalLink.Builder.newInstance();
-//                linkBuilder.setCreator(player);
-//                sendMessage("What would you like the text describing the link to the location to say? \n" +
-//                        "It should complete this sentence: " + edit.getDirection().formatted() + " there is...");
-//                linkBuilder.setDescription(getCommand());
-//                sendMessage("What would you like the text of the link to be while the user moves to the new location?");
-//                linkBuilder.setPassText(getCommand());
-//                linkBuilder.setToLocation(player.getLocation().getOutboundLink(edit.getDirection()).getToLocation());
-//                try {
-//                    Link link = linkService.create(linkBuilder);
-//                    edit.getMessage().getPlayer().getLocation().addOutboundLink(edit.getDirection(), link);
-//                    locationService.createOrUpdate(edit.getMessage().getPlayer().getLocation());
-//                } catch (UncreateableException e) {
-//                    sendMessage(e.getMessage());
-//                }
-//                break;
-//            default:
-//                sendMessage("invalid creatable");
-//                break;
-//        }
-//    }
+    public void visit(Edit edit) {
+        if (!edit.isCreateable()) {
+            return;
+        }
+        edit.getMessage().resetText();
+        switch(edit.getCreateable()) {
+            case LOCATION:
+                ImmutableLocationBuilder locationBuilder = new ImmutableLocationBuilder();
+                locationBuilder.setCreator(player);
+                sendMessage("What would you like the text of the location to be once the user arrives?");
+                locationBuilder.setDescription(getCommand());
+                Location formerLocation = edit.getMessage()
+                                              .getPlayer()
+                                              .getCurrentProgress()
+                                              .getLocation();
+                locationBuilder.setPreviousLocation(formerLocation);
+                locationBuilder.setStoryworld(edit.getMessage()
+                                                  .getPlayer()
+                                                  .getCurrentProgress()
+                                                  .getStoryworld());
+                try {
+
+                    Location location = locationService.create(locationBuilder);
+                    cloneLinks(location, formerLocation);
+                    locationService.create(location);
+
+                    // retire formerLocation
+                    formerLocation.setActive(false);
+                    formerLocation.setForwardingLocation(location);
+                    locationService.createOrUpdate(formerLocation);
+
+                    player.getCurrentProgress()
+                          .setLocation(location);
+                    playerService.create(player);
+                } catch (UncreateableException | NotFoundException e) {
+                    sendMessage(e.getMessage());
+                }
+                break;
+            case LINK:
+                DirectionalLinkBuilder linkBuilder = new DirectionalLinkBuilder();
+                linkBuilder.setCreator(player);
+                sendMessage("What would you like the text describing the link to the location to say? \n" +
+                        "It should complete this sentence: " + edit.getDirection()
+                                                                   .formatted() + " there is...");
+                linkBuilder.setDescription(getCommand());
+                sendMessage("What would you like the text of the link to be while the user moves to the new location?");
+                linkBuilder.setPassText(getCommand());
+                linkBuilder.setToLocation(player.getCurrentProgress()
+                                                .getLocation()
+                                                .getOutboundLink(edit.getDirection())
+                                                .getToLocation());
+                try {
+                    Link link = linkService.create(linkBuilder);
+                    edit.getMessage()
+                        .getPlayer()
+                        .getCurrentProgress()
+                        .getLocation()
+                        .addOutboundLink(edit.getDirection(), link);
+                    locationService.createOrUpdate(edit.getMessage()
+                                                       .getPlayer()
+                                                       .getCurrentProgress()
+                                                       .getLocation());
+                } catch (UncreateableException | NotFoundException e) {
+                    sendMessage(e.getMessage());
+                }
+                break;
+            case ITEM:
+                break;
+            case STORYWORLD:
+                break;
+            default:
+                sendMessage("invalid creatable");
+                break;
+        }
+    }
 
     public void visit(Help help) {
 

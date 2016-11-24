@@ -15,7 +15,7 @@ public interface Actionable extends Persistable {
 
     void setStoryworld(Storyworld storyworld);
 
-    void accept(ActionVisitor visitor) throws InvalidLinkException, InvalidDirectionException, UnrecognizedInputException, NotFoundException;
+    void accept(ActionVisitor visitor) throws Exception;
 
     void setMessage(Message message);
 

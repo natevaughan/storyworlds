@@ -1,18 +1,18 @@
 package storyworlds.create;
 
+import storyworlds.exception.UncreateableException;
+
 public class CreateableParser {
 
-    public static Createable parse(String input) {
-
-        Createable c = Createable.ERROR;
+    public static Createable parse(String input) throws UncreateableException {
 
         for (Createable createables : Createable.values()) {
             if (createables.toString().equalsIgnoreCase(input)) {
-                c = createables;
+                return createables;
             }
         }
 
-        return c;
+        throw new UncreateableException("Unrecognized createable: " + input);
     }
 
 }

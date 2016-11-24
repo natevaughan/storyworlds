@@ -3,6 +3,7 @@ package storyworlds.action;
 public enum Action {
     CREATE("<location | link> <direction>"),
     EDIT("<location | link> <direction>"),
+    DELETE("<location | link> <direction>"),
     HELP(""),
     MAP(""),
     MOVE("<direction>"),

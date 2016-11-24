@@ -5,7 +5,7 @@ import storyworlds.exception.NotFoundException;
 
 public class Take extends ItemAction {
 
-    public void accept(ActionVisitor visitor) throws NotFoundException {
+    public void accept(ActionVisitor visitor) throws Exception {
         visitor.visit(this);
     }
 
