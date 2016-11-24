@@ -2,6 +2,7 @@ package storyworlds.action.visitor;
 
 import storyworlds.action.Actionable;
 import storyworlds.action.Create;
+import storyworlds.action.CreateableAction;
 import storyworlds.action.Delete;
 import storyworlds.action.Edit;
 import storyworlds.action.Help;
@@ -12,7 +13,9 @@ import storyworlds.action.Status;
 import storyworlds.action.Take;
 import storyworlds.action.Use;
 import storyworlds.action.parser.DirectionParser;
+import storyworlds.create.CreateableParser;
 import storyworlds.exception.InvalidDirectionException;
+import storyworlds.exception.UncreateableException;
 
 /**
  * Responsibilities:
@@ -23,16 +26,16 @@ public class SecondaryParserVisitor implements ActionVisitor {
 
     private String secondary = null;
 
-    public void visit(Create create) throws InvalidDirectionException {
-        create.setDirection(DirectionParser.parse(secondary));
+    public void visit(Create create) throws InvalidDirectionException, UncreateableException {
+        getCreateArgs(create);
     }
 
-    public void visit(Delete delete) throws InvalidDirectionException {
-        delete.setDirection(DirectionParser.parse(secondary));
+    public void visit(Delete delete) throws InvalidDirectionException, UncreateableException {
+        getCreateArgs(delete);
     }
 
-    public void visit(Edit edit) throws InvalidDirectionException {
-        edit.setDirection(DirectionParser.parse(secondary));
+    public void visit(Edit edit) throws InvalidDirectionException, UncreateableException {
+        getCreateArgs(edit);
     }
 
     public void visit(Help help) {
@@ -73,5 +76,17 @@ public class SecondaryParserVisitor implements ActionVisitor {
 
     private void setUnrecognizedModifier(Actionable actionable, String modifier) {
         actionable.getMessage().addLine("Unreconginzed modifier: " + modifier);
+    }
+
+    private void getCreateArgs(CreateableAction actionable) throws InvalidDirectionException, UncreateableException {
+        if (secondary != null) {
+            String[] createArgs = secondary.split("\\s+");
+            if (createArgs.length > 0) {
+                actionable.setCreateable(CreateableParser.parse(createArgs[0]));
+            }
+            if (createArgs.length > 1) {
+                actionable.setDirection(DirectionParser.parse(createArgs[1]));
+            }
+        }
     }
 }

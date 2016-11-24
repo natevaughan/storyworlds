@@ -13,7 +13,7 @@ public class Delete extends AbstractCreateableAction  {
 
     @Override
     public boolean isCreateable() {
-        return creatable != null
+        return creatableType != null
                 && getDirection() != null;
     }
 }

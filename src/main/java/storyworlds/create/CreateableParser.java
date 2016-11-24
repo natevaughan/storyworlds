@@ -4,9 +4,9 @@ import storyworlds.exception.UncreateableException;
 
 public class CreateableParser {
 
-    public static Createable parse(String input) throws UncreateableException {
+    public static CreateableType parse(String input) throws UncreateableException {
 
-        for (Createable createables : Createable.values()) {
+        for (CreateableType createables : CreateableType.values()) {
             if (createables.toString().equalsIgnoreCase(input)) {
                 return createables;
             }

@@ -20,7 +20,7 @@ import storyworlds.action.Take;
 import storyworlds.action.Use;
 import storyworlds.action.visitor.ActionVisitor;
 import storyworlds.constants.GameTextConstants;
-import storyworlds.create.Createable;
+import storyworlds.create.CreateableType;
 import storyworlds.exception.InvalidDirectionException;
 import storyworlds.exception.InvalidLinkException;
 import storyworlds.exception.NotFoundException;
@@ -38,11 +38,8 @@ import storyworlds.model.builder.ImmutableLocationBuilder;
 import storyworlds.model.builder.LinkBuilder;
 import storyworlds.model.builder.UsableItemBuilder;
 import storyworlds.model.builder.WikiStoryworldBuilder;
-import storyworlds.model.implementation.BlockableLink;
-import storyworlds.model.implementation.DirectionalLink;
 import storyworlds.model.implementation.IdentifiedPlayer;
 import storyworlds.model.implementation.StoryworldProgress;
-import storyworlds.model.implementation.UsableItem;
 import storyworlds.service.ItemService;
 import storyworlds.service.LinkService;
 import storyworlds.service.LocationService;
@@ -50,9 +47,6 @@ import storyworlds.service.PlayerService;
 import storyworlds.service.StoryworldService;
 import storyworlds.service.message.Message;
 import storyworlds.service.message.MessageService;
-
-import static storyworlds.create.Createable.ITEM;
-import static storyworlds.create.Createable.STORYWORLD;
 
 @Service
 public class ConsoleIO implements ActionVisitor, GameTextConstants {
@@ -246,7 +240,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
             return;
         }
 
-        switch (create.getCreateable()) {
+        switch (create.getCreateableType()) {
             case LOCATION:
                 sendMessage("Would you like the link to the location to require the user to have an item?");
                 boolean blockable = ConfirmationParser.parse(getCommand());
@@ -363,9 +357,9 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
     }
 
     public void visit(Delete delete) {
-        sendMessage("Are you sure you want to delete " + delete.getCreateable() + " " + delete.getDirection() + "?");
+        sendMessage("Are you sure you want to delete " + delete.getCreateableType() + " " + delete.getDirection() + "?");
         if (ConfirmationParser.parse(getCommand())) {
-            if (Createable.LOCATION.equals(delete.getCreateable())) {
+            if (CreateableType.LOCATION.equals(delete.getCreateableType())) {
                 // XXX not implemented
 //                locationService.delete(delete);
             }
@@ -377,7 +371,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
             return;
         }
         edit.getMessage().resetText();
-        switch(edit.getCreateable()) {
+        switch(edit.getCreateableType()) {
             case LOCATION:
                 ImmutableLocationBuilder locationBuilder = new ImmutableLocationBuilder();
                 locationBuilder.setCreator(player);
@@ -443,7 +437,7 @@ public class ConsoleIO implements ActionVisitor, GameTextConstants {
             case STORYWORLD:
                 break;
             default:
-                sendMessage("invalid creatable");
+                sendMessage("invalid creatableType");
                 break;
         }
     }

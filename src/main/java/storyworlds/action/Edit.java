@@ -1,7 +1,7 @@
 package storyworlds.action;
 
 import storyworlds.action.visitor.ActionVisitor;
-import storyworlds.create.Createable;
+import storyworlds.create.CreateableType;
 
 public class Edit extends AbstractCreateableAction {
 
@@ -11,11 +11,13 @@ public class Edit extends AbstractCreateableAction {
 
     public boolean isCreateable() {
         if (getDirection() == null) {
-            return Createable.LOCATION.equals(creatable);
+            return CreateableType.LOCATION.equals(creatableType);
         } else {
-            return creatable != null
-                    && !Createable.LOCATION.equals(creatable)
+            return creatableType != null
+                    && !CreateableType.LOCATION.equals(creatableType)
                     && getDirection() != null;
         }
     }
+
+
 }

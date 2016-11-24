@@ -1,7 +1,7 @@
 package storyworlds.action;
 
 import storyworlds.action.visitor.ActionVisitor;
-import storyworlds.create.Createable;
+import storyworlds.create.CreateableType;
 
 public class Create extends AbstractCreateableAction {
 
@@ -10,9 +10,9 @@ public class Create extends AbstractCreateableAction {
     }
 
     public boolean isCreateable() {
-        return creatable != null
-                && (Createable.ITEM.equals(creatable) || getDirection() != null)
+        return creatableType != null
+                && (CreateableType.ITEM.equals(creatableType) || getDirection() != null)
                 && message.getPlayer().getCurrentProgress().getLocation().getOutboundLink(getDirection()) == null
-                && !(Createable.LOCATION.equals(creatable) && getDirection() == null);
+                && !(CreateableType.LOCATION.equals(creatableType) && getDirection() == null);
     }
 }
