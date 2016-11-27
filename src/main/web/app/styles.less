@@ -4,6 +4,13 @@
 */
 a,abbr,acronym,address,applet,article,aside,audio,b,big,blockquote,body,canvas,caption,center,cite,code,dd,del,details,dfn,div,dl,dt,em,embed,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,html,i,iframe,img,ins,kbd,label,legend,li,mark,menu,nav,object,ol,output,p,pre,q,ruby,s,samp,section,small,span,strike,strong,sub,summary,sup,table,tbody,td,tfoot,th,thead,time,tr,tt,u,ul,var,video{margin:0;padding:0;border:0;font:inherit;vertical-align:baseline}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:after,blockquote:before,q:after,q:before{content:'';content:none}table{border-collapse:collapse;border-spacing:0}
 
+@primary-gray: #777;
+@primary-black: #121614;
+@primary-white: #fff;
+@secondary-gray: #ccc;
+@lt-gray: #f1f2f3;
+@opacity: 0.92;
+
 html {
   height: 100%;
 }
@@ -21,7 +28,7 @@ body, input, textarea, a:link, a:visited {
 body, a:link, a:visited {
   line-height: 1.8em;
   vertical-align: middle;
-  color: #111111;
+  color: @primary-black;
 }
 
 h2 {
@@ -46,20 +53,20 @@ svg {
 
 path {
   stroke-width: 1.5;
-  stroke: black;
+  stroke: @primary-black;
   fill: none;
 }
 
 path.filled {
   stroke-width: 3;
-  stroke: #777;
-  fill: #777;
+  stroke: @primary-gray;
+  fill: @primary-gray;
 }
 
 path.antifilled {
   stroke-width: 3;
-  stroke: #fff;
-  fill: #fff;
+  stroke: @primary-white;
+  fill: @primary-white;
 }
 
 
@@ -107,12 +114,12 @@ textarea {
 
 .header {
   height: 60px;
-  background-color: #fff;
+  background-color: @primary-white;
   opacity: 0.96;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid @secondary-gray;
   padding-left: 2em;
   padding-right: 2em;
-  color:#777;
+  color: @primary-gray;
 }
 
 .body-container {
@@ -159,9 +166,9 @@ textarea {
 }
 
 .action:hover{
-    background-color: #f1f2f3;
-    opacity: .95;
-    color: black;
+    background-color: @lt-gray;
+    opacity: @opacity;
+    color: @primary-black;
     cursor: pointer;
 }
 
@@ -175,10 +182,10 @@ textarea {
 }
 
 .full {
-    min-height: 900px;
+    min-height: 860px;
     padding-top: 60px;
-    background-color: #ffffff;
-    opacity: .90;
+    background-color: @primary-white;
+    opacity: @opacity;
 }
 
 .padded {

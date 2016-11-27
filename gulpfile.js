@@ -66,6 +66,7 @@ gulp.task('js', ['static'], function() {
         '!' + paths.app + '**/*.spec.js'])
         .pipe(debug())
         .pipe(concat(components.dest.js.file))
+        .pipe(uglify())
         .pipe(gulp.dest(components.dest.target + components.dest.js.dir));
 })
 
@@ -73,13 +74,13 @@ gulp.task('templatecache', ['js'], function() {
 
     gulp.src([paths.app + '**/*.html'])
         .pipe(debug())
-        .pipe(templatecache(components.dest.js.templatecache))
+        .pipe(templatecache(components.dest.js.templatecache, {standalone: true}))
         .pipe(gulp.dest(components.dest.target + components.dest.js.dir));
 })
 
 gulp.task('css', ['templatecache'], function() {
     return gulp.src([paths.app + '**/*.css', paths.app + '**/*.less'])
-    .pipe(less())
-    .pipe(concat(components.dest.css.file))
-    .pipe(gulp.dest(components.dest.target + components.dest.css.dir));
+        .pipe(less())
+        .pipe(concat(components.dest.css.file))
+        .pipe(gulp.dest(components.dest.target + components.dest.css.dir));
 })
