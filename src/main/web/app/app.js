@@ -1,5 +1,5 @@
-angular
-.module('storyworlds', ['storyworlds.state'])
+var app = angular
+.module('storyworlds', ['ui.router'])
 .controller('headerCtrl', ['$scope', '$http', '$state', function($scope, $http, $state) {
     $scope.data = $state.current.data;
     if (!$state.current.data.user) {
@@ -70,8 +70,6 @@ angular
     $scope.send({text:'status'});
     $window.document.getElementById('user-input').focus();
 }])
-angular
-.module('storyworlds.state', ['ui.router'])
 .config(['$stateProvider','$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/');
 
@@ -123,3 +121,12 @@ angular
         })
 
 }]);
+//
+//angular.module('storyworlds.demoService', [])
+//.service('demoService', function() {
+//    var demoService = {};
+//    demoService.add = function(number) {
+//        return number +1;
+//    }
+//    return demoService;
+//})

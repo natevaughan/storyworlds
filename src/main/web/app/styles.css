@@ -10,7 +10,7 @@ html {
 
 body {
   background-size: 100% 100%;
-  background-image: url("background3.jpg");
+  background-image: url("../img/background3.jpg");
 }
 
 body, input, textarea, a:link, a:visited {
