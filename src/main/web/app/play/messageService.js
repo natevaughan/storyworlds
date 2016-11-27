@@ -5,15 +5,23 @@ angular.module('storyworlds.messageService', [
 .service('messageService', ['$http', 'responseParserService', function($http, responseParserService) {
 
     var messages = [];
-
-    function trimLatest(array, size) {
-        if (array.length > size) {
-            array.splice(0, array.length - size);
+    var trim = function () {
+        if (messages.length > maxMessages) {
+            messages.splice(0, messages.length - maxMessages);
         }
-    }
+    };
+
+    // private count with setter
+    var messageCount = 1;
+    var maxMessages = 20; // internal and not configurable
 
     return {
-        messages : messages,
+        getMessages : function() {
+            return messages.slice(messages.length - messageCount, messages.length);
+        },
+        push : function(item) {
+            messages.push(item);
+        },
         send: function(command) {
               if (!command || !command.text)
                   return;
@@ -23,11 +31,16 @@ angular.module('storyworlds.messageService', [
               .then(function(response) {
                   responseParserService.parse(response);
                   messages.push({text:response.data.message.text});
-                  trimLatest(messages, 1);
+                  trim();
               }, function(response) {
                   messages.push({text:response.data.message});
-                  trimLatest(messages, 1);
+                  trim();
               });
-          }
+          },
+        trim : trim,
+        setMessageCount : function(number) {
+            messageCount = number;
+        }
     }
+
 }]);

@@ -5,9 +5,9 @@ angular.module('storyworlds.responseParserService', [
     return {
         parse : function(response) {
             console.log(response.data);
-//            if (response.data.createable) {
-//                $state.go('home');
-//            }
+            if (response.data.createable) {
+                $state.go('home');
+            }
         },
         add : function(number) {
             return number + 1;
