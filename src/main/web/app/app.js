@@ -1,2 +1,1 @@
-var app = angular
-.module('storyworlds', ['storyworlds.state','templates']);
+angular.module('storyworlds', ['storyworlds.state','templates']);

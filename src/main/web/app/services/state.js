@@ -1,4 +1,9 @@
-angular.module('storyworlds.state', ['ui.router'])
+angular.module('storyworlds.state', [
+    'ui.router',
+    'storyworlds.createCtrl',
+    'storyworlds.headerCtrl',
+    'storyworlds.landingCtrl',
+    'storyworlds.playCtrl'])
 .config(['$stateProvider','$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/');
 

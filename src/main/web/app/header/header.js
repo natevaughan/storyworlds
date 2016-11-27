@@ -1,4 +1,6 @@
-app
+angular.module('storyworlds.headerCtrl', [
+    'storyworlds.state'
+])
 .controller('headerCtrl', ['$scope', '$http', '$state', function($scope, $http, $state) {
     $scope.data = $state.current.data;
     if (!$state.current.data.user) {

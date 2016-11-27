@@ -1,4 +1,5 @@
-app
+angular.module('storyworlds.createCtrl', [
+])
 .controller('createCtrl', ['$scope', '$http',  function($scope, $http) {
     $scope.storyworld = {
             "@class" : "storyworlds.model.builder.WikiStoryworldBuilder",

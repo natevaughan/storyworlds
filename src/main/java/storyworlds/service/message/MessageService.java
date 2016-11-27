@@ -9,20 +9,32 @@ import storyworlds.action.Actionable;
 @Service
 public class MessageService {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private              Logger logger             = LoggerFactory.getLogger(getClass());
+    private static final String MESSAGE_LOG_MARKER = "msglog,";
+    private static final String MESSAGE_STATUS_ERR = "err,";
+    private static final String MESSAGE_STATUS_OK  = "ok,";
 
     @Autowired
     MessageExecutor executor;
 
     public Actionable process(Message message) throws Exception {
-        logger.info(message.getPlayer().getUsername() + "," + message.getCommand() + "," + message.getTime().toEpochMilli());
 
         MessageTransport transport = new MessageTransport(message);
 
-        transport.accept(new PrimaryMessageParser());
-        transport.accept(new SecondaryMessageParser());
-        transport.accept(executor);
-
+        try {
+            transport.accept(new PrimaryMessageParser());
+            transport.accept(new SecondaryMessageParser());
+            transport.accept(executor);
+        } catch (Exception e) {
+            logger.info(MESSAGE_LOG_MARKER + MESSAGE_STATUS_ERR + message.getPlayer()
+                                                    .getUsername() + "," + message.getCommand() + "," + message.getTime()
+                                                                                                               .toEpochMilli());
+            // TODO: possibly don't throw error all the way up the chain
+            throw e;
+        }
+        logger.info(MESSAGE_LOG_MARKER + MESSAGE_STATUS_OK + message.getPlayer()
+                                                                    .getUsername() + "," + message.getCommand() + "," + message.getTime()
+                                                                                                                               .toEpochMilli());
         return transport.getResponse();
     }
 }

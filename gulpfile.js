@@ -75,6 +75,7 @@ gulp.task('templatecache', ['js'], function() {
     gulp.src([paths.app + '**/*.html'])
         .pipe(debug())
         .pipe(templatecache(components.dest.js.templatecache, {standalone: true}))
+        .pipe(uglify())
         .pipe(gulp.dest(components.dest.target + components.dest.js.dir));
 })
 

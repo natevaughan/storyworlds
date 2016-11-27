@@ -1,4 +1,6 @@
-app
+angular.module('storyworlds.landingCtrl', [
+    'storyworlds.state'
+])
 .controller('landingCtrl', ['$scope', '$http', '$state', function($scope, $http, $state) {
     $http.get('storyworld/').then(function(response) {
         $scope.storyworlds = response.data;
