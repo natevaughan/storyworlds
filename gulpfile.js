@@ -6,6 +6,7 @@ var debug = require('gulp-debug');
 var concat = require('gulp-concat');
 var templatecache = require('gulp-angular-templatecache');
 
+
 var components = {
     src : {
         base : 'src/main/web/',
