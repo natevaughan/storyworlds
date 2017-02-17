@@ -13,7 +13,7 @@
     "gulp-less": "^3.0.5",
     "gulp-uglify": "^1.5.1",
     "gulp-util": "^3.0.7",
-    "gulp-watch": "^4.3.5",
+    "gulp-watch": "^4.3.5"
   },
   "author": "Nate Vaughan",
   "license": "Copyright 2016 Nate Vaughan",
@@ -25,7 +25,7 @@
     "karma-chrome-launcher": "^0.2.2",
     "karma-jasmine": "^0.3.6",
     "karma-cli": "^0.1.2",
-    "run-sequence": "^1.1.5"
+    "run-sequence": "^1.1.5",
     "karma-phantomjs-launcher": "^1.0.2"
   }
 }
